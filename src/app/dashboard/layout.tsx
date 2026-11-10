@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { getStudentSession } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { signOut } from '@/app/(auth)/actions';
@@ -8,16 +9,31 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await getStudentSession();
 
-  if (!user) redirect('/login');
+  let userEmail = session?.email || '';
+  let userName = session?.name || '';
+  let userRole = session?.role || 'student';
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('full_name, role')
-    .eq('id', user.id)
-    .single();
+  if (!session) {
+    const supabase = createClient();
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        redirect('/login');
+      }
+      userEmail = user.email || '';
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name, role')
+        .eq('id', user.id)
+        .single();
+      userName = profile?.full_name || user.email || '';
+      userRole = profile?.role || 'student';
+    } catch {
+      redirect('/login');
+    }
+  }
 
   return (
     <div className="min-h-screen bg-transparent">
@@ -34,9 +50,9 @@ export default async function DashboardLayout({
 
           <div className="flex items-center gap-4">
             <span className="text-gray-400 text-sm hidden md:inline">
-              {profile?.full_name || user.email}
+              {userName || userEmail}
             </span>
-            {profile?.role && ['admin', 'super_admin'].includes(profile.role) && (
+            {userRole && ['admin', 'super_admin'].includes(userRole) && (
               <Link href="/admin" className="text-xs text-cobalt-300 hover:text-lime transition-colors">
                 Admin Panel
               </Link>

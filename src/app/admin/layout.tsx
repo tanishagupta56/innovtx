@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { getStudentSession } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import Link from 'next/link';
@@ -17,21 +18,33 @@ export default async function AdminLayout({
     return <>{children}</>;
   }
 
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  // Check custom session first
+  const session = await getStudentSession();
+  let adminEmail = session?.email || '';
+  let adminName = session?.name || 'Administrator';
+  let adminRole = session?.role || 'admin';
 
-  if (!user) {
-    redirect('/admin/login');
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('full_name, role, email')
-    .eq('id', user.id)
-    .single();
-
-  if (!profile || !['admin', 'super_admin'].includes(profile.role)) {
-    redirect('/');
+  if (!session || !['admin', 'super_admin'].includes(session.role)) {
+    const supabase = createClient();
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        redirect('/admin/login');
+      }
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name, role, email')
+        .eq('id', user.id)
+        .single();
+      if (!profile || !['admin', 'super_admin'].includes(profile.role)) {
+        redirect('/');
+      }
+      adminEmail = profile.email || user.email || '';
+      adminName = profile.full_name || user.email || 'Administrator';
+      adminRole = profile.role || 'admin';
+    } catch {
+      redirect('/admin/login');
+    }
   }
 
   return (
@@ -52,8 +65,8 @@ export default async function AdminLayout({
 
         <div className="flex items-center gap-4">
           <div className="text-right hidden sm:block">
-            <p className="text-xs font-semibold text-white">{profile.full_name || profile.email}</p>
-            <p className="text-[10px] font-mono text-lime uppercase">{profile.role}</p>
+            <p className="text-xs font-semibold text-white">{adminName || adminEmail}</p>
+            <p className="text-[10px] font-mono text-lime uppercase">{adminRole}</p>
           </div>
 
           <Link href="/" target="_blank" className="text-xs text-gray-400 hover:text-white px-2.5 py-1 border border-cobalt/20">

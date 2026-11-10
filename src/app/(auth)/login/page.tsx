@@ -1,16 +1,15 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { login, sendLoginOtp, verifyLoginOtp } from '@/app/(auth)/actions';
+import { sendLoginOtp, verifyLoginOtp } from '@/app/(auth)/actions';
 
 function LoginForm() {
-  const [authMode, setAuthMode] = useState<'otp' | 'password'>('otp');
   const [step, setStep] = useState<'email' | 'otp'>('email');
   const [email, setEmail] = useState('');
-  const [otpToken, setOtpToken] = useState('');
+  const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '']);
   const [countdown, setCountdown] = useState(0);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -19,7 +18,9 @@ function LoginForm() {
   const router = useRouter();
   const redirectTo = searchParams.get('redirect') || '';
 
-  // Resend countdown timer
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // 45s resend countdown timer
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
@@ -27,71 +28,142 @@ function LoginForm() {
     }
   }, [countdown]);
 
-  // Handle password submission
-  async function handlePasswordSubmit(formData: FormData) {
-    setLoading(true);
-    setError('');
-    setMessage('');
-    if (redirectTo) formData.set('redirect', redirectTo);
-    const result = await login(formData);
-    if (result?.error) {
-      setError(result.error);
-      setLoading(false);
+  // Auto-focus first input box when entering OTP step
+  useEffect(() => {
+    if (step === 'otp') {
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 100);
     }
-  }
+  }, [step]);
 
-  // Handle send OTP
-  async function handleSendOtp(e: React.FormEvent) {
+  // Step 1: Submit email address to generate and send OTP
+  async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
-      setError('Please provide a valid student email address.');
+    const cleanEmail = email.trim().toLowerCase();
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+      setError('Please provide a valid email address.');
       return;
     }
+
     setLoading(true);
     setError('');
     setMessage('');
 
-    const res = await sendLoginOtp(email);
+    const res = await sendLoginOtp(cleanEmail);
     setLoading(false);
 
     if (res.error) {
       setError(res.error);
+      if (res.cooldownRemaining) {
+        setCountdown(res.cooldownRemaining);
+      }
     } else {
       setStep('otp');
-      setMessage(`A 6-digit access code has been dispatched to ${email}`);
+      setMessage(res.success || `A 6-digit access code has been dispatched to ${cleanEmail}`);
       setCountdown(45);
+      setOtpDigits(['', '', '', '', '', '']);
     }
   }
 
-  // Handle verify OTP
-  async function handleVerifyOtp(e: React.FormEvent) {
-    e.preventDefault();
-    if (otpToken.length < 6) {
-      setError('Please enter the complete 6-digit verification code.');
+  // Trigger OTP verification
+  async function submitOtp(token: string) {
+    if (token.length !== 6) {
+      setError('Please enter all 6 digits of your verification code.');
       return;
     }
     setLoading(true);
     setError('');
 
-    const res = await verifyLoginOtp(email, otpToken, redirectTo);
+    const res = await verifyLoginOtp(email.trim().toLowerCase(), token, redirectTo);
     if (res?.error) {
       setError(res.error);
       setLoading(false);
     }
   }
 
-  // Handle resend OTP
+  // Handle individual OTP digit change
+  const handleDigitChange = (index: number, value: string) => {
+    const digit = value.replace(/\D/g, '').slice(-1);
+    const newDigits = [...otpDigits];
+    newDigits[index] = digit;
+    setOtpDigits(newDigits);
+    setError('');
+
+    if (digit && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+
+    // Auto-verify if all 6 digits are provided
+    if (digit && index === 5 && newDigits.every((d) => d.length === 1)) {
+      submitOtp(newDigits.join(''));
+    }
+  };
+
+  // Handle backspace and arrow navigation
+  const handleDigitKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace') {
+      if (!otpDigits[index] && index > 0) {
+        inputRefs.current[index - 1]?.focus();
+        const newDigits = [...otpDigits];
+        newDigits[index - 1] = '';
+        setOtpDigits(newDigits);
+      } else {
+        const newDigits = [...otpDigits];
+        newDigits[index] = '';
+        setOtpDigits(newDigits);
+      }
+    } else if (e.key === 'ArrowLeft' && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    } else if (e.key === 'ArrowRight' && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  // Handle paste of 6-digit code
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (!pasteData) return;
+
+    const newDigits = [...otpDigits];
+    for (let i = 0; i < 6; i++) {
+      newDigits[i] = pasteData[i] || '';
+    }
+    setOtpDigits(newDigits);
+
+    const nextFocusIndex = Math.min(pasteData.length, 5);
+    inputRefs.current[nextFocusIndex]?.focus();
+
+    if (pasteData.length === 6) {
+      submitOtp(pasteData);
+    }
+  };
+
+  // Step 2 form submission
+  async function handleVerifySubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const token = otpDigits.join('');
+    await submitOtp(token);
+  }
+
+  // Resend OTP
   async function handleResendOtp() {
     if (countdown > 0 || loading) return;
     setLoading(true);
     setError('');
-    const res = await sendLoginOtp(email);
+    const res = await sendLoginOtp(email.trim().toLowerCase());
     setLoading(false);
     if (res.error) {
       setError(res.error);
     } else {
       setMessage(`A fresh 6-digit code has been dispatched to ${email}`);
       setCountdown(45);
+      setOtpDigits(['', '', '', '', '', '']);
+      inputRefs.current[0]?.focus();
     }
   }
 
@@ -114,204 +186,146 @@ function LoginForm() {
           </h1>
         </Link>
         <p className="font-mono text-xs text-muted-text mt-1 uppercase tracking-widest">
-          TECHNEEDS IGDTUW AUTHENTICATION
+          {step === 'email' ? 'EMAIL OTP AUTHENTICATION' : 'ENTER 6-DIGIT SECURITY CODE'}
         </p>
       </div>
 
-      {/* Mode Switcher: One-Time Passcode vs Secret Password */}
-      <div className="grid grid-cols-2 p-1 mb-6 bg-deep-ink border border-charcoal-border rounded-lg font-mono text-xs">
-        <button
-          type="button"
-          onClick={() => {
-            setAuthMode('otp');
-            setStep('email');
-            setError('');
-            setMessage('');
-          }}
-          className={`py-2 rounded-md transition-all uppercase tracking-wider font-semibold ${
-            authMode === 'otp'
-              ? 'bg-electric-blue text-soft-white shadow-[0_0_12px_rgba(49,94,255,0.4)]'
-              : 'text-muted-text hover:text-soft-white'
-          }`}
-        >
-          Email OTP
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setAuthMode('password');
-            setError('');
-            setMessage('');
-          }}
-          className={`py-2 rounded-md transition-all uppercase tracking-wider font-semibold ${
-            authMode === 'password'
-              ? 'bg-electric-blue text-soft-white shadow-[0_0_12px_rgba(49,94,255,0.4)]'
-              : 'text-muted-text hover:text-soft-white'
-          }`}
-        >
-          Password
-        </button>
-      </div>
-
-      {/* Status Alerts */}
+      {/* Alerts */}
       {error && (
-        <div className="p-3 mb-5 bg-red-950/70 border border-burnt-orange/50 text-red-200 text-xs font-mono rounded-lg">
-          <span className="text-burnt-orange font-bold mr-1">[AUTH ALERT]</span> {error}
+        <div className="p-3 mb-6 bg-red-950/70 border border-burnt-orange/50 text-red-200 text-xs font-mono rounded-lg flex items-start gap-2">
+          <span className="text-burnt-orange font-bold">[ALERT]</span>
+          <span>{error}</span>
         </div>
       )}
 
-      {message && (
-        <div className="p-3 mb-5 bg-lime-green/10 border border-lime-green/30 text-lime-green text-xs font-mono rounded-lg">
-          <span className="font-bold mr-1">✓</span> {message}
+      {message && step === 'otp' && (
+        <div className="p-3 mb-6 bg-lime-green/10 border border-lime-green/30 text-lime-green text-xs font-mono rounded-lg flex items-start gap-2">
+          <span className="font-bold">✓</span>
+          <span>{message}</span>
         </div>
       )}
 
-      {/* MODE 1: OTP AUTHENTICATION */}
-      {authMode === 'otp' && (
-        <>
-          {step === 'email' ? (
-            <form onSubmit={handleSendOtp} className="space-y-5">
-              <div>
-                <label htmlFor="otp-email" className="block text-xs font-mono text-muted-text uppercase mb-2">
-                  Student Email Address
-                </label>
-                <input
-                  id="otp-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="input-field font-mono text-xs rounded-lg"
-                  placeholder="e.g. rollnumber@igdtuw.ac.in"
-                  autoComplete="email"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 rounded-lg font-bold"
-              >
-                {loading ? 'Transmitting Code...' : 'Request One-Time Code →'}
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={handleVerifyOtp} className="space-y-5">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label htmlFor="otp-code" className="text-xs font-mono text-muted-text uppercase">
-                    6-Digit Security Code
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setStep('email');
-                      setOtpToken('');
-                    }}
-                    className="text-[11px] font-mono text-electric-blue hover:underline"
-                  >
-                    Change Email
-                  </button>
-                </div>
-                <input
-                  id="otp-code"
-                  type="text"
-                  maxLength={6}
-                  value={otpToken}
-                  onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ''))}
-                  required
-                  className="input-field font-mono text-lg text-center tracking-[0.4em] font-bold rounded-lg"
-                  placeholder="000000"
-                  autoFocus
-                />
-                <p className="text-[11px] font-mono text-muted-text mt-2 text-center">
-                  Sent to <span className="text-soft-white font-semibold">{email}</span>
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading || otpToken.length < 6}
-                className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 rounded-lg font-bold disabled:opacity-50"
-              >
-                {loading ? 'Validating Token...' : 'Verify Code & Enter Portal →'}
-              </button>
-
-              <div className="text-center pt-2 font-mono text-xs">
-                {countdown > 0 ? (
-                  <span className="text-muted-text">
-                    Resend available in <span className="text-lime-green">{countdown}s</span>
-                  </span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleResendOtp}
-                    disabled={loading}
-                    className="text-electric-blue hover:text-lime-green underline"
-                  >
-                    Resend Verification Code
-                  </button>
-                )}
-              </div>
-            </form>
-          )}
-        </>
-      )}
-
-      {/* MODE 2: PASSWORD AUTHENTICATION */}
-      {authMode === 'password' && (
-        <form action={handlePasswordSubmit} className="space-y-5">
+      {/* STEP 1: INITIAL EMAIL LOGIN */}
+      {step === 'email' ? (
+        <form onSubmit={handleEmailSubmit} className="space-y-5">
           <div>
             <label htmlFor="email" className="block text-xs font-mono text-muted-text uppercase mb-2">
-              Student Email
+              University / Student Email Address
             </label>
             <input
               id="email"
               name="email"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              className="input-field font-mono text-xs rounded-lg"
-              placeholder="you@igdtuw.ac.in"
+              placeholder="e.g. rollnumber@igdtuw.ac.in"
+              className="input-field font-mono text-xs rounded-lg py-3"
               autoComplete="email"
+              autoFocus
             />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-xs font-mono text-muted-text uppercase mb-2">
-              Password Secret
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              className="input-field font-mono text-xs rounded-lg"
-              placeholder="••••••••••••"
-              autoComplete="current-password"
-            />
-          </div>
-
-          <div className="flex justify-end font-mono text-xs">
-            <Link href="/forgot-password" className="text-electric-blue hover:text-lime-green">
-              Forgot password?
-            </Link>
+            <p className="text-[11px] font-mono text-muted-text mt-2">
+              We will send a single-use 6-digit access code to this email.
+            </p>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 rounded-lg font-bold"
+            className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 rounded-lg font-bold shadow-[0_0_20px_rgba(49,94,255,0.2)]"
           >
-            {loading ? 'Authenticating...' : 'Sign In to Portal →'}
+            {loading ? 'Generating Security Code...' : 'Continue with Email OTP →'}
           </button>
+        </form>
+      ) : (
+        /* STEP 2: SIX INPUT BOXES FOR 6-DIGIT OTP */
+        <form onSubmit={handleVerifySubmit} className="space-y-6">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-mono text-muted-text uppercase">
+                6-Digit Access Code
+              </label>
+              <button
+                type="button"
+                onClick={() => {
+                  setStep('email');
+                  setError('');
+                  setMessage('');
+                }}
+                className="text-[11px] font-mono text-electric-blue hover:text-lime-green underline"
+              >
+                ← Change Email
+              </button>
+            </div>
+
+            <div className="text-[11px] font-mono text-slate-400 mb-4">
+              Sent to: <strong className="text-soft-white">{email}</strong>
+            </div>
+
+            {/* 6 Individual Input Boxes */}
+            <div className="flex items-center justify-between gap-2 sm:gap-2.5 my-4">
+              {otpDigits.map((digit, idx) => (
+                <input
+                  key={idx}
+                  ref={(el) => {
+                    inputRefs.current[idx] = el;
+                  }}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleDigitChange(idx, e.target.value)}
+                  onKeyDown={(e) => handleDigitKeyDown(idx, e)}
+                  onPaste={handlePaste}
+                  aria-label={`Digit ${idx + 1}`}
+                  className={`w-11 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-mono font-bold rounded-xl border transition-all ${
+                    digit
+                      ? 'border-lime-green bg-charcoal text-lime-green shadow-[0_0_15px_rgba(184,217,76,0.2)]'
+                      : 'border-charcoal-border bg-[#080B12]/80 text-soft-white focus:border-electric-blue focus:shadow-[0_0_15px_rgba(49,94,255,0.25)]'
+                  } outline-none`}
+                />
+              ))}
+            </div>
+
+            <p className="text-[11px] font-mono text-muted-text text-center mt-3">
+              Code expires in <span className="text-soft-white font-semibold">5 minutes</span>.
+            </p>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading || otpDigits.join('').length !== 6}
+            className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 rounded-lg font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Verifying Code...' : 'Verify Code & Enter Dashboard →'}
+          </button>
+
+          {/* Resend Cooldown Section */}
+          <div className="text-center pt-2 font-mono text-xs">
+            {countdown > 0 ? (
+              <span className="text-muted-text">
+                Resend code in <span className="text-lime-green font-bold">{countdown}s</span>
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={handleResendOtp}
+                disabled={loading}
+                className="text-electric-blue hover:text-lime-green underline"
+              >
+                Resend Verification Code
+              </button>
+            )}
+          </div>
         </form>
       )}
 
-      {/* Footer link to Registration */}
+      {/* Footer Navigation */}
       <div className="mt-8 pt-6 border-t border-charcoal-border text-center font-mono text-xs text-muted-text">
         New student member?{' '}
         <Link href="/signup" className="text-lime-green hover:underline font-bold">
-          Register Member Account
+          Register Account
         </Link>
       </div>
     </div>
@@ -320,7 +334,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="font-mono text-xs text-muted-text">Loading authentication portal...</div>}>
+    <Suspense fallback={<div className="font-mono text-xs text-muted-text">Loading portal console...</div>}>
       <LoginForm />
     </Suspense>
   );

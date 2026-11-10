@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { signup, verifySignupOtp, sendLoginOtp } from '@/app/(auth)/actions';
@@ -10,11 +10,13 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
-  const [otpToken, setOtpToken] = useState('');
+  const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '']);
   const [countdown, setCountdown] = useState(0);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Countdown timer for OTP resend
   useEffect(() => {
@@ -23,6 +25,15 @@ export default function SignupPage() {
       return () => clearTimeout(timer);
     }
   }, [countdown]);
+
+  // Auto-focus first input box when step becomes OTP
+  useEffect(() => {
+    if (step === 'otp') {
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 100);
+    }
+  }, [step]);
 
   // Step 1: Submit details and trigger OTP / registration
   async function handleDetailsSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -33,7 +44,7 @@ export default function SignupPage() {
 
     const formData = new FormData();
     formData.append('fullName', fullName);
-    formData.append('email', email);
+    formData.append('email', email.trim().toLowerCase());
     formData.append('password', password);
 
     const result = await signup(formData);
@@ -45,26 +56,90 @@ export default function SignupPage() {
       setStep('otp');
       setSuccess(result.success || `Verification code dispatched to ${email}`);
       setCountdown(45);
+      setOtpDigits(['', '', '', '', '', '']);
     } else if (result?.success) {
       setSuccess(result.success);
     }
   }
 
-  // Step 2: Verify OTP
-  async function handleOtpSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (otpToken.length < 6) {
+  // Trigger verify OTP
+  async function submitOtp(token: string) {
+    if (token.length !== 6) {
       setError('Please provide the full 6-digit verification code.');
       return;
     }
     setLoading(true);
     setError('');
 
-    const res = await verifySignupOtp(email, otpToken);
+    const res = await verifySignupOtp(email.trim().toLowerCase(), token, fullName);
     if (res?.error) {
       setError(res.error);
       setLoading(false);
     }
+  }
+
+  // Handle individual OTP digit change
+  const handleDigitChange = (index: number, value: string) => {
+    const digit = value.replace(/\D/g, '').slice(-1);
+    const newDigits = [...otpDigits];
+    newDigits[index] = digit;
+    setOtpDigits(newDigits);
+    setError('');
+
+    if (digit && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+
+    if (digit && index === 5 && newDigits.every((d) => d.length === 1)) {
+      submitOtp(newDigits.join(''));
+    }
+  };
+
+  // Handle backspace and navigation
+  const handleDigitKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace') {
+      if (!otpDigits[index] && index > 0) {
+        inputRefs.current[index - 1]?.focus();
+        const newDigits = [...otpDigits];
+        newDigits[index - 1] = '';
+        setOtpDigits(newDigits);
+      } else {
+        const newDigits = [...otpDigits];
+        newDigits[index] = '';
+        setOtpDigits(newDigits);
+      }
+    } else if (e.key === 'ArrowLeft' && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    } else if (e.key === 'ArrowRight' && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  // Handle paste of 6-digit code
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (!pasteData) return;
+
+    const newDigits = [...otpDigits];
+    for (let i = 0; i < 6; i++) {
+      newDigits[i] = pasteData[i] || '';
+    }
+    setOtpDigits(newDigits);
+
+    const nextFocusIndex = Math.min(pasteData.length, 5);
+    inputRefs.current[nextFocusIndex]?.focus();
+
+    if (pasteData.length === 6) {
+      submitOtp(pasteData);
+    }
+  };
+
+  // Step 2 form submission
+  async function handleOtpSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const token = otpDigits.join('');
+    await submitOtp(token);
   }
 
   // Resend verification code
@@ -72,13 +147,15 @@ export default function SignupPage() {
     if (countdown > 0 || loading) return;
     setLoading(true);
     setError('');
-    const res = await sendLoginOtp(email);
+    const res = await sendLoginOtp(email.trim().toLowerCase());
     setLoading(false);
     if (res.error) {
       setError(res.error);
     } else {
       setSuccess(`A fresh verification code has been dispatched to ${email}`);
       setCountdown(45);
+      setOtpDigits(['', '', '', '', '', '']);
+      inputRefs.current[0]?.focus();
     }
   }
 
@@ -101,19 +178,21 @@ export default function SignupPage() {
           </h1>
         </Link>
         <p className="font-mono text-xs text-muted-text mt-1 uppercase tracking-widest">
-          TECHNEEDS STUDENT REGISTRATION
+          {step === 'details' ? 'STUDENT REGISTRATION' : 'VERIFY 6-DIGIT CODE'}
         </p>
       </div>
 
       {/* Status Alerts */}
       {error && (
-        <div className="p-3 mb-5 bg-red-950/70 border border-burnt-orange/50 text-red-200 text-xs font-mono rounded-lg">
-          <span className="text-burnt-orange font-bold mr-1">[ALERT]</span> {error}
+        <div className="p-3 mb-5 bg-red-950/70 border border-burnt-orange/50 text-red-200 text-xs font-mono rounded-lg flex items-start gap-2">
+          <span className="text-burnt-orange font-bold">[ALERT]</span>
+          <span>{error}</span>
         </div>
       )}
       {success && (
-        <div className="p-3 mb-5 bg-lime-green/10 border border-lime-green/30 text-lime-green text-xs font-mono rounded-lg">
-          <span className="font-bold mr-1">✓</span> {success}
+        <div className="p-3 mb-5 bg-lime-green/10 border border-lime-green/30 text-lime-green text-xs font-mono rounded-lg flex items-start gap-2">
+          <span className="font-bold">✓</span>
+          <span>{success}</span>
         </div>
       )}
 
@@ -132,7 +211,7 @@ export default function SignupPage() {
               onChange={(e) => setFullName(e.target.value)}
               required
               minLength={2}
-              className="input-field font-mono text-xs rounded-lg"
+              className="input-field font-mono text-xs rounded-lg py-2.5"
               placeholder="e.g. Priya Sharma"
               autoComplete="name"
             />
@@ -149,7 +228,7 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="input-field font-mono text-xs rounded-lg"
+              className="input-field font-mono text-xs rounded-lg py-2.5"
               placeholder="rollnumber@igdtuw.ac.in"
               autoComplete="email"
             />
@@ -157,7 +236,7 @@ export default function SignupPage() {
 
           <div>
             <label htmlFor="password" className="block text-xs font-mono text-muted-text uppercase mb-1.5">
-              Secret Password (Min 8 Characters)
+              Account Password (Min 8 Characters)
             </label>
             <input
               id="password"
@@ -167,7 +246,7 @@ export default function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={8}
-              className="input-field font-mono text-xs rounded-lg"
+              className="input-field font-mono text-xs rounded-lg py-2.5"
               placeholder="••••••••••••"
               autoComplete="new-password"
             />
@@ -182,45 +261,64 @@ export default function SignupPage() {
           </button>
         </form>
       ) : (
-        /* STEP 2: OTP VERIFICATION */
-        <form onSubmit={handleOtpSubmit} className="space-y-5">
+        /* STEP 2: 6 INPUT BOXES FOR OTP VERIFICATION */
+        <form onSubmit={handleOtpSubmit} className="space-y-6">
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label htmlFor="otp-token" className="text-xs font-mono text-muted-text uppercase">
+              <label className="text-xs font-mono text-muted-text uppercase">
                 6-Digit Security Token
               </label>
               <button
                 type="button"
                 onClick={() => {
                   setStep('details');
-                  setOtpToken('');
                   setError('');
                 }}
-                className="text-[11px] font-mono text-electric-blue hover:underline"
+                className="text-[11px] font-mono text-electric-blue hover:text-lime-green underline"
               >
                 ← Edit Details
               </button>
             </div>
-            <input
-              id="otp-token"
-              type="text"
-              maxLength={6}
-              value={otpToken}
-              onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ''))}
-              required
-              className="input-field font-mono text-lg text-center tracking-[0.4em] font-bold rounded-lg"
-              placeholder="000000"
-              autoFocus
-            />
-            <p className="text-[11px] font-mono text-muted-text mt-2 text-center">
-              Verification token dispatched to <span className="text-soft-white font-semibold">{email}</span>
+
+            <div className="text-[11px] font-mono text-slate-400 mb-3">
+              Sent to: <strong className="text-soft-white">{email}</strong>
+            </div>
+
+            {/* 6 Individual Input Boxes */}
+            <div className="flex items-center justify-between gap-2 sm:gap-2.5 my-4">
+              {otpDigits.map((digit, idx) => (
+                <input
+                  key={idx}
+                  ref={(el) => {
+                    inputRefs.current[idx] = el;
+                  }}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleDigitChange(idx, e.target.value)}
+                  onKeyDown={(e) => handleDigitKeyDown(idx, e)}
+                  onPaste={handlePaste}
+                  aria-label={`Digit ${idx + 1}`}
+                  className={`w-11 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-mono font-bold rounded-xl border transition-all ${
+                    digit
+                      ? 'border-lime-green bg-charcoal text-lime-green shadow-[0_0_15px_rgba(184,217,76,0.2)]'
+                      : 'border-charcoal-border bg-[#080B12]/80 text-soft-white focus:border-electric-blue focus:shadow-[0_0_15px_rgba(49,94,255,0.25)]'
+                  } outline-none`}
+                />
+              ))}
+            </div>
+
+            <p className="text-[11px] font-mono text-muted-text text-center mt-2">
+              Valid for <span className="text-soft-white font-semibold">5 minutes</span>.
             </p>
           </div>
 
           <button
             type="submit"
-            disabled={loading || otpToken.length < 6}
-            className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 rounded-lg font-bold disabled:opacity-50"
+            disabled={loading || otpDigits.join('').length !== 6}
+            className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 rounded-lg font-bold disabled:opacity-40"
           >
             {loading ? 'Confirming Token...' : 'Verify Code & Launch Dashboard →'}
           </button>
@@ -228,7 +326,7 @@ export default function SignupPage() {
           <div className="text-center pt-2 font-mono text-xs">
             {countdown > 0 ? (
               <span className="text-muted-text">
-                Resend code in <span className="text-lime-green">{countdown}s</span>
+                Resend code in <span className="text-lime-green font-bold">{countdown}s</span>
               </span>
             ) : (
               <button
