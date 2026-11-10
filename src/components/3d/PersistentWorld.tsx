@@ -1,12 +1,8 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const WorldCanvas = dynamic(() => import('./WorldCanvas'), {
-  ssr: false,
-  loading: () => <div className="fixed inset-0 pointer-events-none -z-10 bg-[#030407]" />,
-});
-
+// PersistentWorld: Giant 3D background machinery removed in favor of clean, minimal artistic background.
 export function PersistentWorld() {
-  return <WorldCanvas />;
+  return null;
 }
+
+export default PersistentWorld;

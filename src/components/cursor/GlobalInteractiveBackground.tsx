@@ -3,36 +3,35 @@
 import React, { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 
-interface GridVertex {
-  ox: number; // original rest X
-  oy: number; // original rest Y
-  x: number;  // current X
-  y: number;  // current Y
-  vx: number; // velocity X
-  vy: number; // velocity Y
-}
-
 interface Particle {
-  baseX: number;
-  baseY: number;
   x: number;
   y: number;
+  baseX: number;
+  baseY: number;
   vx: number;
   vy: number;
   size: number;
   color: string;
-  type: 'blue' | 'lime' | 'orange';
+  alpha: number;
 }
 
-interface RippleWave {
+interface SoftRipple {
   x: number;
   y: number;
   radius: number;
   maxRadius: number;
-  strength: number;
+  opacity: number;
   speed: number;
-  life: number;
-  maxLife: number;
+}
+
+interface AmbientOrb {
+  baseX: number;
+  baseY: number;
+  radius: number;
+  color: string;
+  speedX: number;
+  speedY: number;
+  phase: number;
 }
 
 export default function GlobalInteractiveBackground() {
@@ -52,54 +51,103 @@ export default function GlobalInteractiveBackground() {
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Palette tokens
-    const colorBlue = 'rgba(49, 94, 255,';
-    const colorLime = 'rgba(184, 217, 76,';
-    const colorOrange = 'rgba(214, 90, 49,';
+    // Soft palette tokens
+    const blue = 'rgba(49, 94, 255,';
+    const lime = 'rgba(184, 217, 76,';
+    const orange = 'rgba(214, 90, 49,';
 
-    // Slightly softer intensity on dense admin/dashboard pages for readability
+    // Slightly toned alpha for internal dashboard tools
     const isDashboard = pathname.startsWith('/dashboard') || pathname.startsWith('/admin');
-    const alphaScale = isDashboard ? 0.45 : 0.85;
+    const alphaScale = isDashboard ? 0.6 : 1.0;
 
-    // Mouse coordinates with fluid trailing inertia
-    let mouseX = width / 2;
-    let mouseY = height / 2;
-    let targetMouseX = width / 2;
-    let targetMouseY = height / 2;
-    let prevMouseX = width / 2;
-    let prevMouseY = height / 2;
-    let mouseSpeed = 0;
-    let lastMoveTime = performance.now();
+    // Cursor coordinates with buttery fluid inertia
+    let mouseX = width * 0.5;
+    let mouseY = height * 0.4;
+    let targetMouseX = mouseX;
+    let targetMouseY = mouseY;
+    let prevMouseX = mouseX;
+    let prevMouseY = mouseY;
     let isDocVisible = !document.hidden;
 
-    // Grid config for physical liquid deformation
-    let cols = 0;
-    let rows = 0;
-    let cellWidth = 0;
-    let cellHeight = 0;
-    let grid: GridVertex[][] = [];
+    // 1. Organic Ambient Orbs (Soft Gradient Mesh)
+    const orbs: AmbientOrb[] = [
+      {
+        baseX: width * 0.25,
+        baseY: height * 0.3,
+        radius: Math.max(width, height) * 0.42,
+        color: `${blue} 0.12)`,
+        speedX: 0.0004,
+        speedY: 0.0003,
+        phase: 0,
+      },
+      {
+        baseX: width * 0.75,
+        baseY: height * 0.65,
+        radius: Math.max(width, height) * 0.38,
+        color: `${blue} 0.09)`,
+        speedX: 0.0003,
+        speedY: 0.0005,
+        phase: Math.PI * 0.6,
+      },
+      {
+        baseX: width * 0.85,
+        baseY: height * 0.25,
+        radius: Math.max(width, height) * 0.26,
+        color: `${lime} 0.035)`,
+        speedX: 0.0005,
+        speedY: 0.0004,
+        phase: Math.PI * 1.2,
+      },
+      {
+        baseX: width * 0.15,
+        baseY: height * 0.8,
+        radius: Math.max(width, height) * 0.24,
+        color: `${orange} 0.025)`,
+        speedX: 0.0004,
+        speedY: 0.0006,
+        phase: Math.PI * 1.8,
+      },
+    ];
+
+    // 2. Fine Micro-Particles
     let particles: Particle[] = [];
-    let ripples: RippleWave[] = [];
+    const initParticles = () => {
+      particles = [];
+      const count = width < 768 ? 32 : 55;
+      for (let i = 0; i < count; i++) {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        const rand = Math.random();
+        const color = rand > 0.88 ? lime : rand > 0.76 ? orange : blue;
+        particles.push({
+          x,
+          y,
+          baseX: x,
+          baseY: y,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: (Math.random() - 0.5) * 0.25,
+          size: rand > 0.85 ? 1.4 : 0.9,
+          color,
+          alpha: (0.15 + Math.random() * 0.25) * alphaScale,
+        });
+      }
+    };
 
-    const initSimulation = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+    // 3. Subtle Wave Contour Points (Delicate, Minimal Grid Displacement)
+    const waveCols = width < 768 ? 16 : 24;
+    const waveRows = width < 768 ? 12 : 16;
+    let wavePoints: { x: number; y: number; ox: number; oy: number; vx: number; vy: number }[][] = [];
 
-      // Adaptive grid density: denser on desktop, lighter on mobile
-      const spacing = width < 768 ? 65 : 55;
-      cols = Math.ceil(width / spacing) + 1;
-      rows = Math.ceil(height / spacing) + 1;
-      cellWidth = width / (cols - 1);
-      cellHeight = height / (rows - 1);
-
-      // 1. Initialize Spring Lattice Mesh
-      grid = [];
-      for (let c = 0; c < cols; c++) {
-        grid[c] = [];
-        for (let r = 0; r < rows; r++) {
-          const ox = c * cellWidth;
-          const oy = r * cellHeight;
-          grid[c][r] = {
+    const initWaveGrid = () => {
+      wavePoints = [];
+      const colStep = width / (waveCols - 1);
+      const rowStep = height / (waveRows - 1);
+      for (let c = 0; c < waveCols; c++) {
+        wavePoints[c] = [];
+        for (let r = 0; r < waveRows; r++) {
+          const ox = c * colStep;
+          const oy = r * rowStep;
+          wavePoints[c][r] = {
             ox,
             oy,
             x: ox,
@@ -109,63 +157,39 @@ export default function GlobalInteractiveBackground() {
           };
         }
       }
-
-      // 2. Initialize Floating Quantum Particles
-      particles = [];
-      const particleDensity = width < 768 ? 45 : 75;
-      for (let i = 0; i < particleDensity; i++) {
-        const bx = Math.random() * width;
-        const by = Math.random() * height;
-        const rand = Math.random();
-        const type: 'blue' | 'lime' | 'orange' =
-          rand > 0.85 ? 'lime' : rand > 0.72 ? 'orange' : 'blue';
-
-        particles.push({
-          baseX: bx,
-          baseY: by,
-          x: bx,
-          y: by,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
-          size: type === 'lime' ? 2.0 : type === 'orange' ? 1.8 : 1.4,
-          color: type === 'lime' ? '#B8D94C' : type === 'orange' ? '#D65A31' : '#315EFF',
-          type,
-        });
-      }
-
-      ripples = [];
     };
 
-    initSimulation();
+    let ripples: SoftRipple[] = [];
 
-    // Event listeners
     const handleResize = () => {
-      initSimulation();
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initParticles();
+      initWaveGrid();
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       targetMouseX = e.clientX;
       targetMouseY = e.clientY;
-      lastMoveTime = performance.now();
     };
 
     const handleClick = (e: MouseEvent) => {
-      // Create an energetic ripple burst on click
+      // Gentle, understated ripple
       ripples.push({
         x: e.clientX,
         y: e.clientY,
-        radius: 5,
-        maxRadius: Math.min(width, height) * 0.45,
-        strength: 24,
-        speed: 5.5,
-        life: 1.0,
-        maxLife: 1.0,
+        radius: 8,
+        maxRadius: Math.min(width, height) * 0.35,
+        opacity: 0.16 * alphaScale,
+        speed: 2.8,
       });
     };
 
     const handleVisibility = () => {
       isDocVisible = !document.hidden;
     };
+
+    handleResize();
 
     window.addEventListener('resize', handleResize, { passive: true });
     if (!isTouch) {
@@ -174,304 +198,206 @@ export default function GlobalInteractiveBackground() {
     }
     document.addEventListener('visibilitychange', handleVisibility);
 
-    // Reduced motion: static subtle background
+    // Reduced motion: static subtle atmospheric gradient
     if (isReduced) {
       ctx.clearRect(0, 0, width, height);
-      ctx.strokeStyle = `${colorBlue} 0.08)`;
-      ctx.lineWidth = 1;
-      for (let c = 0; c < cols; c++) {
-        ctx.beginPath();
-        ctx.moveTo(c * cellWidth, 0);
-        ctx.lineTo(c * cellWidth, height);
-        ctx.stroke();
-      }
-      for (let r = 0; r < rows; r++) {
-        ctx.beginPath();
-        ctx.moveTo(0, r * cellHeight);
-        ctx.lineTo(width, r * cellHeight);
-        ctx.stroke();
-      }
+      const g = ctx.createRadialGradient(width * 0.5, height * 0.4, 0, width * 0.5, height * 0.4, width * 0.6);
+      g.addColorStop(0, `${blue} 0.1)`);
+      g.addColorStop(1, 'rgba(8, 11, 18, 0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, width, height);
       return () => {
         window.removeEventListener('resize', handleResize);
         document.removeEventListener('visibilitychange', handleVisibility);
       };
     }
 
-    // Animation loop with delta timing
-    let lastFrameTime = performance.now();
+    let lastTime = performance.now();
 
+    // Render loop
     const render = (now: number) => {
       animId = requestAnimationFrame(render);
       if (!isDocVisible) return;
 
-      const dt = Math.min(40, now - lastFrameTime);
-      lastFrameTime = now;
+      const dt = Math.min(35, now - lastTime);
+      lastTime = now;
 
-      // Touch / Idle autonomous harmonic wave generation
-      const idleTime = now - lastMoveTime;
-      if (isTouch || idleTime > 2800) {
-        const driftSpeed = isTouch ? 0.0006 : 0.0004;
-        const driftRadiusX = width * 0.32;
-        const driftRadiusY = height * 0.22;
-        targetMouseX = width / 2 + Math.cos(now * driftSpeed) * driftRadiusX;
-        targetMouseY = height / 2 + Math.sin(now * (driftSpeed * 1.3)) * driftRadiusY;
+      // Touch / Ambient gentle drifting
+      if (isTouch) {
+        targetMouseX = width * 0.5 + Math.cos(now * 0.0005) * (width * 0.25);
+        targetMouseY = height * 0.45 + Math.sin(now * 0.0007) * (height * 0.2);
       }
 
-      // Smooth pointer position lerping (liquid inertia)
-      const lerpFactor = 0.085;
-      mouseX += (targetMouseX - mouseX) * lerpFactor;
-      mouseY += (targetMouseY - mouseY) * lerpFactor;
+      // Smooth fluid lerp for cursor
+      mouseX += (targetMouseX - mouseX) * 0.06;
+      mouseY += (targetMouseY - mouseY) * 0.06;
 
-      // Calculate cursor velocity
-      const dmx = mouseX - prevMouseX;
-      const dmy = mouseY - prevMouseY;
-      mouseSpeed = Math.sqrt(dmx * dmx + dmy * dmy);
+      const mouseDeltaX = mouseX - prevMouseX;
+      const mouseDeltaY = mouseY - prevMouseY;
+      const mouseSpeed = Math.hypot(mouseDeltaX, mouseDeltaY);
       prevMouseX = mouseX;
       prevMouseY = mouseY;
 
-      // Emit continuous subtle ripple waves when moving vigorously
-      if (mouseSpeed > 3.0 && Math.random() < 0.28) {
+      // Occasional faint ripple on brisk movement
+      if (mouseSpeed > 4.5 && Math.random() < 0.08 && ripples.length < 3) {
         ripples.push({
           x: mouseX,
           y: mouseY,
-          radius: 10,
-          maxRadius: Math.min(260, mouseSpeed * 14 + 100),
-          strength: Math.min(18, mouseSpeed * 0.8),
-          speed: 3.2 + Math.min(3, mouseSpeed * 0.15),
-          life: 1.0,
-          maxLife: 1.0,
+          radius: 12,
+          maxRadius: Math.min(220, mouseSpeed * 12 + 80),
+          opacity: 0.11 * alphaScale,
+          speed: 2.2,
         });
       }
 
-      // Clear frame with alpha blending
       ctx.clearRect(0, 0, width, height);
 
-      // 1. UPDATE RIPPLE WAVES
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        const rip = ripples[i];
-        rip.radius += rip.speed;
-        rip.life -= 0.018;
+      // 1. ORGANIC FLOWING GRADIENT MESHES (Soft & Atmospheric)
+      for (let i = 0; i < orbs.length; i++) {
+        const orb = orbs[i];
+        const ox = orb.baseX + Math.sin(now * orb.speedX + orb.phase) * (width * 0.12);
+        const oy = orb.baseY + Math.cos(now * orb.speedY + orb.phase) * (height * 0.1);
 
-        if (rip.life <= 0 || rip.radius >= rip.maxRadius) {
-          ripples.splice(i, 1);
-        }
-      }
+        const grad = ctx.createRadialGradient(ox, oy, 0, ox, oy, orb.radius);
+        grad.addColorStop(0, orb.color);
+        grad.addColorStop(0.65, orb.color.replace(/[\d\.]+\)$/, '0.015)'));
+        grad.addColorStop(1, 'rgba(8, 11, 18, 0)');
 
-      // 2. UPDATE GRID LATTICE WITH PHYSICAL LIQUID DISPLACEMENT & SPRING RESTORATION
-      const deformRadius = width < 768 ? 160 : 220;
-      const deformRadiusSq = deformRadius * deformRadius;
-      const springK = 0.048; // elastic tension
-      const damping = 0.84;  // viscous liquid friction
-
-      for (let c = 0; c < cols; c++) {
-        for (let r = 0; r < rows; r++) {
-          const v = grid[c][r];
-
-          // Cursor repulsion & liquid displacement
-          const dx = v.x - mouseX;
-          const dy = v.y - mouseY;
-          const distSq = dx * dx + dy * dy;
-
-          if (distSq < deformRadiusSq && distSq > 1) {
-            const dist = Math.sqrt(distSq);
-            const factor = (1 - dist / deformRadius);
-            // Non-linear push + subtle vortex swirl
-            const force = factor * factor * (12 + mouseSpeed * 0.4);
-            const angle = Math.atan2(dy, dx);
-            const swirlAngle = angle + (dmx * 0.01);
-
-            v.vx += Math.cos(swirlAngle) * force * 0.09;
-            v.vy += Math.sin(swirlAngle) * force * 0.09;
-          }
-
-          // Propagate ripple wave displacement
-          for (let ri = 0; ri < ripples.length; ri++) {
-            const rip = ripples[ri];
-            const rdx = v.x - rip.x;
-            const rdy = v.y - rip.y;
-            const rDist = Math.sqrt(rdx * rdx + rdy * rdy);
-            const waveDist = Math.abs(rDist - rip.radius);
-
-            if (waveDist < 35 && rDist > 1) {
-              const waveFactor = Math.cos((waveDist / 35) * (Math.PI / 2));
-              const push = (rip.strength * rip.life * waveFactor) * 0.07;
-              v.vx += (rdx / rDist) * push;
-              v.vy += (rdy / rDist) * push;
-            }
-          }
-
-          // Hooke's Law spring back to rest position (ox, oy)
-          const fx = (v.ox - v.x) * springK;
-          const fy = (v.oy - v.y) * springK;
-
-          v.vx = (v.vx + fx) * damping;
-          v.vy = (v.vy + fy) * damping;
-
-          v.x += v.vx;
-          v.y += v.vy;
-        }
-      }
-
-      // 3. DRAW PHYSICAL LIQUID DEFORMED GRID LINES
-      // Vertical curved mesh lines
-      ctx.lineWidth = 1;
-      for (let c = 0; c < cols; c++) {
+        ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.moveTo(grid[c][0].x, grid[c][0].y);
-
-        for (let r = 1; r < rows; r++) {
-          const prev = grid[c][r - 1];
-          const curr = grid[c][r];
-          // Midpoint quadratic curve for buttery liquid curvature
-          const mx = (prev.x + curr.x) * 0.5;
-          const my = (prev.y + curr.y) * 0.5;
-          ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
-        }
-        ctx.lineTo(grid[c][rows - 1].x, grid[c][rows - 1].y);
-
-        // Calculate dynamic line luminosity based on proximity to cursor
-        const sampleV = grid[c][Math.floor(rows / 2)];
-        const distToCursor = Math.abs(sampleV.x - mouseX);
-        const nearAlpha = Math.max(0.04, Math.min(0.25, 1 - distToCursor / 400)) * alphaScale;
-        ctx.strokeStyle = `${colorBlue} ${nearAlpha})`;
-        ctx.stroke();
+        ctx.arc(ox, oy, orb.radius, 0, Math.PI * 2);
+        ctx.fill();
       }
 
-      // Horizontal curved mesh lines
-      for (let r = 0; r < rows; r++) {
-        ctx.beginPath();
-        ctx.moveTo(grid[0][r].x, grid[0][r].y);
-
-        for (let c = 1; c < cols; c++) {
-          const prev = grid[c - 1][r];
-          const curr = grid[c][r];
-          const mx = (prev.x + curr.x) * 0.5;
-          const my = (prev.y + curr.y) * 0.5;
-          ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
-        }
-        ctx.lineTo(grid[cols - 1][r].x, grid[cols - 1][r].y);
-
-        const sampleV = grid[Math.floor(cols / 2)][r];
-        const distToCursor = Math.abs(sampleV.y - mouseY);
-        const nearAlpha = Math.max(0.04, Math.min(0.25, 1 - distToCursor / 400)) * alphaScale;
-        ctx.strokeStyle = `${colorBlue} ${nearAlpha})`;
-        ctx.stroke();
-      }
-
-      // 4. DRAW EXPANDING RIPPLE WAVE SHOCKWAVES
-      for (let i = 0; i < ripples.length; i++) {
-        const rip = ripples[i];
-        const ripAlpha = Math.max(0, rip.life * 0.28 * alphaScale);
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `${colorBlue} ${ripAlpha})`;
-        ctx.lineWidth = 1.5;
-        ctx.setLineDash([6, 8]);
-        ctx.stroke();
-
-        // Lime-tinted inner echo
-        if (rip.radius > 20) {
-          ctx.beginPath();
-          ctx.arc(rip.x, rip.y, rip.radius * 0.82, 0, Math.PI * 2);
-          ctx.strokeStyle = `${colorLime} ${ripAlpha * 0.6})`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
-
-      // 5. DRAW LUMINOUS LIQUID RADIAL AURA AT CURSOR
-      const auraRadius = width < 768 ? 220 : 340;
-      const radialGlow = ctx.createRadialGradient(
+      // 2. SOFT CURSOR RADIAL LIGHT FIELD (Delicate, Ambient)
+      const cursorGlowRadius = width < 768 ? 200 : 300;
+      const cursorGrad = ctx.createRadialGradient(
         mouseX,
         mouseY,
         0,
         mouseX,
         mouseY,
-        auraRadius
+        cursorGlowRadius
       );
-      radialGlow.addColorStop(0, `${colorBlue} ${0.20 * alphaScale})`);
-      radialGlow.addColorStop(0.35, `${colorBlue} ${0.08 * alphaScale})`);
-      radialGlow.addColorStop(0.7, `${colorLime} ${0.02 * alphaScale})`);
-      radialGlow.addColorStop(1, 'rgba(8, 11, 18, 0)');
+      cursorGrad.addColorStop(0, `${blue} ${0.11 * alphaScale})`);
+      cursorGrad.addColorStop(0.45, `${blue} ${0.035 * alphaScale})`);
+      cursorGrad.addColorStop(0.75, `${lime} ${0.01 * alphaScale})`);
+      cursorGrad.addColorStop(1, 'rgba(8, 11, 18, 0)');
 
-      ctx.fillStyle = radialGlow;
+      ctx.fillStyle = cursorGrad;
       ctx.beginPath();
-      ctx.arc(mouseX, mouseY, auraRadius, 0, Math.PI * 2);
+      ctx.arc(mouseX, mouseY, cursorGlowRadius, 0, Math.PI * 2);
       ctx.fill();
 
-      // 6. DRAW PARTICLES WITH DYNAMIC FLUID REPULSION
-      const particleLensRadius = width < 768 ? 160 : 210;
+      // 3. SUBTLE SURFACE CONTOUR WOBBLE (Delicate, Soft Organic Lines)
+      const deformRadius = 180;
+      const deformRadiusSq = deformRadius * deformRadius;
+      const springK = 0.04;
+      const damping = 0.88;
+
+      for (let c = 0; c < waveCols; c++) {
+        for (let r = 0; r < waveRows; r++) {
+          const pt = wavePoints[c][r];
+          const dx = pt.x - mouseX;
+          const dy = pt.y - mouseY;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < deformRadiusSq && distSq > 1) {
+            const dist = Math.sqrt(distSq);
+            // Low, organic displacement: max ~8-12px
+            const factor = 1 - dist / deformRadius;
+            const push = factor * factor * (7 + mouseSpeed * 0.2);
+            const angle = Math.atan2(dy, dx);
+            pt.vx += Math.cos(angle) * push * 0.08;
+            pt.vy += Math.sin(angle) * push * 0.08;
+          }
+
+          // Spring return to rest
+          pt.vx = (pt.vx + (pt.ox - pt.x) * springK) * damping;
+          pt.vy = (pt.vy + (pt.oy - pt.y) * springK) * damping;
+
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+        }
+      }
+
+      // Draw very faint horizontal contour ribbons that bend with the liquid surface
+      ctx.lineWidth = 0.75;
+      for (let r = 1; r < waveRows - 1; r += 2) {
+        ctx.beginPath();
+        ctx.moveTo(wavePoints[0][r].x, wavePoints[0][r].y);
+        for (let c = 1; c < waveCols; c++) {
+          const prev = wavePoints[c - 1][r];
+          const curr = wavePoints[c][r];
+          const mx = (prev.x + curr.x) * 0.5;
+          const my = (prev.y + curr.y) * 0.5;
+          ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
+        }
+        ctx.strokeStyle = `${blue} ${0.035 * alphaScale})`;
+        ctx.stroke();
+      }
+
+      // 4. SOFT RIPPLES (Understated concentric waves)
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const rip = ripples[i];
+        rip.radius += rip.speed;
+        rip.opacity -= 0.0035;
+
+        if (rip.opacity <= 0 || rip.radius >= rip.maxRadius) {
+          ripples.splice(i, 1);
+          continue;
+        }
+
+        ctx.beginPath();
+        ctx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `${blue} ${rip.opacity})`;
+        ctx.lineWidth = 0.85;
+        ctx.stroke();
+      }
+
+      // 5. FINE PARTICLES & DELICATE NETWORK HAILINES
+      const particleRadius = 130;
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
+
+        // Soft cursor deflection
         const pdx = mouseX - p.x;
         const pdy = mouseY - p.y;
         const pDist = Math.hypot(pdx, pdy);
 
-        // Fluid repulsion
-        if (pDist < particleLensRadius && pDist > 0) {
-          const push = (1 - pDist / particleLensRadius) * (14 + mouseSpeed * 0.3);
+        if (pDist < particleRadius && pDist > 0) {
+          const push = (1 - pDist / particleRadius) * 6;
           const angle = Math.atan2(pdy, pdx);
-          p.vx -= Math.cos(angle) * push * 0.12;
-          p.vy -= Math.sin(angle) * push * 0.12;
+          p.vx -= Math.cos(angle) * push * 0.06;
+          p.vy -= Math.sin(angle) * push * 0.06;
         }
 
-        // Elastic return to base with slight Brownian motion
-        const pSpringX = (p.baseX - p.x) * 0.038;
-        const pSpringY = (p.baseY - p.y) * 0.038;
-        p.vx = (p.vx + pSpringX) * 0.85;
-        p.vy = (p.vy + pSpringY) * 0.85;
+        // Return to drift
+        p.vx = (p.vx + (p.baseX - p.x) * 0.02) * 0.88;
+        p.vy = (p.vy + (p.baseY - p.y) * 0.02) * 0.88;
 
         p.x += p.vx;
         p.y += p.vy;
 
-        const isNear = pDist < particleLensRadius;
-        const pAlpha = (isNear ? 0.9 : 0.22) * alphaScale;
-        const currentSize = isNear ? p.size * 1.5 : p.size;
-
+        // Draw particle dot
         ctx.beginPath();
-        ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
-
-        if (p.type === 'lime') {
-          ctx.fillStyle = `${colorLime} ${pAlpha})`;
-        } else if (p.type === 'orange') {
-          ctx.fillStyle = `${colorOrange} ${pAlpha})`;
-        } else {
-          ctx.fillStyle = `${colorBlue} ${pAlpha})`;
-        }
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `${p.color} ${p.alpha})`;
         ctx.fill();
 
-        // Connect neighboring particles near cursor to create neural web
-        if (isNear) {
-          for (let j = i + 1; j < Math.min(i + 4, particles.length); j++) {
+        // Connect neighboring particles near cursor with faint hairlines
+        if (pDist < particleRadius) {
+          for (let j = i + 1; j < Math.min(i + 3, particles.length); j++) {
             const p2 = particles[j];
-            const p2Dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-            if (p2Dist < 55) {
+            const dist2 = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if (dist2 < 70) {
               ctx.beginPath();
               ctx.moveTo(p.x, p.y);
               ctx.lineTo(p2.x, p2.y);
-              ctx.strokeStyle = `${colorBlue} ${(1 - p2Dist / 55) * 0.25 * alphaScale})`;
-              ctx.lineWidth = 1;
+              ctx.strokeStyle = `${blue} ${(1 - dist2 / 70) * 0.12 * alphaScale})`;
+              ctx.lineWidth = 0.65;
               ctx.stroke();
             }
-          }
-        }
-      }
-
-      // 7. GLOWING INTERSECTION NODES NEAR CURSOR
-      const nodeGlowRadius = 180;
-      for (let c = 0; c < cols; c++) {
-        for (let r = 0; r < rows; r++) {
-          const v = grid[c][r];
-          const dist = Math.hypot(v.x - mouseX, v.y - mouseY);
-          if (dist < nodeGlowRadius) {
-            const nodeAlpha = (1 - dist / nodeGlowRadius) * 0.55 * alphaScale;
-            ctx.beginPath();
-            ctx.arc(v.x, v.y, 1.8, 0, Math.PI * 2);
-            ctx.fillStyle = `${colorLime} ${nodeAlpha})`;
-            ctx.fill();
           }
         }
       }

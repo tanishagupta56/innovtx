@@ -84,11 +84,11 @@ export default async function HomePage() {
           items={[
             'TECHNEEDS IGDTUW',
             'LEARN. BUILD. EXPLORE. CONNECT.',
-            'INNOVORTEX ARENA',
-            'SSSC MENTORSHIP CADRE',
+            'INNOVORTEX HACKATHON',
+            'SSSC MENTORSHIP',
             '21-DAY CS SPRINT',
-            'SYSTEM ARCHITECTS',
-            'LIGHT FIELD ACTIVE',
+            'SOFTWARE ARCHITECTS',
+            'PEER-LED COMMUNITY',
           ]}
           speed={22}
           bordered={true}

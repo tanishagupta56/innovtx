@@ -53,10 +53,7 @@ export default function Preloader() {
           }}
           className="fixed inset-0 z-[99999] bg-[#080B12] flex flex-col justify-between p-8 sm:p-12 pointer-events-none select-none overflow-hidden"
         >
-          {/* Laser horizontal scanline */}
-          <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-electric-blue to-transparent shadow-[0_0_20px_#315EFF] animate-scanline pointer-events-none" />
-
-          {/* Top telemetry bar */}
+          {/* Top header bar */}
           <div className="flex justify-between items-center text-xs font-mono">
             <span className="text-electric-blue-light tracking-widest uppercase">
               TECHNEEDS IGDTUW // DIGITAL EXPERIENCE
@@ -105,11 +102,11 @@ export default function Preloader() {
             </motion.p>
           </div>
 
-          {/* Bottom telemetry footer */}
+          {/* Bottom status footer */}
           <div className="flex justify-between items-end text-xs font-mono border-t border-charcoal-border pt-4">
             <div className="space-y-1">
               <p className="text-slate-500">IGDTUW KASHMERE GATE, DELHI</p>
-              <p className="text-slate-400">STATUS: INITIALIZING LIGHT FIELD</p>
+              <p className="text-slate-400">STUDENT COMMUNITY PLATFORM</p>
             </div>
             <div className="text-right">
               <span className="text-4xl sm:text-6xl font-display font-black text-soft-white tracking-tighter">

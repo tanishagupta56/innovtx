@@ -8,23 +8,11 @@ import MagneticButton from './MagneticButton';
 export default function Hero() {
   return (
     <section className="relative min-h-screen w-full flex flex-col justify-between pt-28 pb-12 px-6 sm:px-12 overflow-hidden bg-transparent">
-      {/* Background radial energy field */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] bg-electric-blue/15 blur-[170px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-10 w-[400px] h-[400px] bg-lime-green/10 blur-[140px] pointer-events-none -z-10" />
+      {/* Background soft ambient light */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-electric-blue/10 blur-[160px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 left-10 w-[350px] h-[350px] bg-lime-green/5 blur-[140px] pointer-events-none -z-10" />
 
-      {/* Cyber Grid Lines Overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.04]"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(117, 230, 255, 0.4) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(49, 94, 255, 0.4) 1px, transparent 1px)
-          `,
-          backgroundSize: '80px 80px',
-        }}
-      />
-
-      {/* Top society status bar */}
+      {/* Top community bar */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -34,7 +22,7 @@ export default function Hero() {
         <div className="flex items-center gap-3">
           <span className="inline-block w-2 h-2 rounded-full bg-lime-green shadow-[0_0_8px_#B8D94C] animate-pulse" />
           <span className="text-lime-green font-bold uppercase tracking-wider">
-            SOCIETY OPS ONLINE
+            COMMUNITY ACTIVE
           </span>
           <span className="text-slate-500 hidden sm:inline">{'// IGDTUW KASHMERE GATE'}</span>
         </div>
@@ -42,7 +30,7 @@ export default function Hero() {
         <div className="flex items-center gap-6 text-slate-400">
           <span className="hidden md:inline">INDIRA GANDHI DELHI TECHNICAL UNIVERSITY FOR WOMEN</span>
           <span className="px-2.5 py-0.5 rounded bg-charcoal border border-charcoal-border text-lime-green text-[11px] font-mono">
-            V3.0 ACTIVE
+            DELHI
           </span>
         </div>
       </motion.div>
