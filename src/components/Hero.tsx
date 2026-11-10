@@ -1,149 +1,133 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+import HeroVisual from './HeroVisual';
+import MagneticButton from './MagneticButton';
+import SplitHeading from './SplitHeading';
 
 export default function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mql.matches);
-
-    if (mql.matches) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      setMousePos({
-        x: (e.clientX - rect.left) / rect.width,
-        y: (e.clientY - rect.top) / rect.height,
-      });
-    };
-
-    const el = containerRef.current;
-    el?.addEventListener('mousemove', handleMouseMove);
-    return () => el?.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   return (
-    <section
-      ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-    >
-      {/* Pointer-reactive gradient lighting */}
-      {!prefersReducedMotion && (
-        <div
-          className="absolute inset-0 pointer-events-none transition-opacity duration-1000"
-          style={{
-            background: `
-              radial-gradient(800px circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(21,88,201,0.12), transparent 50%),
-              radial-gradient(600px circle at ${mousePos.x * 80 + 20}% ${mousePos.y * 60 + 20}%, rgba(212,255,36,0.04), transparent 50%)
-            `,
-          }}
-        />
-      )}
+    <section className="relative min-h-screen w-full flex flex-col justify-between pt-28 pb-12 px-6 sm:px-12 overflow-hidden bg-midnight">
+      {/* Background radial energy field */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-cobalt/20 blur-[160px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 left-10 w-[350px] h-[350px] bg-lime/10 blur-[130px] pointer-events-none -z-10" />
 
-      {/* Background grid */}
-      <div className="absolute inset-0 opacity-[0.03]"
+      {/* Cyber Grid Lines Overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.05]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(21,88,201,0.3) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(21,88,201,0.3) 1px, transparent 1px)
+            linear-gradient(to right, rgba(21, 88, 201, 0.4) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(21, 88, 201, 0.4) 1px, transparent 1px)
           `,
           backgroundSize: '80px 80px',
         }}
       />
 
-      {/* Floating technical elements */}
-      {!prefersReducedMotion && (
-        <>
-          <motion.div
-            className="absolute top-1/4 left-[10%] w-px h-32 bg-gradient-to-b from-transparent via-cobalt/30 to-transparent"
-            animate={{ y: [0, 20, 0], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute top-1/3 right-[15%] w-2 h-2 border border-lime/30"
-            animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-          />
-          <motion.div
-            className="absolute bottom-1/3 left-[20%] w-20 h-px bg-gradient-to-r from-transparent via-cobalt/20 to-transparent"
-            animate={{ x: [0, 30, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute top-[60%] right-[8%] text-cobalt/10 font-mono text-xs"
-            animate={{ opacity: [0.1, 0.3, 0.1] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          >
-            {'<innovation />'}
-          </motion.div>
-        </>
-      )}
+      {/* Top telemetry bar */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="flex flex-wrap items-center justify-between gap-4 font-mono text-xs border-b border-cobalt/20 pb-4 z-10"
+      >
+        <div className="flex items-center gap-3">
+          <span className="inline-block w-2 h-2 rounded-full bg-lime shadow-[0_0_8px_#D4FF24] animate-pulse" />
+          <span className="text-lime font-bold uppercase tracking-wider">
+            SOCIETY OPS ONLINE
+          </span>
+          <span className="text-gray-500 hidden sm:inline">{'// BATCH 2024-2026'}</span>
+        </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <p className="text-cobalt-300 font-mono text-sm tracking-widest uppercase mb-6">
-            IGDTUW Technical Society
+        <div className="flex items-center gap-6 text-gray-400">
+          <span className="hidden md:inline">INDIRA GANDHI DELHI TECHNICAL UNIVERSITY FOR WOMEN</span>
+          <span className="tag-telemetry text-lime border-lime/40">v2.4 ACTIVE</span>
+        </div>
+      </motion.div>
+
+      {/* Hero Body Composition: Asymmetrical Editorial Layering */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto relative z-10 py-8">
+        {/* Left Column: Massive Editorial Typography & Narrative */}
+        <div className="lg:col-span-7 flex flex-col justify-center space-y-8">
+          <div className="inline-flex items-center gap-2">
+            <span className="tag-telemetry-lime">EST. IGDTUW DELHI</span>
+            <span className="font-mono text-xs text-gray-400 uppercase tracking-widest">
+              OFFICIAL TECHNICAL SOCIETY
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-white tracking-tight leading-[0.88]">
+              <span className="block text-white">IGNITING</span>
+              <span className="block text-transparent [-webkit-text-stroke:1.5px_#1558C9] hover:[-webkit-text-stroke:1.5px_#D4FF24] transition-all">
+                TECHNICAL
+              </span>
+              <span className="block text-white">
+                GENIUS<span className="text-lime">.</span>
+              </span>
+            </h1>
+          </div>
+
+          <p className="text-gray-300 font-body text-base sm:text-lg max-w-xl leading-relaxed">
+            The premier technology innovation collective at IGDTUW. We engineer competitive hackathons, architect distributed systems, and foster open engineering excellence among the nation&apos;s sharpest women developers.
           </p>
-        </motion.div>
 
-        <motion.h1
-          className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9]"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <span className="text-white">Tech</span>
-          <span className="text-lime">Needs</span>
-        </motion.h1>
+          {/* Action Hub */}
+          <div className="flex flex-wrap items-center gap-4 pt-2">
+            <MagneticButton href="/events" strength={25}>
+              <span className="btn-magnetic">
+                Explore Events &amp; Passes →
+              </span>
+            </MagneticButton>
 
-        <motion.p
-          className="mt-8 text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          Fostering innovation, coding proficiency, and problem-solving
-          at Indira Gandhi Delhi Technical University for Women.
-        </motion.p>
+            <MagneticButton href="/about" strength={20}>
+              <span className="btn-hollow">
+                Read Manifesto
+              </span>
+            </MagneticButton>
+          </div>
 
-        <motion.div
-          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-        >
-          <Link href="/events" className="btn-accent text-base px-8 py-4">
-            Explore Events
-          </Link>
-          <Link href="/about" className="btn-ghost text-base px-8 py-4">
-            Learn More
-          </Link>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        {!prefersReducedMotion && (
-          <motion.div
-            className="absolute bottom-12 left-1/2 -translate-x-1/2"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <div className="w-5 h-8 border border-cobalt/30 flex justify-center pt-1.5">
-              <div className="w-1 h-2 bg-cobalt/50" />
+          {/* Quick Stat Pill Rail */}
+          <div className="pt-6 border-t border-cobalt/20 grid grid-cols-3 gap-4 font-mono">
+            <div>
+              <p className="text-2xl sm:text-3xl font-display font-bold text-white">100%</p>
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">OPEN-SOURCE</p>
             </div>
-          </motion.div>
-        )}
+            <div>
+              <p className="text-2xl sm:text-3xl font-display font-bold text-lime">INNO-</p>
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">VORTEX FEST</p>
+            </div>
+            <div>
+              <p className="text-2xl sm:text-3xl font-display font-bold text-white">HMAC</p>
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">SECURED PASSES</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Interactive 3D Kinetic Hyper-Sphere Object */}
+        <div className="lg:col-span-5 relative w-full flex items-center justify-center">
+          <HeroVisual />
+        </div>
+      </div>
+
+      {/* Bottom Editorial Bar with Interactive Scroll Indicator */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs border-t border-cobalt/20 pt-4 z-10 text-gray-500">
+        <div className="flex items-center gap-4">
+          <span className="text-gray-400">COORDINATES:</span>
+          <span className="text-white">28°39&apos;55&quot; N 77°13&apos;57&quot; E</span>
+        </div>
+
+        {/* Reactive scroll indicator */}
+        <div className="flex items-center gap-3 text-gray-400">
+          <span className="uppercase tracking-widest text-[10px]">SCROLL TO EXPLORE ARCHIVE</span>
+          <div className="w-5 h-8 border border-cobalt/50 flex justify-center pt-1.5">
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-1 h-2 bg-lime"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

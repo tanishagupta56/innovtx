@@ -4,25 +4,25 @@ export const metadata = { title: 'Project Showcase — TechNeeds IGDTUW' };
 
 export default function ShowcasePage() {
   return (
-    <div className="pt-28 pb-20 px-6">
-      <div className="max-w-3xl mx-auto text-center">
-        <span className="font-mono text-xs px-2.5 py-1 bg-lime/10 text-lime border border-lime/30 uppercase">
-          Phase 2 // Feature
-        </span>
-        <h1 className="font-display text-4xl font-bold text-white mt-4 mb-4">
-          Project Showcase &amp; Moderation
+    <div className="pt-32 pb-24 px-6 sm:px-12 bg-midnight min-h-screen text-white flex items-center justify-center">
+      <div className="max-w-2xl mx-auto text-center space-y-8">
+        <span className="tag-telemetry-lime font-bold">PROJECT LABS // VAULT</span>
+        <h1 className="editorial-title text-5xl sm:text-7xl text-white">
+          INNOVATION <br />
+          <span className="text-lime">SHOWCASE.</span>
         </h1>
-        <p className="text-gray-400 text-base max-w-lg mx-auto mb-8">
-          A dedicated exhibition space where student hackathon submissions and verified engineering projects will be featured with community reviews.
+        <p className="text-gray-300 font-body text-base sm:text-lg leading-relaxed">
+          An interactive laboratory exhibiting peer-reviewed software projects, hackathon winning submissions, and open-source packages authored by IGDTUW students.
         </p>
-        <div className="card text-center py-10 max-w-md mx-auto">
-          <p className="text-xs font-mono text-gray-500 uppercase tracking-wider">Status</p>
-          <p className="font-display font-semibold text-white mt-1">Coming Soon</p>
-          <p className="text-xs text-gray-400 mt-2">Submission moderation and live demo sandbox will launch in Phase 2.</p>
+
+        <div className="p-8 border border-cobalt/25 bg-[#050816] font-mono text-xs text-gray-400 space-y-2 text-left">
+          <p className="text-lime font-bold">{'// FEATURE TELEMETRY'}</p>
+          <p>Submission moderation and interactive demo sandboxes are currently scheduled for Phase 2.</p>
         </div>
-        <div className="mt-8">
-          <Link href="/" className="btn-ghost text-xs py-2 px-4">
-            ← Return to Home
+
+        <div className="pt-4">
+          <Link href="/" className="btn-hollow font-mono text-xs uppercase">
+            ← Return to Overview
           </Link>
         </div>
       </div>

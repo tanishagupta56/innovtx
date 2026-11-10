@@ -23,75 +23,84 @@ function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md p-8 sm:p-10 border border-cobalt/30 bg-[#050917] relative shadow-[0_0_50px_rgba(21,88,201,0.2)]">
       <div className="text-center mb-8">
-        <Link href="/" className="font-display text-2xl font-bold">
-          <span className="text-white">Tech</span>
-          <span className="text-lime">Needs</span>
+        <Link href="/" className="inline-block group">
+          <span className="w-10 h-10 bg-[#0a1228] border border-cobalt/60 inline-flex items-center justify-center font-mono text-sm text-lime group-hover:border-lime group-hover:shadow-[0_0_15px_#D4FF24] transition-all mb-3">
+            TN
+          </span>
+          <h1 className="font-display text-3xl font-extrabold text-white tracking-tight">
+            STUDENT <span className="text-lime">PORTAL</span>
+          </h1>
         </Link>
-        <h1 className="font-display text-3xl font-bold text-white mt-6">Sign In</h1>
-        <p className="text-gray-500 mt-2">Welcome back to TechNeeds</p>
+        <p className="font-mono text-xs text-gray-400 mt-1 uppercase tracking-widest">
+          TECHNEEDS IGDTUW AUTHENTICATION
+        </p>
       </div>
 
-      <form action={handleSubmit} className="space-y-4">
+      <form action={handleSubmit} className="space-y-5">
         {error && (
-          <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-mono">
-            {error}
+          <div className="p-3 bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-mono">
+            [ACCESS ERROR] {error}
           </div>
         )}
 
         <div>
-          <label htmlFor="email" className="block text-sm text-gray-400 mb-1.5 font-mono">
-            Email
+          <label htmlFor="email" className="block text-xs font-mono text-gray-300 uppercase mb-2">
+            Student Email
           </label>
           <input
             id="email"
             name="email"
             type="email"
             required
-            className="input-field"
+            className="input-field font-mono text-xs"
             placeholder="you@igdtuw.ac.in"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm text-gray-400 mb-1.5 font-mono">
-            Password
+          <label htmlFor="password" className="block text-xs font-mono text-gray-300 uppercase mb-2">
+            Password Secret
           </label>
           <input
             id="password"
             name="password"
             type="password"
             required
-            className="input-field"
+            className="input-field font-mono text-xs"
             placeholder="••••••••"
           />
         </div>
 
-        <div className="flex justify-end">
-          <Link href="/forgot-password" className="text-xs text-cobalt-300 hover:text-cobalt-200">
+        <div className="flex justify-end font-mono text-xs">
+          <Link href="/forgot-password" className="text-cobalt-300 hover:text-lime">
             Forgot password?
           </Link>
         </div>
 
-        <button type="submit" disabled={loading} className="btn-primary w-full">
-          {loading ? 'Signing in...' : 'Sign In'}
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5"
+        >
+          {loading ? 'Authenticating...' : 'Sign In to Portal →'}
         </button>
       </form>
 
-      <p className="text-center text-gray-500 text-sm mt-6">
-        Don&apos;t have an account?{' '}
-        <Link href="/signup" className="text-cobalt-300 hover:text-lime transition-colors">
-          Sign up
+      <div className="mt-8 pt-6 border-t border-cobalt/15 text-center font-mono text-xs text-gray-400">
+        New student member?{' '}
+        <Link href="/signup" className="text-lime hover:underline font-bold">
+          Register Account
         </Link>
-      </p>
+      </div>
     </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="text-xs font-mono text-gray-500">Loading sign-in...</div>}>
+    <Suspense fallback={<div className="font-mono text-xs text-gray-500">Loading sign-in console...</div>}>
       <LoginForm />
     </Suspense>
   );

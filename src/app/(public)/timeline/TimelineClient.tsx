@@ -14,105 +14,137 @@ interface TimelineItem {
 }
 
 export default function TimelineClient({ items }: { items: TimelineItem[] }) {
-  const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-
   const years = Array.from(new Set(items.map((i) => i.year))).sort((a, b) => b - a);
-  const filtered = selectedYear === 'all' ? items : items.filter((i) => i.year === selectedYear);
+  const [activeYear, setActiveYear] = useState<number | 'all'>(years[0] || 'all');
+  const [expandedId, setExpandedId] = useState<string | null>(items[0]?.id || null);
+
+  const filtered = activeYear === 'all' ? items : items.filter((i) => i.year === activeYear);
 
   if (!items.length) {
     return (
-      <div className="card text-center py-16">
-        <p className="text-gray-400 text-base">To be added by admin.</p>
-        <p className="text-gray-600 text-xs mt-1 font-mono">
-          Historical milestones and event records are awaiting verification.
-        </p>
+      <div className="p-16 border border-cobalt/25 bg-[#050816] text-center font-mono">
+        <p className="text-gray-400 text-lg mb-2">Historical milestones are currently being verified.</p>
+        <p className="text-gray-600 text-xs">Official society timeline records to be added by admin.</p>
       </div>
     );
   }
 
   return (
-    <div>
-      {/* Year Navigation Bar */}
-      {years.length > 1 && (
-        <div className="flex flex-wrap gap-2 mb-10">
-          <button
-            onClick={() => setSelectedYear('all')}
-            className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider border transition-all ${
-              selectedYear === 'all'
-                ? 'bg-cobalt text-white border-cobalt'
-                : 'bg-transparent text-gray-400 border-cobalt/20 hover:text-white'
-            }`}
-          >
-            All Milestones
-          </button>
-          {years.map((yr) => (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      {/* Sticky Year Navigation & Progress Rail (Desktop) */}
+      <div className="lg:col-span-4 lg:sticky lg:top-36 space-y-6">
+        <div className="p-6 border border-cobalt/25 bg-[#050816]">
+          <span className="text-lime font-mono text-xs uppercase tracking-widest font-bold block mb-4">
+            CHRONOLOGICAL SCRUBBER
+          </span>
+
+          <div className="flex lg:flex-col gap-2 flex-wrap">
             <button
-              key={yr}
-              onClick={() => setSelectedYear(yr)}
-              className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider border transition-all ${
-                selectedYear === yr
-                  ? 'bg-cobalt text-white border-cobalt'
-                  : 'bg-transparent text-gray-400 border-cobalt/20 hover:text-white'
+              onClick={() => setActiveYear('all')}
+              className={`text-left px-4 py-2.5 font-mono text-xs uppercase tracking-wider border transition-all ${
+                activeYear === 'all'
+                  ? 'bg-lime text-midnight border-lime font-bold shadow-[0_0_15px_rgba(212,255,36,0.3)]'
+                  : 'border-cobalt/20 text-gray-400 hover:text-white hover:border-cobalt'
               }`}
             >
-              {yr}
+              All Milestones ({items.length})
             </button>
-          ))}
-        </div>
-      )}
 
-      {/* Timeline Stream with animated vertical progress line */}
-      <div className="relative pl-8 border-l border-cobalt/30 space-y-8">
-        {filtered.map((item, idx) => {
-          const isExpanded = expandedId === item.id;
-          return (
-            <div key={item.id} className="relative group">
-              {/* Timeline Node Point */}
-              <div className="absolute -left-[39px] top-1.5 w-3.5 h-3.5 bg-midnight border-2 border-lime group-hover:bg-lime transition-all" />
-
-              <div
-                onClick={() => setExpandedId(isExpanded ? null : item.id)}
-                className="card cursor-pointer border-cobalt/20 hover:border-cobalt/50 transition-all"
+            {years.map((yr) => (
+              <button
+                key={yr}
+                onClick={() => setActiveYear(yr)}
+                className={`text-left px-4 py-2.5 font-mono text-xs uppercase tracking-wider border transition-all flex items-center justify-between ${
+                  activeYear === yr
+                    ? 'bg-cobalt text-white border-cobalt-bright font-bold shadow-[0_0_15px_rgba(21,88,201,0.4)]'
+                    : 'border-cobalt/20 text-gray-400 hover:text-white hover:border-cobalt'
+                }`}
               >
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono text-lime bg-lime/10 px-2 py-0.5 border border-lime/30">
-                      {formatDate(item.date)}
-                    </span>
-                    {item.category && (
-                      <span className="text-xs font-mono text-gray-400 uppercase">
-                        {'// ' + item.category}
+                <span>Year {yr}</span>
+                <span className="text-[10px] opacity-70">
+                  {items.filter((i) => i.year === yr).length} entries
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Telemetry info */}
+        <div className="p-6 border border-cobalt/20 bg-[#040712] font-mono text-xs text-gray-500 hidden lg:block space-y-2">
+          <p className="text-lime uppercase font-bold">{'// ARCHIVE VERIFICATION'}</p>
+          <p>Chronological records indexed by society executive tenure.</p>
+          <p className="text-gray-600">STATE: LIVE SYNCHRONIZED</p>
+        </div>
+      </div>
+
+      {/* Main Timeline Stream */}
+      <div className="lg:col-span-8 relative">
+        {/* Animated Electric Progress Line */}
+        <div className="absolute left-4 top-2 bottom-2 w-[2px] bg-gradient-to-b from-lime via-cobalt to-transparent shadow-[0_0_10px_#1558C9]" />
+
+        <div className="space-y-8 pl-12">
+          {filtered.map((item, idx) => {
+            const isExpanded = expandedId === item.id;
+            return (
+              <div key={item.id} className="relative group">
+                {/* Glowing Node Pulse */}
+                <div
+                  className={`absolute -left-[45px] top-6 w-5 h-5 rounded-none border-2 transition-all ${
+                    isExpanded
+                      ? 'bg-lime border-lime shadow-[0_0_15px_#D4FF24] rotate-45 scale-110'
+                      : 'bg-midnight border-cobalt group-hover:border-lime group-hover:rotate-45'
+                  }`}
+                />
+
+                {/* Milestone Content Card */}
+                <div
+                  onClick={() => setExpandedId(isExpanded ? null : item.id)}
+                  className={`p-8 border cursor-pointer transition-all duration-300 relative overflow-hidden ${
+                    isExpanded
+                      ? 'border-lime/60 bg-[#060a1d] shadow-[0_0_30px_rgba(21,88,201,0.2)]'
+                      : 'border-cobalt/25 bg-[#050816] hover:border-cobalt/60'
+                  }`}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="tag-telemetry-lime font-bold">
+                        {formatDate(item.date)}
                       </span>
-                    )}
+                      {item.category && (
+                        <span className="font-mono text-xs text-gray-400 uppercase">
+                          {'// ' + item.category}
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-mono text-xs text-cobalt-300">
+                      {isExpanded ? '[-] CONTRACT' : '[+] EXPAND'}
+                    </span>
                   </div>
-                  <span className="text-cobalt-300 font-mono text-sm">
-                    {isExpanded ? '[-]' : '[+]'}
-                  </span>
+
+                  <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-white group-hover:text-lime transition-colors">
+                    {item.title}
+                  </h3>
+
+                  <AnimatePresence>
+                    {isExpanded && item.description && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.35, ease: 'easeOut' }}
+                        className="overflow-hidden"
+                      >
+                        <div className="mt-4 pt-4 border-t border-cobalt/20 text-gray-300 font-body text-base leading-relaxed whitespace-pre-wrap">
+                          {item.description}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-
-                <h3 className="font-display font-bold text-white text-lg mt-2">
-                  {item.title}
-                </h3>
-
-                <AnimatePresence>
-                  {isExpanded && item.description && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <p className="mt-3 text-sm text-gray-300 font-body leading-relaxed whitespace-pre-wrap pt-3 border-t border-cobalt/15">
-                        {item.description}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

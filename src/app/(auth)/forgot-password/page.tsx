@@ -20,39 +20,61 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md p-8 sm:p-10 border border-cobalt/30 bg-[#050917] relative shadow-[0_0_50px_rgba(21,88,201,0.2)]">
       <div className="text-center mb-8">
-        <Link href="/" className="font-display text-2xl font-bold">
-          <span className="text-white">Tech</span>
-          <span className="text-lime">Needs</span>
+        <Link href="/" className="inline-block group">
+          <span className="w-10 h-10 bg-[#0a1228] border border-cobalt/60 inline-flex items-center justify-center font-mono text-sm text-lime group-hover:border-lime group-hover:shadow-[0_0_15px_#D4FF24] transition-all mb-3">
+            TN
+          </span>
+          <h1 className="font-display text-3xl font-extrabold text-white tracking-tight">
+            RESET <span className="text-lime">SECRET</span>
+          </h1>
         </Link>
-        <h1 className="font-display text-3xl font-bold text-white mt-6">Reset Password</h1>
-        <p className="text-gray-500 mt-2">We&apos;ll send you a reset link</p>
+        <p className="font-mono text-xs text-gray-400 mt-1 uppercase tracking-widest">
+          PASSWORD RECOVERY PROTOCOL
+        </p>
       </div>
 
       <form action={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>
+          <div className="p-3 bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-mono">
+            [ERROR] {error}
+          </div>
         )}
         {success && (
-          <div className="p-3 bg-lime/10 border border-lime/20 text-lime text-sm">{success}</div>
+          <div className="p-3 bg-lime/10 border border-lime/30 text-lime text-xs font-mono">
+            [LINK DISPATCHED] {success}
+          </div>
         )}
 
         <div>
-          <label htmlFor="email" className="block text-sm text-gray-400 mb-1.5">Email</label>
-          <input id="email" name="email" type="email" required className="input-field" placeholder="you@igdtuw.ac.in" />
+          <label htmlFor="email" className="block text-xs font-mono text-gray-300 uppercase mb-2">
+            Registered Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            className="input-field font-mono text-xs"
+            placeholder="you@igdtuw.ac.in"
+          />
         </div>
 
-        <button type="submit" disabled={loading} className="btn-primary w-full">
-          {loading ? 'Sending...' : 'Send Reset Link'}
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 mt-2"
+        >
+          {loading ? 'Transmitting Link...' : 'Send Reset Link →'}
         </button>
       </form>
 
-      <p className="text-center text-gray-500 text-sm mt-6">
-        <Link href="/login" className="text-cobalt-300 hover:text-lime transition-colors">
-          ← Back to sign in
+      <div className="mt-8 pt-6 border-t border-cobalt/15 text-center font-mono text-xs">
+        <Link href="/login" className="text-gray-400 hover:text-lime">
+          ← Return to Student Sign In
         </Link>
-      </p>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import ResourcesClient from './ResourcesClient';
 
-export const metadata = { title: 'TechBoard Resources — TechNeeds IGDTUW' };
+export const metadata = { title: 'TechBoard Learning Vault — TechNeeds IGDTUW' };
 
 export default async function ResourcesPage({
   searchParams,
@@ -31,15 +31,24 @@ export default async function ResourcesPage({
   const { data: resources } = await query;
 
   return (
-    <div className="pt-28 pb-20 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
-          <p className="text-cobalt-300 font-mono text-sm tracking-widest uppercase mb-3">
-            Knowledge Repository
-          </p>
-          <h1 className="section-heading text-white">TechBoard Resources</h1>
-          <p className="text-gray-400 mt-3 max-w-2xl">
-            Curated roadmaps, documentation, open-source kits, and learning paths compiled by society leads.
+    <div className="pt-32 pb-24 px-6 sm:px-12 bg-midnight min-h-screen text-white">
+      <div className="max-w-7xl mx-auto space-y-12">
+        {/* Editorial Header */}
+        <div className="border-b border-cobalt/25 pb-12">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="tag-telemetry-lime">{'KNOWLEDGE // REPOSITORY'}</span>
+            <span className="font-mono text-xs text-gray-500 uppercase tracking-widest">
+              {'// CURATED BY SOCIETY LEADS'}
+            </span>
+          </div>
+
+          <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-white tracking-tight">
+            TECHBOARD <br />
+            <span className="text-lime">RESOURCES.</span>
+          </h1>
+
+          <p className="mt-4 text-gray-300 font-body text-base sm:text-lg max-w-2xl leading-relaxed">
+            Curated roadmaps, production architectures, Web3 protocols, and system design archives compiled for IGDTUW developers.
           </p>
         </div>
 

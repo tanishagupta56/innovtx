@@ -23,54 +23,91 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md p-8 sm:p-10 border border-cobalt/30 bg-[#050917] relative shadow-[0_0_50px_rgba(21,88,201,0.2)]">
       <div className="text-center mb-8">
-        <Link href="/" className="font-display text-2xl font-bold">
-          <span className="text-white">Tech</span>
-          <span className="text-lime">Needs</span>
+        <Link href="/" className="inline-block group">
+          <span className="w-10 h-10 bg-[#0a1228] border border-cobalt/60 inline-flex items-center justify-center font-mono text-sm text-lime group-hover:border-lime group-hover:shadow-[0_0_15px_#D4FF24] transition-all mb-3">
+            TN
+          </span>
+          <h1 className="font-display text-3xl font-extrabold text-white tracking-tight">
+            JOIN <span className="text-lime">COLLECTIVE</span>
+          </h1>
         </Link>
-        <h1 className="font-display text-3xl font-bold text-white mt-6">Create Account</h1>
-        <p className="text-gray-500 mt-2">Join TechNeeds IGDTUW</p>
+        <p className="font-mono text-xs text-gray-400 mt-1 uppercase tracking-widest">
+          TECHNEEDS STUDENT REGISTRATION
+        </p>
       </div>
 
       <form action={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-            {error}
+          <div className="p-3 bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-mono">
+            [ERROR] {error}
           </div>
         )}
         {success && (
-          <div className="p-3 bg-lime/10 border border-lime/20 text-lime text-sm">
-            {success}
+          <div className="p-3 bg-lime/10 border border-lime/30 text-lime text-xs font-mono">
+            [VERIFICATION SENT] {success}
           </div>
         )}
 
         <div>
-          <label htmlFor="fullName" className="block text-sm text-gray-400 mb-1.5">Full Name</label>
-          <input id="fullName" name="fullName" type="text" required className="input-field" placeholder="Your full name" />
+          <label htmlFor="fullName" className="block text-xs font-mono text-gray-300 uppercase mb-1.5">
+            Full Name
+          </label>
+          <input
+            id="fullName"
+            name="fullName"
+            type="text"
+            required
+            className="input-field font-mono text-xs"
+            placeholder="e.g. Ananya Sharma"
+          />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm text-gray-400 mb-1.5">Email</label>
-          <input id="email" name="email" type="email" required className="input-field" placeholder="you@igdtuw.ac.in" />
+          <label htmlFor="email" className="block text-xs font-mono text-gray-300 uppercase mb-1.5">
+            Student Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            className="input-field font-mono text-xs"
+            placeholder="you@igdtuw.ac.in"
+          />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm text-gray-400 mb-1.5">Password</label>
-          <input id="password" name="password" type="password" required minLength={8} className="input-field" placeholder="Min. 8 characters" />
+          <label htmlFor="password" className="block text-xs font-mono text-gray-300 uppercase mb-1.5">
+            Security Password (Min 8 Characters)
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            minLength={8}
+            className="input-field font-mono text-xs"
+            placeholder="••••••••••••"
+          />
         </div>
 
-        <button type="submit" disabled={loading} className="btn-primary w-full">
-          {loading ? 'Creating account...' : 'Create Account'}
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 mt-2"
+        >
+          {loading ? 'Creating Member Pass...' : 'Create Account →'}
         </button>
       </form>
 
-      <p className="text-center text-gray-500 text-sm mt-6">
-        Already have an account?{' '}
-        <Link href="/login" className="text-cobalt-300 hover:text-lime transition-colors">
-          Sign in
+      <div className="mt-8 pt-6 border-t border-cobalt/15 text-center font-mono text-xs text-gray-400">
+        Already registered?{' '}
+        <Link href="/login" className="text-lime hover:underline font-bold">
+          Sign In
         </Link>
-      </p>
+      </div>
     </div>
   );
 }

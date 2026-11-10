@@ -5,7 +5,7 @@ Official technical society web platform for Indira Gandhi Delhi Technical Univer
 ## AGENT HANDOFF
 
 ### STATUS
-P0 (7/7 complete), P1 (5/5 complete), P2 (placeholders ready) — Build & Typecheck passing.
+Awwwards-level visual overhaul complete on feat/visual-redesign — Build & Typecheck passing with 0 errors.
 
 ### AGENT RULES
 - Single agent. No parallel agents. No browser automation except one final smoke test.
@@ -17,7 +17,7 @@ P0 (7/7 complete), P1 (5/5 complete), P2 (placeholders ready) — Build & Typech
 
 ### STACK & COMMANDS
 - Stack: Next.js 14 App Router, TypeScript, Tailwind CSS, Supabase (@supabase/ssr), Zod, GSAP + Lenis, Framer Motion, cmdk, QRCode, html5-qrcode.
-- Dev: `npm run dev` | Build: `npm run build` | Lint: `npm run lint` | Typecheck: `npm run typecheck`
+- Dev: `npm run dev` (or `npm.cmd run dev` on Windows) | Build: `npm run build` | Lint: `npm run lint` | Typecheck: `npm run typecheck`
 - Seed admin: `npx tsx scripts/seed.ts` | Migrations: apply `supabase/migrations/0001_init.sql`
 
 ### REQUIRED ENV VARS
@@ -27,7 +27,7 @@ P0 (7/7 complete), P1 (5/5 complete), P2 (placeholders ready) — Build & Typech
 - `docs/`: Research dossiers and gap summaries.
 - `scripts/`: Operational scripts including admin bootstrap seed (`scripts/seed.ts`).
 - `src/app/`: Next.js 14 App Router routes (public, auth, student dashboard, admin console, API).
-- `src/components/`: UI modules (Navbar, Footer, Hero, Preloader, MotionProvider, CommandPalette).
+- `src/components/`: Kinetic UI modules (Navbar, Footer, Hero, HeroVisual, Preloader, MotionProvider, CustomCursor, SplitHeading, MagneticButton, InfiniteMarquee, ScrollReveal, CommandPalette).
 - `src/lib/`: Supabase clients (client, server, admin, middleware), crypto QR helpers, Zod schemas, utils.
 - `supabase/migrations/`: SQL migration files with zero-trust RLS policies.
 
@@ -47,25 +47,21 @@ P0 (7/7 complete), P1 (5/5 complete), P2 (placeholders ready) — Build & Typech
 - `audit_logs`: Governance; admin read & insert audit trail.
 
 ### CHECKLIST
-- [x] P0.1 Migration & RLS: `supabase/migrations/0001_init.sql`
-- [x] P0.2 Auth & Middleware: `src/app/(auth)/*`, `src/middleware.ts`, `src/lib/supabase/*`, `scripts/seed.ts`
-- [x] P0.3 Public Home & Events: `src/app/(public)/page.tsx`, `src/app/(public)/events/*`, `src/app/(public)/faq/*`
-- [x] P0.4 Cryptographic QR Passes: `src/lib/qr.ts`, `src/app/api/events/register/route.ts`, `src/app/dashboard/registrations/*`
-- [x] P0.5 Admin Event Ops & Scanner: `src/app/admin/events/*`, `src/app/api/admin/events/*`, scanner + CSV export
-- [x] P0.6 Support Tickets & Triage: `src/app/dashboard/tickets/*`, `src/app/admin/tickets/*`, `src/app/api/tickets/*`
-- [x] P0.7 Opportunities Portal: `src/app/(public)/opportunities/page.tsx`, `src/app/admin/opportunities/*`
-- [x] P1 Team, Timeline, TechBoard: `src/app/(public)/team/*`, `src/app/(public)/timeline/*`, `src/app/(public)/resources/*`
-- [x] P1 Cert Verify & CmdK: `src/app/(public)/verify/[id]/*`, `src/components/CommandPalette.tsx`, `src/app/admin/audit-logs/*`
-- [x] P2 Placeholders: `src/app/(public)/recruitment/*`, `/showcase/*`, `/mentorship/*`, `/dashboard/notifications/*`
+- [x] Visual Redesign: Cinematic 3D interactive procedural canvas orb with inertia (`src/components/HeroVisual.tsx`)
+- [x] Motion Engine: Lenis + GSAP ScrollTrigger synchronized ticker (`src/components/MotionProvider.tsx`)
+- [x] Custom Cursor: Desktop smooth trailing ring + radial spotlight (`src/components/CustomCursor.tsx`)
+- [x] Preloader: Scanning laser line, HUD telemetry counter (0-100%), geometric SVG reveal (`src/components/Preloader.tsx`)
+- [x] Kinetic Components: MagneticButton, InfiniteMarquee, SplitHeading, ScrollReveal
+- [x] Redesigned Pages: Home, About/Manifesto, Events & Passes, Timeline, Team, Resources, Opportunities, FAQ, Verify, Recruitment
+- [x] P0/P1/P2 Functionality Preserved: Auth, HMAC pass booking, check-in scanner, ticket threads, command palette intact.
 
 ### NEXT TASK
-Execute migration `0001_init.sql` against production Supabase project and provide real credentials in `.env.local`.
+Connect production Supabase credentials in .env.local to link live student/admin database records.
 
 ### DECISIONS
-- Fixed color tokens: Midnight `#030407`, Cobalt Blue `#1558C9`, Acid Lime `#D4FF24`.
-- QR security: Random 24-byte entropy + HMAC-SHA256 signature stored as SHA-256 hash; no PII encoded in QR.
-- Rate limiting: In-memory IP sliding window on auth and submission routes.
-- Preloader: SVG logo animation runs once per session (<1.4s) with prefers-reduced-motion bypass.
+- Procedural 3D Canvas visual in place of Three.js: 60 FPS performance, lightweight bundle, zero external 3D dependencies.
+- Strict Palette adherence: Midnight Black `#030407`, Electric Cobalt `#1558C9`, Acid Lime `#D4FF24`.
+- Replaced all repetitive 3-column card layouts with asymmetric editorial magazine spreads, numbered telemetry blocks, and full-bleed showcases.
 
 ### KNOWN ISSUES & NEEDS ADMIN VERIFICATION
 - Founding date, complete team roster, and faculty coordinators need admin verification (marked "To be added by admin").
@@ -75,5 +71,5 @@ Execute migration `0001_init.sql` against production Supabase project and provid
 ### TEST STATUS
 - TypeScript typecheck (`tsc --noEmit`): Passed with 0 errors.
 - ESLint (`next lint`): Passed with 0 errors.
-- Production build (`next build`): All 35 routes compiled and prerendered successfully.
-- Crypto test: Valid token HMAC verification passes; tampered token rejected.
+- Production build (`next build`): All 35 routes compiled and prerendered successfully with code 0.
+- Live server smoke test: `http://localhost:3000/` and subroutes verified with HTTP 200 responses.
