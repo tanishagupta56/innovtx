@@ -59,7 +59,7 @@ export async function sendLoginOtp(email: string) {
     return { error: result.error, cooldownRemaining: result.cooldownRemaining };
   }
 
-  return { success: result.message };
+  return { success: result.message, devCode: result.devCode };
 }
 
 /**
@@ -111,6 +111,7 @@ export async function signup(formData: FormData) {
     needsOtp: true,
     email,
     fullName,
+    devCode: otpRes.devCode,
   };
 }
 

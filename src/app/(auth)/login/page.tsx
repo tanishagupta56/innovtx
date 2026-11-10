@@ -10,6 +10,7 @@ function LoginForm() {
   const [step, setStep] = useState<'email' | 'otp'>('email');
   const [email, setEmail] = useState('');
   const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '']);
+  const [devCode, setDevCode] = useState('');
   const [countdown, setCountdown] = useState(0);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -64,6 +65,9 @@ function LoginForm() {
     } else {
       setStep('otp');
       setMessage(res.success || `A 6-digit access code has been dispatched to ${cleanEmail}`);
+      if (res.devCode) {
+        setDevCode(res.devCode);
+      }
       setCountdown(45);
       setOtpDigits(['', '', '', '', '', '']);
     }
@@ -161,6 +165,9 @@ function LoginForm() {
       setError(res.error);
     } else {
       setMessage(`A fresh 6-digit code has been dispatched to ${email}`);
+      if (res.devCode) {
+        setDevCode(res.devCode);
+      }
       setCountdown(45);
       setOtpDigits(['', '', '', '', '', '']);
       inputRefs.current[0]?.focus();
@@ -261,6 +268,30 @@ function LoginForm() {
             <div className="text-[11px] font-mono text-slate-400 mb-4">
               Sent to: <strong className="text-soft-white">{email}</strong>
             </div>
+
+            {/* In-App One-Click Access Code Helper */}
+            {devCode && (
+              <div className="p-3 mb-4 bg-electric-blue/10 border border-electric-blue/40 rounded-xl flex items-center justify-between text-xs font-mono shadow-sm">
+                <div className="flex items-center gap-2 text-electric-blue">
+                  <span className="w-2 h-2 rounded-full bg-electric-blue animate-pulse" />
+                  <span className="text-muted-text">Security Code:</span>
+                  <span className="text-soft-white font-bold tracking-widest text-sm bg-charcoal/80 px-2 py-0.5 rounded border border-charcoal-border">
+                    {devCode}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const digits = devCode.split('');
+                    setOtpDigits(digits);
+                    submitOtp(devCode);
+                  }}
+                  className="px-2.5 py-1 bg-lime-green/20 hover:bg-lime-green/30 text-lime-green border border-lime-green/40 rounded text-[11px] font-bold transition-all flex items-center gap-1 uppercase tracking-wider"
+                >
+                  <span>⚡ Autofill & Login</span>
+                </button>
+              </div>
+            )}
 
             {/* 6 Individual Input Boxes */}
             <div className="flex items-center justify-between gap-2 sm:gap-2.5 my-4">

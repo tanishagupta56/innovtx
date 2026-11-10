@@ -123,6 +123,59 @@ export async function getStudentSession(): Promise<UserSession | null> {
 }
 
 /**
+ * Universal authenticated user retriever:
+ * Checks signed session cookie first, then falls back to Supabase auth user
+ */
+export async function getAuthenticatedUser(): Promise<{
+  id: string;
+  email: string;
+  name: string;
+  role: 'student' | 'admin' | 'super_admin';
+} | null> {
+  // 1. Check custom signed cookie session
+  const session = await getStudentSession();
+  if (session) {
+    return {
+      id: session.userId,
+      email: session.email,
+      name: session.name,
+      role: session.role,
+    };
+  }
+
+  // 2. Check Supabase auth
+  try {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      let role: 'student' | 'admin' | 'super_admin' = 'student';
+      let name = user.email ? user.email.split('@')[0] : 'Student';
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, role')
+          .eq('id', user.id)
+          .maybeSingle();
+        if (profile?.role) role = profile.role as any;
+        if (profile?.full_name) name = profile.full_name;
+      } catch {
+        // continue
+      }
+      return {
+        id: user.id,
+        email: user.email || '',
+        name,
+        role,
+      };
+    }
+  } catch {
+    // continue
+  }
+
+  return null;
+}
+
+/**
  * Destroys the current session
  */
 export async function destroyStudentSession(): Promise<void> {

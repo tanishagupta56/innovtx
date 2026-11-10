@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { getAuthenticatedUser } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import TicketForm from './TicketForm';
@@ -13,15 +14,21 @@ const statusColors: Record<string, string> = {
 };
 
 export default async function TicketsPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getAuthenticatedUser();
   if (!user) redirect('/login');
 
-  const { data: tickets } = await supabase
-    .from('tickets')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+  let tickets: any[] = [];
+  try {
+    const supabase = createClient();
+    const { data } = await supabase
+      .from('tickets')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    if (data) tickets = data;
+  } catch {
+    tickets = [];
+  }
 
   return (
     <div>

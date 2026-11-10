@@ -1,14 +1,15 @@
 import { createClient } from '@/lib/supabase/server';
+import { getAuthenticatedUser } from '@/lib/auth/session';
 import { generateSignedQRToken, hashToken } from '@/lib/qr';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  const supabase = createClient();
-
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getAuthenticatedUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
   }
+
+  const supabase = createClient();
 
   const body = await request.json();
   const { eventId } = body;

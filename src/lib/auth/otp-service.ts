@@ -42,6 +42,7 @@ export async function requestEmailOtp(rawEmail: string): Promise<{
   message?: string;
   error?: string;
   cooldownRemaining?: number;
+  devCode?: string;
 }> {
   const email = rawEmail.trim().toLowerCase();
 
@@ -125,6 +126,7 @@ export async function requestEmailOtp(rawEmail: string): Promise<{
     return {
       success: true,
       message: `A 6-digit verification code has been generated for ${email}. (Expires in 5 minutes)`,
+      devCode: otpCode,
     };
   }
 }

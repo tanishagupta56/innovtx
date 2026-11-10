@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { getAuthenticatedUser } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import QRDisplay from './QRDisplay';
@@ -6,19 +7,25 @@ import QRDisplay from './QRDisplay';
 export const metadata = { title: 'My Registrations — TechNeeds' };
 
 export default async function RegistrationsPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getAuthenticatedUser();
   if (!user) redirect('/login');
 
-  const { data: registrations } = await supabase
-    .from('event_registrations')
-    .select(`
-      id, qr_token_hash, registered_at,
-      events:event_id (id, title, slug, start_date, end_date, venue),
-      attendance:attendance (id, checked_in_at)
-    `)
-    .eq('user_id', user.id)
-    .order('registered_at', { ascending: false });
+  let registrations: any[] = [];
+  try {
+    const supabase = createClient();
+    const { data } = await supabase
+      .from('event_registrations')
+      .select(`
+        id, qr_token_hash, registered_at,
+        events:event_id (id, title, slug, start_date, end_date, venue),
+        attendance:attendance (id, checked_in_at)
+      `)
+      .eq('user_id', user.id)
+      .order('registered_at', { ascending: false });
+    if (data) registrations = data;
+  } catch {
+    registrations = [];
+  }
 
   return (
     <div>
