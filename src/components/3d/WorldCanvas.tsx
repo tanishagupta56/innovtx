@@ -55,22 +55,22 @@ export function WorldCanvas() {
           {/* Lighting Environment */}
           <ambientLight intensity={0.4} />
           
-          {/* Electric Cobalt Blue Primary Key Light */}
-          <pointLight position={[5, 4, 4]} intensity={25} color="#1558C9" distance={20} />
-          <pointLight position={[-5, -3, 3]} intensity={18} color="#0d3b8c" distance={18} />
+          {/* Electric Blue Primary Key Light */}
+          <pointLight position={[5, 4, 4]} intensity={25} color="#315EFF" distance={20} />
+          <pointLight position={[-5, -3, 3]} intensity={18} color="#1E44D6" distance={18} />
 
-          {/* Acid Lime Accent Rim Light */}
+          {/* Ice Cyan Accent Rim Light */}
           <spotLight
             position={[0, 6, 2]}
             intensity={35}
-            color="#D4FF24"
+            color="#75E6FF"
             angle={0.6}
             penumbra={0.8}
             distance={15}
           />
 
           {/* Fill Light from below */}
-          <pointLight position={[0, -5, -2]} intensity={10} color="#38bdf8" distance={15} />
+          <pointLight position={[0, -5, -2]} intensity={12} color="#75E6FF" distance={15} />
 
           {/* Scene Camera Controller */}
           <SceneController scrollProgress={scrollProgress} pointerPos={pointerPos} />

@@ -1,145 +1,181 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { VERIFIED_TEAM_MEMBERS } from '@/data/teamData';
 
-export const metadata = { title: 'Team & Alumni Roster — TechNeeds IGDTUW' };
+export const metadata = {
+  title: 'Leadership & Mentors — TechNeeds IGDTUW',
+  description: 'Meet the executive leads, cohort mentors, faculty advisors, and alumni of TechNeeds IGDTUW.',
+};
 
 export default async function TeamPage({
   searchParams,
 }: {
-  searchParams: { year?: string; tab?: string };
+  searchParams: { year?: string; tab?: string; category?: string };
 }) {
-  const supabase = createClient();
   const isAlumni = searchParams.tab === 'alumni';
+  let dbMembers: any[] = [];
 
-  let query = supabase
-    .from('team_members')
-    .select('*')
-    .eq('is_published', true)
-    .eq('is_alumni', isAlumni)
-    .order('display_order', { ascending: true });
+  try {
+    const supabase = createClient();
+    let query = supabase
+      .from('team_members')
+      .select('*')
+      .eq('is_published', true)
+      .eq('is_alumni', isAlumni)
+      .order('display_order', { ascending: true });
 
-  if (searchParams.year) {
-    query = query.eq('year', parseInt(searchParams.year));
+    if (searchParams.year) {
+      query = query.eq('year', parseInt(searchParams.year));
+    }
+
+    const { data } = await query;
+    if (data && data.length > 0) {
+      dbMembers = data;
+    }
+  } catch {
+    // fallback gracefully
   }
 
-  const { data: members } = await query;
+  const allMembers = dbMembers.length > 0 ? dbMembers : VERIFIED_TEAM_MEMBERS;
+
+  const filteredMembers = allMembers.filter((m) => {
+    const matchesTab = isAlumni ? m.is_alumni : !m.is_alumni;
+    const matchesYear = !searchParams.year || m.year === parseInt(searchParams.year);
+    const matchesCategory = !searchParams.category || m.category === searchParams.category;
+    return matchesTab && matchesYear && matchesCategory;
+  });
+
+  const years = [2026, 2025, 2024];
 
   return (
-    <div className="pt-32 pb-24 px-6 sm:px-12 bg-midnight min-h-screen text-white">
+    <div className="pt-32 pb-24 px-6 sm:px-12 bg-deep-ink min-h-screen text-soft-white relative z-10">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Editorial Header */}
-        <div className="border-b border-cobalt/25 pb-12">
+        <div className="border-b border-charcoal-border pb-12">
           <div className="flex items-center gap-3 mb-4">
-            <span className="tag-telemetry-lime">PEOPLE // ARCHIVE</span>
-            <span className="font-mono text-xs text-gray-500 uppercase tracking-widest">
-              LEADERSHIP &amp; ALUMNI
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+              LEADERSHIP CADRE // PEOPLE
+            </span>
+            <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
+              ORGANIZATIONAL DIRECTORY
             </span>
           </div>
 
-          <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-white tracking-tight">
+          <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             THE ARCHITECTS <br />
-            <span className="text-lime">&amp; LEADS.</span>
+            <span className="text-ice-cyan">&amp; LEADS.</span>
           </h1>
 
-          <p className="mt-4 text-gray-300 font-body text-base sm:text-lg max-w-2xl leading-relaxed">
-            The engineers, designers, and organizers steering TechNeeds at IGDTUW. Leading technical initiatives, mentoring cohorts, and driving campus innovation.
+          <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">
+            The engineers, cohort mentors, and organizers steering TechNeeds at IGDTUW. Leading technical initiatives, mentoring cohorts, and driving campus innovation.
           </p>
         </div>
 
-        {/* Tab switcher: Core Leads vs. Alumni Network */}
-        <div className="flex gap-4 border-b border-cobalt/20 pb-4 font-mono text-xs">
-          <Link
-            href="/team"
-            className={`px-5 py-2.5 uppercase tracking-wider border transition-all ${
-              !isAlumni
-                ? 'bg-lime text-midnight border-lime font-bold shadow-[0_0_15px_rgba(212,255,36,0.3)]'
-                : 'border-cobalt/20 text-gray-400 hover:text-white hover:border-cobalt'
-            }`}
-          >
-            Current Leads &amp; Core Team
-          </Link>
+        {/* Tab switcher: Core Leads vs Alumni */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-charcoal-border pb-4 font-mono text-xs">
+          <div className="flex gap-3">
+            <Link
+              href="/team"
+              className={`px-5 py-2.5 uppercase tracking-wider rounded-md transition-all ${
+                !isAlumni
+                  ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_15px_#75E6FF]'
+                  : 'bg-charcoal border border-charcoal-border text-slate-400 hover:text-white'
+              }`}
+            >
+              Current Leads &amp; Council
+            </Link>
 
-          <Link
-            href="/team?tab=alumni"
-            className={`px-5 py-2.5 uppercase tracking-wider border transition-all ${
-              isAlumni
-                ? 'bg-lime text-midnight border-lime font-bold shadow-[0_0_15px_rgba(212,255,36,0.3)]'
-                : 'border-cobalt/20 text-gray-400 hover:text-white hover:border-cobalt'
-            }`}
-          >
-            Distinguished Alumni
-          </Link>
-        </div>
+            <Link
+              href="/team?tab=alumni"
+              className={`px-5 py-2.5 uppercase tracking-wider rounded-md transition-all ${
+                isAlumni
+                  ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_15px_#75E6FF]'
+                  : 'bg-charcoal border border-charcoal-border text-slate-400 hover:text-white'
+              }`}
+            >
+              Alumni Mentors &amp; Leads
+            </Link>
+          </div>
 
-        {/* Members Showcase */}
-        {members && members.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {members.map((member, index) => (
-              <div
-                key={member.id}
-                className="border border-cobalt/25 bg-[#050816] hover:border-lime/40 transition-all p-8 flex flex-col justify-between group relative overflow-hidden"
+          {/* Year selector */}
+          <div className="flex items-center gap-2">
+            <span className="text-slate-500 uppercase text-[11px]">TENURE:</span>
+            <Link
+              href={isAlumni ? '/team?tab=alumni' : '/team'}
+              className={`px-3 py-1 rounded text-xs transition-colors ${
+                !searchParams.year ? 'bg-white/10 text-white font-bold' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              All
+            </Link>
+            {years.map((y) => (
+              <Link
+                key={y}
+                href={isAlumni ? `/team?tab=alumni&year=${y}` : `/team?year=${y}`}
+                className={`px-3 py-1 rounded text-xs transition-colors ${
+                  searchParams.year === String(y) ? 'bg-ice-cyan text-deep-ink font-bold' : 'text-slate-400 hover:text-white'
+                }`}
               >
-                <div className="space-y-6">
-                  {/* Portrait Box */}
-                  <div className="aspect-[4/5] bg-black border border-cobalt/30 overflow-hidden relative">
-                    {member.image_url ? (
-                      <img
-                        src={member.image_url}
-                        alt={member.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cobalt/30 to-black text-center font-mono">
-                        <span className="font-display font-extrabold text-4xl text-cobalt-200">
-                          {member.name.slice(0, 2).toUpperCase()}
-                        </span>
-                        <span className="text-[10px] text-lime mt-2 uppercase">
-                          CORE EXECUTIVE
-                        </span>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-midnight/90 via-transparent to-transparent pointer-events-none" />
-                  </div>
-
-                  <div>
-                    <span className="tag-telemetry text-lime uppercase font-bold text-[10px]">
-                      {member.role_title}
-                    </span>
-                    <h3 className="font-display font-bold text-2xl text-white mt-2 group-hover:text-lime transition-colors">
-                      {member.name}
-                    </h3>
-                    {member.department && (
-                      <p className="text-xs text-gray-400 font-mono mt-1">
-                        {member.department} {member.year ? `// CLASS OF ${member.year}` : ''}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-cobalt/20 flex justify-between items-center text-xs font-mono">
-                  {member.linkedin_url ? (
-                    <a
-                      href={member.linkedin_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-lime hover:underline"
-                    >
-                      Connect on LinkedIn ↗
-                    </a>
-                  ) : (
-                    <span className="text-gray-500">IGDTUW CHAPTER</span>
-                  )}
-                  <span className="text-gray-600">#{String(index + 1).padStart(2, '0')}</span>
-                </div>
-              </div>
+                {y}
+              </Link>
             ))}
           </div>
-        ) : (
-          <div className="p-20 border border-cobalt/25 bg-[#050814] text-center font-mono text-gray-500">
-            <p className="text-white text-lg font-display mb-2">Executive Roster Update Pending</p>
-            <p className="text-xs">Official leadership verification in progress by faculty and society administrators.</p>
-          </div>
-        )}
+        </div>
+
+        {/* Members Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredMembers.map((member) => (
+            <div
+              key={member.id}
+              className="p-8 border border-charcoal-border bg-charcoal/70 rounded-2xl flex flex-col justify-between group hover:border-ice-cyan transition-all"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-charcoal border border-charcoal-border text-ice-cyan">
+                    {member.department}
+                  </span>
+                  <span className="text-xs font-mono text-slate-500">
+                    {member.year}
+                  </span>
+                </div>
+
+                {/* Profile Visual Frame */}
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-electric-blue to-charcoal border border-charcoal-border flex items-center justify-center font-display font-black text-2xl text-soft-white mb-6 group-hover:scale-105 transition-transform">
+                  {member.name.charAt(0)}
+                </div>
+
+                <h3 className="text-2xl font-bold text-soft-white group-hover:text-ice-cyan transition-colors mb-1">
+                  {member.name}
+                </h3>
+
+                <p className="font-mono text-xs text-electric-blue-light font-semibold mb-3">
+                  {member.role}
+                </p>
+
+                <p className="text-xs text-slate-300 font-sans leading-relaxed">
+                  {member.bio}
+                </p>
+              </div>
+
+              <div className="pt-6 mt-6 border-t border-charcoal-border flex items-center justify-between">
+                <span className="text-[10px] font-mono text-slate-500 uppercase">
+                  VERIFIED CADRE
+                </span>
+                {member.linkedin_url && (
+                  <a
+                    href={member.linkedin_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-mono text-ice-cyan hover:underline flex items-center gap-1 font-bold"
+                  >
+                    <span>LinkedIn</span>
+                    <span>↗</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

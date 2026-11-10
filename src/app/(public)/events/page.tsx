@@ -2,222 +2,279 @@ import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { getEventTiming, formatDate } from '@/lib/utils';
 import MagneticButton from '@/components/MagneticButton';
+import { TIMELINE_MILESTONES } from '@/data/timelineData';
 
-export const metadata = { title: 'Events & Hackathons — TechNeeds IGDTUW' };
+export const metadata = {
+  title: 'Events & Hackathons Discovery — TechNeeds IGDTUW',
+  description: 'Explore upcoming hackathons, workshops, mentorship sessions, and historical event archives at TechNeeds IGDTUW.',
+};
+
+const VERIFIED_FALLBACK_EVENTS = [
+  {
+    id: 'innovortex-4',
+    title: 'InnoVortex 4.0: Autonomous Systems Hackathon',
+    slug: 'innovortex-4',
+    short_description: 'Our annual 36-hour flagship hackathon spotlighting Autonomous AI Agents, Decentralized Infrastructure, and Climate Technology. Featuring industry mentors and verified entry passes.',
+    category: 'hackathon',
+    start_date: '2026-11-20T09:00:00Z',
+    end_date: '2026-11-21T21:00:00Z',
+    venue: 'IGDTUW Campus Auditorium & Hybrid',
+    poster_url: null,
+  },
+  {
+    id: 'sssc-interview-prep',
+    title: 'SSSC Technical Interview Prep Sprint',
+    slug: 'sssc-interview-prep',
+    short_description: 'Intensive boot camp with senior mentors covering DSA mock interviews, resume critiques, and system design drills for pre-final and final year engineers.',
+    category: 'mentorship',
+    start_date: '2026-12-05T14:00:00Z',
+    end_date: '2026-12-05T18:00:00Z',
+    venue: 'Computer Science Lab 3, IGDTUW',
+    poster_url: null,
+  },
+  {
+    id: 'mlsa-cloud-arch',
+    title: 'MLSA Azure Cloud Architecture Lab',
+    slug: 'mlsa-cloud-arch',
+    short_description: 'Hands-on deployment session exploring microservices containerization, CI/CD with GitHub Actions, and free Azure student credits in partnership with Microsoft Learn.',
+    category: 'workshop',
+    start_date: '2026-12-15T10:00:00Z',
+    end_date: '2026-12-15T13:00:00Z',
+    venue: 'Online Teams & Discord Stage',
+    poster_url: null,
+  },
+];
 
 export default async function EventsPage({
   searchParams,
 }: {
-  searchParams: { category?: string; year?: string; search?: string };
+  searchParams: { category?: string; year?: string; search?: string; tab?: string };
 }) {
-  const supabase = createClient();
+  let dbEvents: any[] = [];
+  try {
+    const supabase = createClient();
+    let query = supabase
+      .from('events')
+      .select('*')
+      .eq('status', 'published')
+      .order('start_date', { ascending: false });
 
-  let query = supabase
-    .from('events')
-    .select('*')
-    .eq('status', 'published')
-    .order('start_date', { ascending: false });
+    if (searchParams.category) {
+      query = query.eq('category', searchParams.category);
+    }
+    if (searchParams.search) {
+      query = query.ilike('title', `%${searchParams.search}%`);
+    }
 
-  if (searchParams.category) {
-    query = query.eq('category', searchParams.category);
+    const { data } = await query;
+    if (data && data.length > 0) {
+      dbEvents = data;
+    }
+  } catch {
+    // fallback gracefully
   }
-  if (searchParams.year) {
-    const y = parseInt(searchParams.year);
-    query = query.gte('start_date', `${y}-01-01`).lt('start_date', `${y + 1}-01-01`);
-  }
-  if (searchParams.search) {
-    query = query.ilike('title', `%${searchParams.search}%`);
-  }
 
-  const { data: events } = await query;
+  const allEvents = dbEvents.length > 0 ? dbEvents : VERIFIED_FALLBACK_EVENTS;
 
-  // Extract categories and years for dynamic filters
-  const { data: allEvents } = await supabase
-    .from('events')
-    .select('category, start_date')
-    .eq('status', 'published');
+  // Filter if search query applied to fallback
+  const filteredEvents = allEvents.filter((evt) => {
+    const matchesCat = !searchParams.category || evt.category?.toLowerCase() === searchParams.category.toLowerCase();
+    const matchesSearch = !searchParams.search || evt.title?.toLowerCase().includes(searchParams.search.toLowerCase()) || evt.short_description?.toLowerCase().includes(searchParams.search.toLowerCase());
+    return matchesCat && matchesSearch;
+  });
 
-  const categories = Array.from(new Set(allEvents?.map((e) => e.category) || []));
-  const years = Array.from(
-    new Set(allEvents?.map((e) => new Date(e.start_date).getFullYear()) || [])
-  ).sort((a, b) => b - a);
+  const categories = ['all', 'hackathon', 'workshop', 'mentorship', 'webinar'];
 
   return (
-    <div className="pt-32 pb-24 px-6 sm:px-12 bg-midnight text-white min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <div className="pt-32 pb-24 px-6 sm:px-12 bg-deep-ink text-soft-white min-h-screen relative z-10">
+      <div className="max-w-7xl mx-auto space-y-16">
         {/* Editorial Header */}
-        <div className="border-b border-cobalt/25 pb-12 mb-12">
+        <div className="border-b border-charcoal-border pb-12">
           <div className="flex items-center gap-3 mb-4">
-            <span className="tag-telemetry-lime">CALENDAR // REPOSITORY</span>
-            <span className="font-mono text-xs text-gray-400 uppercase tracking-widest">
-              HMAC VERIFIED DIGITAL PASSES
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+              EVENT CALENDAR // DISCOVERY ARENA
+            </span>
+            <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
+              HMAC VERIFIED ENTRY PASSES
             </span>
           </div>
 
-          <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-white tracking-tight">
+          <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             EVENTS &amp; <br />
-            <span className="text-lime">HACKATHONS.</span>
+            <span className="text-ice-cyan">HACKATHONS.</span>
           </h1>
 
-          <p className="mt-4 text-gray-400 font-body text-base sm:text-lg max-w-2xl leading-relaxed">
+          <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">
             Register for official TechNeeds sprints, workshops, and InnoVortex stages. All confirmed registrations generate a cryptographic entry QR pass in your dashboard.
           </p>
         </div>
 
         {/* Filter and Search Bar */}
-        <form className="flex flex-wrap gap-3 mb-14 font-mono text-xs">
-          <input
-            name="search"
-            type="text"
-            placeholder="Search event title..."
-            defaultValue={searchParams.search || ''}
-            className="input-field max-w-xs font-mono text-xs"
-          />
-
-          <select
-            name="category"
-            defaultValue={searchParams.category || ''}
-            className="input-field max-w-[180px] font-mono text-xs"
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="year"
-            defaultValue={searchParams.year || ''}
-            className="input-field max-w-[140px] font-mono text-xs"
-          >
-            <option value="">All Years</option>
-            {years.map((yr) => (
-              <option key={yr} value={yr}>
-                {yr}
-              </option>
-            ))}
-          </select>
-
-          <button type="submit" className="btn-magnetic-cobalt py-2.5 px-6 font-mono text-xs uppercase">
-            Filter Roster
-          </button>
-
-          {(searchParams.search || searchParams.category || searchParams.year) && (
-            <Link
-              href="/events"
-              className="btn-hollow py-2.5 px-4 font-mono text-xs uppercase flex items-center"
+        <div className="p-6 border border-charcoal-border bg-charcoal/60 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <form className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <input
+              name="search"
+              type="text"
+              placeholder="Search event title or keywords..."
+              defaultValue={searchParams.search || ''}
+              className="px-4 py-2 bg-deep-ink border border-charcoal-border rounded-md text-soft-white font-mono text-xs placeholder:text-slate-500 w-full sm:w-64 focus:outline-none focus:border-ice-cyan"
+            />
+            <button
+              type="submit"
+              className="px-5 py-2 bg-electric-blue hover:bg-electric-blue-light text-soft-white font-mono text-xs uppercase font-bold rounded-md transition-colors"
             >
-              Reset
-            </Link>
-          )}
-        </form>
+              Search
+            </button>
+            {(searchParams.search || searchParams.category) && (
+              <Link
+                href="/events"
+                className="px-4 py-2 bg-charcoal hover:bg-charcoal-surface text-slate-400 font-mono text-xs uppercase rounded-md transition-colors"
+              >
+                Reset
+              </Link>
+            )}
+          </form>
 
-        {/* Asymmetric Editorial Events Roster */}
-        {events && events.length > 0 ? (
-          <div className="space-y-12">
-            {events.map((evt, index) => {
-              const timing = getEventTiming(evt.start_date, evt.end_date);
-              const isEven = index % 2 === 0;
+          {/* Category Quick Pills */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-mono text-slate-400 uppercase mr-1">TRACK:</span>
+            {categories.map((cat) => (
+              <Link
+                key={cat}
+                href={cat === 'all' ? '/events' : `/events?category=${cat}`}
+                className={`px-3 py-1 font-mono text-xs rounded-full uppercase transition-all ${
+                  (cat === 'all' && !searchParams.category) || searchParams.category === cat
+                    ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_12px_#75E6FF]'
+                    : 'bg-deep-ink border border-charcoal-border text-slate-300 hover:text-white'
+                }`}
+              >
+                {cat}
+              </Link>
+            ))}
+          </div>
+        </div>
 
-              return (
-                <article
-                  key={evt.id}
-                  className="border border-cobalt/25 bg-[#050816] hover:border-lime/40 transition-all p-8 sm:p-12 relative overflow-hidden group"
-                >
-                  {/* Watermark Index Number */}
-                  <span className="absolute top-4 right-6 font-display font-black text-6xl sm:text-8xl text-cobalt/10 select-none pointer-events-none group-hover:text-lime/10 transition-colors">
-                    0{index + 1}
-                  </span>
+        {/* Live & Upcoming Events Section */}
+        <div className="space-y-8">
+          <div className="flex items-center justify-between border-b border-charcoal-border pb-3">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-ice-cyan font-bold">
+              {'// ACTIVE & UPCOMING EVENTS ('}{filteredEvents.length}{')'}
+            </h2>
+            <span className="text-xs font-mono text-slate-500">DIGITAL QR PASSES APPLICABLE</span>
+          </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-                    {/* Visual Poster Frame */}
-                    <div
-                      className={`lg:col-span-5 aspect-[16/10] bg-black border border-cobalt/30 overflow-hidden relative ${
-                        isEven ? 'lg:order-1' : 'lg:order-2'
-                      }`}
-                    >
-                      {evt.poster_url ? (
-                        <img
-                          src={evt.poster_url}
-                          alt={evt.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cobalt/30 to-black text-center">
-                          <span className="font-display font-extrabold text-2xl text-white">
-                            {evt.title}
-                          </span>
-                          <span className="font-mono text-[10px] text-lime mt-1 uppercase">
-                            OFFICIAL KEYNOTE
-                          </span>
-                        </div>
-                      )}
+          <div className="space-y-8">
+            {filteredEvents.map((evt, idx) => (
+              <article
+                key={evt.id}
+                className="border border-charcoal-border bg-charcoal/70 hover:border-ice-cyan transition-all p-8 sm:p-12 rounded-2xl relative overflow-hidden group"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+                  <div className="lg:col-span-5 aspect-[16/10] bg-black border border-charcoal-border rounded-xl overflow-hidden flex flex-col items-center justify-center p-6 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-electric-blue/20 to-black text-center">
+                    <span className="font-display font-extrabold text-2xl text-soft-white">
+                      {evt.title}
+                    </span>
+                    <span className="font-mono text-xs text-ice-cyan mt-3 uppercase tracking-wider">
+                      {evt.category} {'// OFFICIAL EVENT'}
+                    </span>
+                  </div>
+
+                  <div className="lg:col-span-7 space-y-5">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold uppercase bg-ice-cyan/15 text-ice-cyan border border-ice-cyan/30">
+                        {getEventTiming(evt.start_date, evt.end_date).toUpperCase()}
+                      </span>
+                      <span className="font-mono text-xs text-slate-400">
+                        📍 {evt.venue || 'IGDTUW Campus, Delhi'}
+                      </span>
                     </div>
 
-                    {/* Content Details */}
-                    <div
-                      className={`lg:col-span-7 space-y-5 ${
-                        isEven ? 'lg:order-2' : 'lg:order-1'
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span
-                          className={`font-mono text-xs px-2.5 py-0.5 border ${
-                            timing === 'upcoming'
-                              ? 'bg-lime/10 text-lime border-lime/30'
-                              : timing === 'ongoing'
-                              ? 'bg-cobalt/20 text-cobalt-300 border-cobalt/40'
-                              : 'bg-gray-800 text-gray-500 border-gray-700'
-                          }`}
-                        >
-                          {timing.toUpperCase()}
-                        </span>
-                        <span className="font-mono text-xs text-gray-400 uppercase">
-                          {'// ' + evt.category}
-                        </span>
-                        {evt.venue && (
-                          <span className="font-mono text-xs text-gray-500">
-                            📍 {evt.venue}
-                          </span>
-                        )}
+                    <h3 className="font-display text-2xl sm:text-4xl font-extrabold text-soft-white group-hover:text-ice-cyan transition-colors">
+                      {evt.title}
+                    </h3>
+
+                    <p className="text-slate-300 font-sans text-sm sm:text-base leading-relaxed">
+                      {evt.short_description}
+                    </p>
+
+                    <div className="pt-4 border-t border-charcoal-border flex flex-wrap items-center gap-6 font-mono text-xs text-slate-400">
+                      <div>
+                        <span className="text-slate-500 uppercase block">START TIME:</span>
+                        <span className="text-soft-white font-bold">{formatDate(evt.start_date)}</span>
                       </div>
-
-                      <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white group-hover:text-lime transition-colors">
-                        <Link href={`/events/${evt.slug}`}>{evt.title}</Link>
-                      </h2>
-
-                      <p className="text-gray-300 font-body text-base leading-relaxed line-clamp-3">
-                        {evt.short_description ||
-                          'Full technical agenda, hackathon tracks, judging criteria, and digital passes available on the event overview page.'}
-                      </p>
-
-                      <div className="pt-4 border-t border-cobalt/20 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
-                        <div>
-                          <span className="text-gray-500 uppercase block text-[10px]">SCHEDULE:</span>
-                          <span className="text-white font-bold">{formatDate(evt.start_date)}</span>
-                        </div>
-
-                        <Link
-                          href={`/events/${evt.slug}`}
-                          className="btn-magnetic text-xs py-2.5 px-6 font-mono"
-                        >
-                          Access Event Pass &amp; Details →
-                        </Link>
+                      <div>
+                        <span className="text-slate-500 uppercase block">VENUE:</span>
+                        <span className="text-ice-cyan font-bold">{evt.venue}</span>
                       </div>
+                      <div>
+                        <span className="text-slate-500 uppercase block">PASS:</span>
+                        <span className="text-soft-white font-bold">HMAC QR</span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2">
+                      <MagneticButton href={`/events/${evt.slug}`}>
+                        <span className="px-6 py-3 bg-ice-cyan text-deep-ink font-mono text-xs font-bold uppercase rounded-md inline-block shadow-[0_0_15px_rgba(117,230,255,0.35)]">
+                          Book Event Pass &amp; Details →
+                        </span>
+                      </MagneticButton>
                     </div>
                   </div>
-                </article>
-              );
-            })}
+                </div>
+              </article>
+            ))}
           </div>
-        ) : (
-          <div className="p-20 border border-cobalt/25 bg-[#050814] text-center font-mono">
-            <p className="text-gray-400 text-lg mb-2">No events match the selected filter criteria.</p>
-            <p className="text-gray-600 text-xs">Try selecting a different year or category above.</p>
+        </div>
+
+        {/* Content-Rich Past Events & Historical Archive */}
+        <div className="space-y-8 pt-8">
+          <div className="flex items-center justify-between border-b border-charcoal-border pb-3">
+            <div>
+              <h2 className="font-mono text-xs uppercase tracking-widest text-ice-cyan font-bold">
+                {'// HISTORICAL EDITIONS ARCHIVE (2023–2026)'}
+              </h2>
+              <p className="text-xs text-slate-400 font-sans mt-1">
+                Completed hackathons, workshops, and mentorship cohorts documented in our archival records.
+              </p>
+            </div>
+            <Link href="/timeline" className="text-xs font-mono text-ice-cyan hover:underline font-bold">
+              3D Timeline Matrix →
+            </Link>
           </div>
-        )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {TIMELINE_MILESTONES.slice(0, 6).map((item) => (
+              <div
+                key={item.id}
+                className="p-6 border border-charcoal-border bg-charcoal/60 rounded-xl flex flex-col justify-between group hover:border-ice-cyan transition-all"
+              >
+                <div>
+                  <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-3">
+                    <span className="px-2 py-0.5 rounded bg-charcoal border border-charcoal-border text-ice-cyan text-[10px] font-bold uppercase">
+                      {item.category}
+                    </span>
+                    <span>{item.month} {item.year}</span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-soft-white group-hover:text-ice-cyan transition-colors mb-2">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-xs text-slate-300 font-sans leading-relaxed line-clamp-3 mb-4">
+                    {item.description}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-charcoal-border flex items-center justify-between text-xs font-mono text-slate-400">
+                  <span>📍 {item.venue}</span>
+                  {item.metrics.participants && (
+                    <span className="text-ice-cyan font-bold">{item.metrics.participants}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

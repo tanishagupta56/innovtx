@@ -54,32 +54,32 @@ export default function ResourcesClient({
   return (
     <div>
       {/* Search & Filter Toolbar */}
-      <form className="flex flex-wrap gap-3 mb-12 font-mono text-xs">
+      <form className="flex flex-wrap items-center gap-3 mb-12 font-mono text-xs">
         <input
           name="search"
           type="text"
           placeholder="Search topics, roadmaps..."
           defaultValue={searchParamSearch || ''}
-          className="input-field max-w-xs font-mono text-xs"
+          className="px-4 py-2 bg-charcoal border border-charcoal-border rounded-md text-soft-white placeholder:text-slate-500 w-full sm:w-64 focus:outline-none focus:border-ice-cyan"
         />
 
         <select
           name="difficulty"
           defaultValue={searchParamDiff || ''}
-          className="input-field max-w-[160px] font-mono text-xs"
+          className="px-4 py-2 bg-charcoal border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-ice-cyan"
         >
-          <option value="">All Difficulty Levels</option>
-          <option value="beginner">Beginner</option>
-          <option value="intermediate">Intermediate</option>
-          <option value="advanced">Advanced</option>
+          <option value="">All Difficulties</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
         </select>
 
         <select
           name="tag"
           defaultValue={searchParamTag || ''}
-          className="input-field max-w-[180px] font-mono text-xs"
+          className="px-4 py-2 bg-charcoal border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-ice-cyan"
         >
-          <option value="">All Tech Topics</option>
+          <option value="">All Topics</option>
           {allTags.map((t) => (
             <option key={t} value={t}>
               #{t}
@@ -87,24 +87,30 @@ export default function ResourcesClient({
           ))}
         </select>
 
-        <button type="submit" className="btn-magnetic-cobalt py-2.5 px-6 font-mono text-xs uppercase">
-          Apply Filters
+        <button
+          type="submit"
+          className="px-5 py-2 bg-electric-blue hover:bg-electric-blue-light text-soft-white font-mono text-xs uppercase font-bold rounded-md transition-colors"
+        >
+          Filter
         </button>
 
         <button
           type="button"
           onClick={() => setShowBookmarksOnly(!showBookmarksOnly)}
-          className={`py-2.5 px-5 font-mono text-xs uppercase tracking-wider border transition-all ${
+          className={`px-4 py-2 font-mono text-xs uppercase tracking-wider rounded-md border transition-all ${
             showBookmarksOnly
-              ? 'bg-lime text-midnight border-lime font-bold shadow-[0_0_15px_rgba(212,255,36,0.3)]'
-              : 'btn-hollow'
+              ? 'bg-ice-cyan text-deep-ink border-ice-cyan font-bold shadow-[0_0_15px_#75E6FF]'
+              : 'bg-charcoal border-charcoal-border text-slate-300 hover:text-white'
           }`}
         >
           ★ Bookmarks ({bookmarks.length})
         </button>
 
         {(searchParamSearch || searchParamDiff || searchParamTag || showBookmarksOnly) && (
-          <a href="/resources" className="btn-hollow py-2.5 px-4 font-mono text-xs uppercase flex items-center">
+          <a
+            href="/resources"
+            className="px-4 py-2 bg-charcoal border border-charcoal-border text-slate-400 hover:text-white rounded-md font-mono text-xs uppercase"
+          >
             Reset
           </a>
         )}
@@ -118,17 +124,17 @@ export default function ResourcesClient({
             return (
               <div
                 key={res.id}
-                className="p-8 border border-cobalt/25 bg-[#050816] hover:border-lime/40 transition-all flex flex-col justify-between group relative overflow-hidden"
+                className="p-8 border border-charcoal-border bg-charcoal/70 rounded-2xl hover:border-ice-cyan transition-all flex flex-col justify-between group relative overflow-hidden"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="tag-telemetry text-lime uppercase font-bold text-[10px]">
+                    <span className="px-2 py-0.5 rounded bg-charcoal border border-charcoal-border text-ice-cyan uppercase font-bold text-[10px] font-mono">
                       {res.difficulty || 'GENERAL'}
                     </span>
                     <button
                       onClick={() => toggleBookmark(res.id)}
                       className={`text-lg p-1 transition-transform hover:scale-125 ${
-                        isBookmarked ? 'text-lime' : 'text-gray-600 hover:text-gray-300'
+                        isBookmarked ? 'text-ice-cyan' : 'text-slate-600 hover:text-slate-300'
                       }`}
                       title={isBookmarked ? 'Remove bookmark' : 'Bookmark this resource'}
                     >
@@ -136,12 +142,12 @@ export default function ResourcesClient({
                     </button>
                   </div>
 
-                  <h3 className="font-display font-bold text-2xl text-white mb-3 group-hover:text-lime transition-colors">
+                  <h3 className="font-display font-bold text-2xl text-soft-white mb-3 group-hover:text-ice-cyan transition-colors">
                     {res.title}
                   </h3>
 
                   {res.description && (
-                    <p className="text-gray-400 font-body text-sm line-clamp-3 mb-6 leading-relaxed">
+                    <p className="text-slate-300 font-sans text-sm line-clamp-3 mb-6 leading-relaxed">
                       {res.description}
                     </p>
                   )}
@@ -151,7 +157,7 @@ export default function ResourcesClient({
                       {res.tags.map((t) => (
                         <span
                           key={t}
-                          className="font-mono text-[10px] text-gray-400 bg-[#090e1f] px-2 py-0.5 border border-cobalt/20"
+                          className="font-mono text-[10px] text-slate-400 bg-deep-ink px-2 py-0.5 border border-charcoal-border rounded"
                         >
                           #{t}
                         </span>
@@ -160,12 +166,12 @@ export default function ResourcesClient({
                   )}
                 </div>
 
-                <div className="pt-6 border-t border-cobalt/15">
+                <div className="pt-6 border-t border-charcoal-border">
                   <a
                     href={res.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-hollow w-full text-center text-xs py-2.5 font-mono uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-lime hover:text-midnight hover:border-lime transition-all"
+                    className="w-full text-center text-xs py-2.5 font-mono uppercase tracking-wider flex items-center justify-center gap-2 bg-charcoal border border-charcoal-border rounded-md hover:bg-ice-cyan hover:text-deep-ink hover:border-ice-cyan transition-all font-bold"
                   >
                     <span>Launch Resource</span>
                     <span>↗</span>
@@ -176,13 +182,9 @@ export default function ResourcesClient({
           })}
         </div>
       ) : (
-        <div className="p-20 border border-cobalt/25 bg-[#050814] text-center font-mono">
-          <p className="text-white text-lg font-display mb-2">No Resources Found</p>
-          <p className="text-gray-500 text-xs">
-            {showBookmarksOnly
-              ? 'You have not saved any bookmarks yet. Star items to access them here.'
-              : 'Learning materials and documentation repositories are being organized by leads.'}
-          </p>
+        <div className="p-16 border border-charcoal-border bg-charcoal/40 rounded-2xl text-center font-mono text-slate-400">
+          <p className="text-soft-white text-lg font-display mb-2">No Matching Resources Found</p>
+          <p className="text-xs">Adjust your search parameters or filter criteria above.</p>
         </div>
       )}
     </div>

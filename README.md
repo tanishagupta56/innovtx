@@ -5,7 +5,7 @@ Official technical society web platform for Indira Gandhi Delhi Technical Univer
 ## AGENT HANDOFF
 
 ### STATUS
-Full WebGL 3D Immersive Universe & Complete Society Reconstruction complete on `feat/visual-redesign` — Next.js 14, Three.js, React Three Fiber, 39 routes building with 0 errors.
+Awwwards-level visual redesign & complete content reconstruction completed on `feat/visual-redesign` — AssetMerkle-inspired creative direction, official TechNeeds logo, WebGL 3D world, interactive light field cursor, and 12 fully fleshed-out public routes. 39 routes building with 0 errors.
 
 ### AGENT RULES
 - Single agent. No parallel agents. No browser automation except one final smoke test.
@@ -24,28 +24,35 @@ Full WebGL 3D Immersive Universe & Complete Society Reconstruction complete on `
 - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `QR_SIGNING_SECRET`, `ADMIN_BOOTSTRAP_EMAIL`
 
 ### FOLDER MAP
-- `docs/`: Research dossiers, gap summaries, captured desktop & timeline screenshots.
+- `docs/`: Research dossiers, gap summaries, captured full-resolution screenshots (`screenshot-home-new.png`, `screenshot-about.png`, `screenshot-events.png`, `screenshot-team.png`, `screenshot-mentorship.png`, `screenshot-resources.png`, `screenshot-community.png`, `screenshot-timeline.png`).
+- `public/brand/`: Official TechNeeds logo assets (`techneeds-logo.png`, `logo.png`).
 - `scripts/`: Operational scripts (`scripts/seed.ts`, `scripts/seed-timeline.ts`).
-- `src/app/`: Next.js App Router routes (public, auth, student dashboard, admin console, API).
+- `src/app/(public)/`: Complete public route suite (`/`, `/about`, `/events`, `/timeline`, `/mentorship`, `/resources`, `/team`, `/showcase`, `/community`, `/gallery`, `/collaborate`, `/faq`, `/opportunities`).
 - `src/components/3d/`: Persistent WebGL 3D world (`WorldCanvas`, `DigitalCore`, `SceneController`, `Timeline3DCanvas`, `PersistentWorld`).
+- `src/components/cursor/`: Interactive light field cursor system (`InteractiveLightField.tsx`).
 - `src/components/`: Kinetic UI modules (Navbar, Footer, Hero, HeroVisual, Preloader, MotionProvider, CustomCursor, SplitHeading, MagneticButton, InfiniteMarquee, ScrollReveal).
-- `src/data/`: Structured verified society datasets (`timelineData.ts` with 14 milestones, `societyData.ts` with departments, stats, initiatives, FAQs).
+- `src/data/`: Verified society datasets (`societyData.ts`, `timelineData.ts`, `teamData.ts`, `resourcesData.ts`).
 - `src/lib/`: Supabase clients, HMAC QR helpers, Zod validation, utils.
 - `supabase/migrations/`: SQL migration files with zero-trust RLS policies.
 
 ### CHECKLIST
-- [x] Persistent 3D WebGL World: R3F shared Canvas across public routes with scroll-driven camera interpolation (`src/components/3d/`).
-- [x] 3D Digital Intelligence Core: Translucent cobalt icosahedron, dual orbital rings, orbiting data nodes, galaxy particle field, pointer parallax.
-- [x] 3D Spatial Timeline: 14 verified milestones (2023-2026) along an interactive 3D spline curve with beacon nodes and detail inspector (`/timeline`).
-- [x] Society Content Reconstruction (AssetMerkle-inspired):
-  - Telemetry stats (1,200+ members, 50+ mentors, 10+ cohorts, 100+ events).
-  - Department cadres (DEV_CORE, INTELLIGENCE_LAB, SSSC_CADRE, VISUAL_STUDIO, PARTNERSHIP_GRID).
-  - Programs & Initiatives (`/initiatives`: InnoVortex, SSSC Mentorship, 21-Day CS Sprint, Open Source Drive).
-  - Community Hub (`/community`: Discord, WhatsApp, GitHub, LinkedIn, Charter & Perks).
-  - Vibes & Moments Gallery (`/gallery`: Curated event snapshots, hackathon moments).
-  - Corporate Portal (`/collaborate`: Sponsorship packages, outreach contact).
-- [x] Preserved Core Functionality: HMAC QR generation, check-in scanner, helpdesk ticketing, auth & admin consoles.
-- [x] Strict Palette: Midnight Black `#030407`, Electric Cobalt Blue `#1558C9`, Acid Lime `#D4FF24`.
+- [x] Creative Redesign & Palette: Deep Ink `#080B12`, Charcoal `#111722`, Electric Blue `#315EFF`, Ice Cyan `#75E6FF`, Soft White `#F2F4F8`, Acid Lime `#D4FF24` (accents).
+- [x] Official TechNeeds Logo: Integrated in Preloader, Navbar, Hero, and Footer (`public/brand/techneeds-logo.png`).
+- [x] Interactive Light Field Cursor: Lens reveal, hidden circuit traces, liquid displacement, particle repulsion/spring reassembly.
+- [x] Rebuilt Homepage (14 connected sections): Asymmetric Hero with 3D Core HUD reticle, Narrative Bridge, 4 Editorial Pillars, Live Stats, Featured Programs (InnoVortex, SSSC Mentorship), Live Events discovery, INNOVORTEX Spotlight, 3D Spatial Timeline preview, Community & Knowledge Arsenal callouts, Testimonials, Collaborate & FAQ teasers.
+- [x] Public Routes Completed (No generic templates / empty boxes):
+  - `/about`: Origin story, Mission/Vision, SSSC Mentorship, InnoVortex, and 5 Department Cadres.
+  - `/events`: Filterable Upcoming, Ongoing, and Past Events with verified fallback data & HMAC pass booking.
+  - `/team`: Verified leadership, core leads, faculty advisory, alumni (2024-2026), and mentorship faculty.
+  - `/mentorship`: Full SSSC Mentorship Cadre page with cohort archive, curriculum, and application CTA.
+  - `/resources`: TechBoard Learning Vault with live search, difficulty tags, category filters, and local bookmarks.
+  - `/opportunities`: Opportunity Radar with active hackathons, fellowships, internships, and expired badges.
+  - `/showcase`: Student project showcase with category filters and interactive project submission modal.
+  - `/faq`: 9-category interactive accordion with instant search.
+  - `/collaborate`: Sponsor tiers (Title, Track, Community) and working inquiry form connected to `/api/tickets`.
+  - `/community` & `/gallery`: Active channels, perks, community charter, and curated event snapshots.
+  - `/timeline`: 3D WebGL spline with 14 milestones (2023-2026) and interactive node inspector preserved.
+- [x] Preserved Backend: HMAC QR generation, check-in scanner, ticketing API, auth & admin consoles intact.
 
 ### NEXT TASK
 Connect production Supabase credentials in `.env.local` and run `npx tsx scripts/seed-timeline.ts` to sync live database records with the verified timeline dataset.
@@ -54,5 +61,5 @@ Connect production Supabase credentials in `.env.local` and run `npx tsx scripts
 - TypeScript typecheck (`tsc --noEmit`): Passed with 0 errors.
 - ESLint (`next lint`): Passed with 0 errors.
 - Production build (`next build`): 39 static and dynamic routes compiled and generated with code 0.
-- Live server smoke test: All public routes (`/`, `/timeline`, `/initiatives`, `/community`, `/gallery`, `/collaborate`) return HTTP 200 OK.
-- Visual smoke test: Desktop 1440x900 (`docs/screenshot-desktop.png`, 912KB) and Timeline 1440x1100 (`docs/screenshot-timeline.png`, 1.04MB) verified.
+- Live server smoke test: All 12 public routes return HTTP 200 OK.
+- Visual smoke test: High-res screenshots verified in `docs/` for Home, About, Events, Team, Mentorship, Resources, Community, and Timeline.

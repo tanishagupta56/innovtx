@@ -1,6 +1,5 @@
 import React from 'react';
 import MagneticButton from '@/components/MagneticButton';
-import Link from 'next/link';
 
 export const metadata = {
   title: 'Community Ecosystem — TechNeeds IGDTUW',
@@ -14,7 +13,6 @@ const CHANNELS = [
     badge: 'PRIMARY DEV REALM',
     members: '950+ Engineers',
     link: 'https://discord.gg',
-    accent: 'border-electric-lime',
   },
   {
     title: 'WhatsApp Announcement Matrix',
@@ -22,7 +20,6 @@ const CHANNELS = [
     badge: 'OFFICIAL BROADCAST',
     members: '1,200+ Members',
     link: 'https://chat.whatsapp.com',
-    accent: 'border-cobalt',
   },
   {
     title: 'GitHub Organization',
@@ -30,15 +27,13 @@ const CHANNELS = [
     badge: 'CODE REPOSITORIES',
     members: '40+ Repositories',
     link: 'https://github.com',
-    accent: 'border-white/20',
   },
   {
     title: 'LinkedIn Professional Network',
     description: 'Alumni spotlights, corporate partnership announcements, and verified career milestones of society graduates.',
     badge: 'ALUMNI ALLIANCE',
     members: '1,500+ Followers',
-    link: 'https://linkedin.com',
-    accent: 'border-cobalt-light',
+    link: 'https://linkedin.com/company/techneeds-igdtuw/',
   },
 ];
 
@@ -67,23 +62,23 @@ const PERKS = [
 
 export default function CommunityPage() {
   return (
-    <div className="pt-32 pb-24 px-6 sm:px-12 min-h-screen text-white relative">
+    <div className="pt-32 pb-24 px-6 sm:px-12 bg-deep-ink text-soft-white min-h-screen relative z-10">
       <div className="max-w-7xl mx-auto space-y-16">
         {/* Editorial Header */}
-        <div className="border-b border-cobalt/25 pb-10">
+        <div className="border-b border-charcoal-border pb-10">
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-cobalt/20 border border-cobalt text-cobalt-bright">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
               ECOSYSTEM // 1,200+ MEMBERS
             </span>
-            <span className="font-mono text-xs text-electric-lime uppercase tracking-widest flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-electric-lime animate-ping" />
+            <span className="font-mono text-xs text-ice-cyan uppercase tracking-widest flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-ice-cyan animate-ping" />
               GLOBAL NETWORK
             </span>
           </div>
 
-          <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-white tracking-tight uppercase">
+          <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             COMMUNITY <br />
-            <span className="text-electric-lime">COLLECTIVE.</span>
+            <span className="text-ice-cyan">COLLECTIVE.</span>
           </h1>
 
           <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">
@@ -93,11 +88,11 @@ export default function CommunityPage() {
 
         {/* Channels Grid */}
         <div className="space-y-6">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="flex items-center justify-between border-b border-charcoal-border pb-3">
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
               COMMUNICATION MATRIX
             </span>
-            <span className="font-mono text-xs text-electric-lime">
+            <span className="font-mono text-xs text-ice-cyan">
               DIRECT ACCESS NODES
             </span>
           </div>
@@ -106,34 +101,34 @@ export default function CommunityPage() {
             {CHANNELS.map((channel, idx) => (
               <div
                 key={idx}
-                className={`p-8 rounded-xl border ${channel.accent} bg-midnight-950/80 backdrop-blur-md relative overflow-hidden group hover:scale-[1.01] transition-all flex flex-col justify-between`}
+                className="p-8 rounded-2xl border border-charcoal-border bg-charcoal/70 hover:border-ice-cyan transition-all flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="px-2 py-0.5 text-[10px] font-mono uppercase bg-white/10 rounded text-slate-300">
+                    <span className="px-2.5 py-0.5 text-[10px] font-mono uppercase bg-charcoal border border-charcoal-border rounded text-slate-300">
                       {channel.badge}
                     </span>
-                    <span className="text-xs font-mono text-electric-lime">
+                    <span className="text-xs font-mono text-ice-cyan font-bold">
                       {channel.members}
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-white group-hover:text-electric-lime transition-colors">
+                  <h3 className="text-2xl font-bold text-soft-white group-hover:text-ice-cyan transition-colors">
                     {channel.title}
                   </h3>
 
-                  <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+                  <p className="mt-3 text-sm text-slate-300 font-sans leading-relaxed">
                     {channel.description}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-xs font-mono text-slate-500">ENCRYPTION: VERIFIED</span>
+                <div className="mt-6 pt-4 border-t border-charcoal-border flex items-center justify-between">
+                  <span className="text-xs font-mono text-slate-500">ACCESS: OPEN</span>
                   <a
                     href={channel.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 text-xs font-mono font-bold bg-white/10 hover:bg-electric-lime hover:text-black transition-colors rounded"
+                    className="px-4 py-2 text-xs font-mono font-bold bg-ice-cyan text-deep-ink hover:bg-cyan-300 transition-colors rounded-md shadow-[0_0_12px_rgba(117,230,255,0.3)]"
                   >
                     Enter Channel ↗
                   </a>
@@ -144,43 +139,43 @@ export default function CommunityPage() {
         </div>
 
         {/* Member Perks & Benefits */}
-        <div className="p-10 rounded-xl border border-white/10 bg-midnight-900/60 backdrop-blur-md">
+        <div className="p-10 rounded-3xl border border-charcoal-border bg-charcoal/50">
           <div className="mb-8">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-cobalt/20 border border-cobalt text-cobalt-bright">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
               MEMBERSHIP PRIVILEGES
             </span>
-            <h2 className="editorial-title text-3xl sm:text-5xl text-white mt-3">
-              WHAT YOU GAIN IN THE COLLECTIVE<span className="text-electric-lime">.</span>
+            <h2 className="editorial-title text-3xl sm:text-5xl text-soft-white mt-3">
+              WHAT YOU GAIN IN THE COLLECTIVE<span className="text-ice-cyan">.</span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {PERKS.map((perk, i) => (
-              <div key={i} className="p-6 bg-white/5 rounded-lg border border-white/5">
+              <div key={i} className="p-6 bg-deep-ink rounded-xl border border-charcoal-border">
                 <span className="text-3xl block mb-3">{perk.icon}</span>
-                <h4 className="text-base font-bold text-white mb-2">{perk.title}</h4>
-                <p className="text-xs text-slate-400 leading-relaxed">{perk.description}</p>
+                <h4 className="text-base font-bold text-soft-white mb-2">{perk.title}</h4>
+                <p className="text-xs text-slate-400 leading-relaxed font-sans">{perk.description}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Code of Conduct Charter */}
-        <div className="p-8 border border-white/10 bg-midnight-950/70 rounded-xl">
-          <h3 className="font-mono text-sm uppercase text-electric-lime tracking-widest mb-4">
+        {/* Community Charter */}
+        <div className="p-8 border border-charcoal-border bg-charcoal/70 rounded-2xl">
+          <h3 className="font-mono text-xs uppercase text-ice-cyan tracking-widest mb-4 font-bold">
             {'//'} THE TECHNEEDS COMMUNITY CHARTER
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs text-slate-300">
             <div>
-              <strong className="text-white block mb-1">01. MERIT &amp; COLLABORATION</strong>
+              <strong className="text-soft-white block mb-1">01. MERIT &amp; COLLABORATION</strong>
               We build together. Knowledge is open and contributions to peer learning are celebrated.
             </div>
             <div>
-              <strong className="text-white block mb-1">02. RESPECT &amp; INCLUSIVITY</strong>
+              <strong className="text-soft-white block mb-1">02. RESPECT &amp; INCLUSIVITY</strong>
               Zero tolerance for harassment, elitism, or exclusion. Safe space for every engineer.
             </div>
             <div>
-              <strong className="text-white block mb-1">03. ENGINEERING RIGOR</strong>
+              <strong className="text-soft-white block mb-1">03. ENGINEERING RIGOR</strong>
               We ship code that solves real problems. Respect deadlines and uphold code quality.
             </div>
           </div>
@@ -188,14 +183,14 @@ export default function CommunityPage() {
 
         {/* CTA */}
         <div className="text-center py-12">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white mb-4">
+          <h2 className="text-3xl sm:text-5xl font-bold text-soft-white mb-4">
             Ready to Begin Your Journey?
           </h2>
-          <p className="text-slate-400 text-sm max-w-md mx-auto mb-8">
+          <p className="text-slate-400 text-sm max-w-md mx-auto mb-8 font-sans">
             Create your account today and unlock instant access to event registrations and society cohorts.
           </p>
           <MagneticButton href="/signup" strength={25}>
-            <span className="btn-magnetic px-8 py-3.5 text-sm">
+            <span className="px-8 py-3.5 bg-ice-cyan text-deep-ink font-mono text-xs font-bold uppercase rounded-md shadow-[0_0_15px_rgba(117,230,255,0.4)]">
               Create Student Identity →
             </span>
           </MagneticButton>

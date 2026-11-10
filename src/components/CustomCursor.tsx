@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import InteractiveLightField from './cursor/InteractiveLightField';
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -73,7 +74,8 @@ export default function CustomCursor() {
         target.closest('button') ||
         target.closest('.interactive') ||
         target.closest('input') ||
-        target.closest('select')
+        target.closest('select') ||
+        target.closest('[data-magnetic]')
       ) {
         setIsHovered(true);
       } else {
@@ -92,38 +94,44 @@ export default function CustomCursor() {
     };
   }, []);
 
-  if (!isDesktop) return null;
-
   return (
     <>
-      {/* Ambient reactive cursor spotlight */}
-      <div
-        ref={auraRef}
-        className="fixed top-0 left-0 w-[500px] h-[500px] -ml-[250px] -mt-[250px] rounded-full pointer-events-none z-[9990] opacity-30 mix-blend-screen transition-opacity duration-300"
-        style={{
-          background: 'radial-gradient(circle, rgba(21, 88, 201, 0.35) 0%, rgba(212, 255, 36, 0.06) 40%, transparent 70%)',
-        }}
-      />
+      {/* TechNeeds Interactive Light Field Shader & Particle Canvas */}
+      <InteractiveLightField />
 
-      {/* Trailing electric ring */}
-      <div
-        ref={ringRef}
-        className={`fixed top-0 left-0 rounded-full pointer-events-none z-[9999] -ml-5 -mt-5 transition-all duration-150 ease-out ${
-          isHovered
-            ? 'w-16 h-16 -ml-8 -mt-8 border-2 border-lime bg-lime/10 shadow-[0_0_20px_rgba(212,255,36,0.3)]'
-            : isClicking
-            ? 'w-8 h-8 -ml-4 -mt-4 border border-cobalt-bright scale-90'
-            : 'w-10 h-10 border border-cobalt/60'
-        }`}
-      />
+      {isDesktop && (
+        <>
+          {/* Ambient reactive cursor spotlight in Electric Blue & Ice Cyan */}
+          <div
+            ref={auraRef}
+            className="fixed top-0 left-0 w-[520px] h-[520px] -ml-[260px] -mt-[260px] rounded-full pointer-events-none z-[40] opacity-35 mix-blend-screen transition-opacity duration-300"
+            style={{
+              background:
+                'radial-gradient(circle, rgba(117, 230, 255, 0.25) 0%, rgba(49, 94, 255, 0.15) 35%, rgba(8, 11, 18, 0) 70%)',
+            }}
+          />
 
-      {/* Center pinpoint */}
-      <div
-        ref={dotRef}
-        className={`fixed top-0 left-0 w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full pointer-events-none z-[10000] transition-colors duration-150 ${
-          isHovered ? 'bg-lime scale-150' : 'bg-white'
-        }`}
-      />
+          {/* Trailing electric cyan/blue ring */}
+          <div
+            ref={ringRef}
+            className={`fixed top-0 left-0 rounded-full pointer-events-none z-[9999] -ml-5 -mt-5 transition-all duration-150 ease-out ${
+              isHovered
+                ? 'w-16 h-16 -ml-8 -mt-8 border-2 border-ice-cyan bg-ice-cyan/10 shadow-[0_0_24px_rgba(117,230,255,0.4)]'
+                : isClicking
+                ? 'w-8 h-8 -ml-4 -mt-4 border-2 border-electric-blue-light scale-90'
+                : 'w-10 h-10 border border-ice-cyan/50 shadow-[0_0_12px_rgba(49,94,255,0.3)]'
+            }`}
+          />
+
+          {/* Center pinpoint */}
+          <div
+            ref={dotRef}
+            className={`fixed top-0 left-0 w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full pointer-events-none z-[10000] transition-colors duration-150 ${
+              isHovered ? 'bg-acid-lime scale-150 shadow-[0_0_8px_#D4FF24]' : 'bg-ice-cyan'
+            }`}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -123,6 +123,54 @@ export const SOCIETY_INITIATIVES: Initiative[] = [
   },
 ];
 
+export const WHAT_WE_DO = [
+  {
+    num: '01',
+    title: 'High-Impact Hackathons',
+    subtitle: 'INNOVORTEX ARENA',
+    description: 'We orchestrate intense 36-hour sprint hackathons challenging collegiate teams across Delhi NCR in AI safety, decentralized infrastructure, and climate technology.',
+  },
+  {
+    num: '02',
+    title: 'Peer Mentorship Cadres',
+    subtitle: 'SSSC ECOSYSTEM',
+    description: 'Our Society Student Support Cell pairs incoming freshers with experienced senior leaders for DSA, full-stack architectures, and interview prep.',
+  },
+  {
+    num: '03',
+    title: 'Open Source Upstreaming',
+    subtitle: 'GLOBAL CODEBASES',
+    description: 'Structured pathways teaching Git branch hygiene, PR reviews, and contributing to GirlScript Summer of Code, Outreachy, and Google Summer of Code.',
+  },
+  {
+    num: '04',
+    title: 'Technical Masterclasses',
+    subtitle: 'INDUSTRY LABS',
+    description: 'Hands-on workshops in partnership with Microsoft Learn Student Ambassadors (MLSA) covering Azure cloud, Docker, Kubernetes, and autonomous agent loops.',
+  },
+];
+
+export const TESTIMONIALS = [
+  {
+    quote: 'InnoVortex was my very first 36-hour hackathon. The mentorship from senior TechNeeds leads helped our team deploy our first live AI agent on Azure and win the track prize.',
+    author: 'Ananya Sharma',
+    batch: 'CSE Batch of 2026',
+    role: 'InnoVortex 3.0 Finalist',
+  },
+  {
+    quote: 'The SSSC Mentorship Cohort completely transformed my preparation for summer internships. The 1-on-1 mock interviews and DSA sprints gave me the confidence to crack Tier-1 technical rounds.',
+    author: 'Riya Gupta',
+    batch: 'IT Batch of 2025',
+    role: 'SSSC Mentee & Upcoming SDE Intern',
+  },
+  {
+    quote: 'TechNeeds is more than a technical society; it is an empowering ecosystem of women technologists who push each other to build software that actually matters.',
+    author: 'Sneha Verma',
+    batch: 'AI & Data Science 2026',
+    role: 'Web Development Cohort Lead',
+  },
+];
+
 export const FAQS = [
   {
     q: 'Who can join TechNeeds IGDTUW?',

@@ -4,14 +4,22 @@
 
 @layer base {
   :root {
-    --midnight: #030407;
-    --cobalt: #1558C9;
-    --cobalt-bright: #2d74ff;
-    --cobalt-glow: rgba(21, 88, 201, 0.4);
+    --deep-ink: #080B12;
+    --charcoal: #111722;
+    --charcoal-surface: #151D2A;
+    --electric-blue: #315EFF;
+    --electric-blue-light: #537AFF;
+    --ice-cyan: #75E6FF;
+    --soft-white: #F2F4F8;
+    --acid-lime: #D4FF24;
+    
+    --midnight: #080B12;
+    --cobalt: #315EFF;
+    --cobalt-bright: #537AFF;
+    --cobalt-glow: rgba(49, 94, 255, 0.4);
     --lime: #D4FF24;
     --lime-glow: rgba(212, 255, 36, 0.35);
-    --charcoal: #0a0e17;
-    --card-surface: #060913;
+    --card-surface: #111722;
   }
 
   * {

@@ -59,22 +59,22 @@ const MOMENTS = [
 
 export default function GalleryPage() {
   return (
-    <div className="pt-32 pb-24 px-6 sm:px-12 min-h-screen text-white relative">
+    <div className="pt-32 pb-24 px-6 sm:px-12 bg-deep-ink min-h-screen text-soft-white relative z-10">
       <div className="max-w-7xl mx-auto space-y-16">
         {/* Header */}
-        <div className="border-b border-cobalt/25 pb-10">
+        <div className="border-b border-charcoal-border pb-10">
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-cobalt/20 border border-cobalt text-cobalt-bright">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
               VISUAL CHRONICLE // VIBES
             </span>
-            <span className="font-mono text-xs text-electric-lime uppercase tracking-widest">
+            <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
               CAMPUS CULTURE
             </span>
           </div>
 
-          <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-white tracking-tight uppercase">
+          <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             SOCIETY <br />
-            <span className="text-electric-lime">VIBES &amp; GALLERY.</span>
+            <span className="text-ice-cyan">VIBES &amp; GALLERY.</span>
           </h1>
 
           <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">
@@ -87,15 +87,15 @@ export default function GalleryPage() {
           {MOMENTS.map((m, idx) => (
             <div
               key={idx}
-              className="p-6 border border-white/10 bg-midnight-950/80 backdrop-blur-md rounded-xl hover:border-electric-lime transition-all flex flex-col justify-between group"
+              className="p-6 border border-charcoal-border bg-charcoal/70 rounded-2xl hover:border-ice-cyan transition-all flex flex-col justify-between group"
             >
               <div>
                 {/* Visual Placeholder Frame with Gradient Cyber Texture */}
-                <div className={`w-full ${m.aspect} rounded-lg bg-gradient-to-br from-electric-cobalt/30 via-midnight-900 to-black border border-white/10 relative overflow-hidden flex flex-col justify-end p-4 mb-4 group-hover:border-electric-lime/50 transition-colors`}>
-                  <div className="absolute top-3 left-3 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-[10px] font-mono text-electric-lime uppercase border border-white/10">
+                <div className={`w-full ${m.aspect} rounded-xl bg-gradient-to-br from-electric-blue/20 via-deep-ink to-black border border-charcoal-border relative overflow-hidden flex flex-col justify-end p-4 mb-4 group-hover:border-ice-cyan transition-colors`}>
+                  <div className="absolute top-3 left-3 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-[10px] font-mono text-ice-cyan uppercase border border-charcoal-border">
                     {m.tag}
                   </div>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-electric-lime/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-ice-cyan/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <span className="text-xs font-mono text-slate-400 z-10">
                     📸 {m.location}
                   </span>
@@ -105,33 +105,33 @@ export default function GalleryPage() {
                   <span>{m.date}</span>
                 </div>
 
-                <h3 className="text-xl font-bold text-white group-hover:text-electric-lime transition-colors mb-2">
+                <h3 className="text-xl font-bold text-soft-white group-hover:text-ice-cyan transition-colors mb-2">
                   {m.title}
                 </h3>
 
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-300 leading-relaxed font-sans">
                   {m.caption}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-slate-500">
+              <div className="mt-6 pt-4 border-t border-charcoal-border flex items-center justify-between text-xs font-mono text-slate-500">
                 <span>ARCHIVE #0{idx + 1}</span>
-                <span className="text-electric-lime">CONFIRMED VIBE</span>
+                <span className="text-ice-cyan font-bold">VERIFIED VIBE</span>
               </div>
             </div>
           ))}
         </div>
 
         {/* Bottom Banner */}
-        <div className="p-8 border border-white/10 bg-midnight-900/60 rounded-xl text-center space-y-4">
-          <h3 className="text-2xl font-bold text-white">Have photos from our events?</h3>
-          <p className="text-xs text-slate-400 max-w-md mx-auto">
-            Tag us on Instagram @techneeds_igdtuw or submit high-resolution event media to the Media &amp; Design wing.
+        <div className="p-8 border border-charcoal-border bg-charcoal/60 rounded-2xl text-center space-y-4">
+          <h3 className="text-2xl font-bold text-soft-white">Have photos from our events?</h3>
+          <p className="text-xs text-slate-400 max-w-md mx-auto font-sans">
+            Tag us on Instagram @techneeds_igdtuw_ or submit high-resolution event media to the Media &amp; Design wing.
           </p>
           <div className="pt-2">
             <Link
               href="/community"
-              className="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded font-mono text-xs uppercase font-bold inline-block"
+              className="px-6 py-2.5 bg-ice-cyan text-deep-ink rounded-md font-mono text-xs uppercase font-bold inline-block hover:bg-cyan-300 transition-colors shadow-[0_0_12px_rgba(117,230,255,0.3)]"
             >
               Join Media Wing →
             </Link>

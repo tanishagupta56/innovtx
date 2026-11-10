@@ -42,10 +42,10 @@ export function DigitalCore({ scrollProgress = 0, pointerPos = { x: 0, y: 0 } }:
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
     
-    // Electric blue (#1558C9) & Acid lime (#D4FF24)
-    const colorBlue = new THREE.Color('#1558C9');
+    // Electric blue (#315EFF) & Ice cyan (#75E6FF) & subtle Lime (#D4FF24)
+    const colorBlue = new THREE.Color('#315EFF');
+    const colorCyan = new THREE.Color('#75E6FF');
     const colorLime = new THREE.Color('#D4FF24');
-    const colorCyan = new THREE.Color('#38bdf8');
 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
@@ -58,9 +58,9 @@ export function DigitalCore({ scrollProgress = 0, pointerPos = { x: 0, y: 0 } }:
       positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
       positions[i3 + 2] = radius * Math.cos(phi);
 
-      const mixedColor = Math.random() > 0.85 
+      const mixedColor = Math.random() > 0.90 
         ? colorLime 
-        : (Math.random() > 0.5 ? colorBlue : colorCyan);
+        : (Math.random() > 0.4 ? colorCyan : colorBlue);
 
       colors[i3] = mixedColor.r;
       colors[i3 + 1] = mixedColor.g;
@@ -130,15 +130,15 @@ export function DigitalCore({ scrollProgress = 0, pointerPos = { x: 0, y: 0 } }:
       <mesh ref={coreMeshRef}>
         <icosahedronGeometry args={[1.4, 2]} />
         <meshPhysicalMaterial
-          color="#1558C9"
-          emissive="#0a2a6b"
-          emissiveIntensity={0.6}
+          color="#315EFF"
+          emissive="#1E44D6"
+          emissiveIntensity={0.65}
           roughness={0.15}
           metalness={0.2}
-          transmission={0.85}
+          transmission={0.88}
           thickness={1.2}
           transparent
-          opacity={0.88}
+          opacity={0.9}
           wireframe={false}
         />
       </mesh>
@@ -147,10 +147,10 @@ export function DigitalCore({ scrollProgress = 0, pointerPos = { x: 0, y: 0 } }:
       <mesh>
         <icosahedronGeometry args={[1.42, 2]} />
         <meshBasicMaterial
-          color="#38bdf8"
+          color="#75E6FF"
           wireframe
           transparent
-          opacity={0.22}
+          opacity={0.25}
         />
       </mesh>
 
@@ -158,35 +158,35 @@ export function DigitalCore({ scrollProgress = 0, pointerPos = { x: 0, y: 0 } }:
       <mesh ref={innerMeshRef}>
         <octahedronGeometry args={[0.7, 0]} />
         <meshStandardMaterial
-          color="#D4FF24"
-          emissive="#D4FF24"
-          emissiveIntensity={1.8}
-          roughness={0.2}
-          metalness={0.9}
+          color="#75E6FF"
+          emissive="#75E6FF"
+          emissiveIntensity={2.0}
+          roughness={0.15}
+          metalness={0.95}
         />
       </mesh>
 
-      {/* Primary Orbital Ring 1 - Cobalt Blue */}
+      {/* Primary Orbital Ring 1 - Electric Blue */}
       <group ref={ring1Ref}>
         <mesh>
           <torusGeometry args={[2.2, 0.02, 16, 100]} />
           <meshStandardMaterial
-            color="#1558C9"
-            emissive="#1558C9"
-            emissiveIntensity={1.5}
+            color="#315EFF"
+            emissive="#315EFF"
+            emissiveIntensity={1.8}
             roughness={0.3}
           />
         </mesh>
       </group>
 
-      {/* Secondary Orbital Ring 2 - Acid Lime Filament */}
+      {/* Secondary Orbital Ring 2 - Ice Cyan Filament */}
       <group ref={ring2Ref}>
         <mesh>
           <torusGeometry args={[2.6, 0.015, 16, 120]} />
           <meshStandardMaterial
-            color="#D4FF24"
-            emissive="#D4FF24"
-            emissiveIntensity={2.0}
+            color="#75E6FF"
+            emissive="#75E6FF"
+            emissiveIntensity={2.2}
             roughness={0.2}
           />
         </mesh>
@@ -197,9 +197,9 @@ export function DigitalCore({ scrollProgress = 0, pointerPos = { x: 0, y: 0 } }:
         <mesh>
           <torusGeometry args={[3.1, 0.012, 16, 120]} />
           <meshBasicMaterial
-            color="#60a5fa"
+            color="#75E6FF"
             transparent
-            opacity={0.4}
+            opacity={0.35}
             wireframe
           />
         </mesh>
@@ -211,10 +211,10 @@ export function DigitalCore({ scrollProgress = 0, pointerPos = { x: 0, y: 0 } }:
           <mesh key={idx} position={node.position}>
             <octahedronGeometry args={[node.scale, 0]} />
             <meshStandardMaterial
-              color={idx % 3 === 0 ? '#D4FF24' : '#1558C9'}
-              emissive={idx % 3 === 0 ? '#D4FF24' : '#1558C9'}
-              emissiveIntensity={idx % 3 === 0 ? 1.4 : 0.8}
-              roughness={0.3}
+              color={idx % 4 === 0 ? '#D4FF24' : (idx % 2 === 0 ? '#75E6FF' : '#315EFF')}
+              emissive={idx % 4 === 0 ? '#D4FF24' : (idx % 2 === 0 ? '#75E6FF' : '#315EFF')}
+              emissiveIntensity={idx % 4 === 0 ? 1.5 : 1.2}
+              roughness={0.25}
             />
           </mesh>
         ))}

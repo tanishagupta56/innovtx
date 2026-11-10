@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 export default function Preloader() {
   const [loading, setLoading] = useState(false);
@@ -9,7 +10,7 @@ export default function Preloader() {
 
   useEffect(() => {
     const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const hasSeen = sessionStorage.getItem('techneeds_cinematic_preload');
+    const hasSeen = sessionStorage.getItem('techneeds_cinematic_preload_v3');
 
     if (isReduced || hasSeen) {
       return;
@@ -24,15 +25,15 @@ export default function Preloader() {
           clearInterval(interval);
           return 100;
         }
-        const step = Math.floor(Math.random() * 14) + 6;
+        const step = Math.floor(Math.random() * 16) + 8;
         return Math.min(100, prev + step);
       });
-    }, 70);
+    }, 60);
 
     const timer = setTimeout(() => {
       setLoading(false);
-      sessionStorage.setItem('techneeds_cinematic_preload', 'true');
-    }, 1300);
+      sessionStorage.setItem('techneeds_cinematic_preload_v3', 'true');
+    }, 1350);
 
     return () => {
       clearInterval(interval);
@@ -50,101 +51,70 @@ export default function Preloader() {
             clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
             transition: { duration: 0.65, ease: [0.77, 0, 0.175, 1] },
           }}
-          className="fixed inset-0 z-[99999] bg-[#030407] flex flex-col justify-between p-8 sm:p-12 pointer-events-none select-none overflow-hidden"
+          className="fixed inset-0 z-[99999] bg-[#080B12] flex flex-col justify-between p-8 sm:p-12 pointer-events-none select-none overflow-hidden"
         >
           {/* Laser horizontal scanline */}
-          <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-lime to-transparent shadow-[0_0_15px_#D4FF24] animate-scanline pointer-events-none" />
+          <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-ice-cyan to-transparent shadow-[0_0_20px_#75E6FF] animate-scanline pointer-events-none" />
 
           {/* Top telemetry bar */}
           <div className="flex justify-between items-center text-xs font-mono">
-            <span className="text-cobalt-300 tracking-widest uppercase">
-              TECHNEEDS IGDTUW // SYSTEM BOOT
+            <span className="text-electric-blue-light tracking-widest uppercase">
+              TECHNEEDS IGDTUW // DIGITAL EXPERIENCE
             </span>
-            <span className="text-lime flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-lime animate-ping" />
-              INITIALIZING
+            <span className="text-ice-cyan flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-ice-cyan animate-ping" />
+              ONLINE
             </span>
           </div>
 
-          {/* Center Brand Identity with animated geometric vector */}
+          {/* Center Brand Identity with Official Logo Reveal */}
           <div className="flex flex-col items-center justify-center my-auto">
-            <div className="relative mb-8">
-              <svg
-                width="140"
-                height="140"
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-24 h-24 sm:w-28 sm:h-28"
-              >
-                {/* Hexagon framework */}
-                <motion.polygon
-                  points="50,5 92,27 92,73 50,95 8,73 8,27"
-                  stroke="#1558C9"
-                  strokeWidth="2.5"
-                  fill="none"
-                  initial={{ pathLength: 0, rotate: -30 }}
-                  animate={{ pathLength: 1, rotate: 0 }}
-                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                />
-                {/* Inner kinetic diamond */}
-                <motion.path
-                  d="M50 18 L80 50 L50 82 L20 50 Z"
-                  stroke="#D4FF24"
-                  strokeWidth="2"
-                  strokeDasharray="4 2"
-                  fill="none"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.7, delay: 0.25 }}
-                />
-                {/* Core pulse node */}
-                <motion.circle
-                  cx="50"
-                  cy="50"
-                  r="5"
-                  fill="#D4FF24"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: [0, 1.4, 1] }}
-                  transition={{ duration: 0.5, delay: 0.6 }}
-                />
-              </svg>
-            </div>
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-28 h-28 sm:w-36 sm:h-36 mb-6"
+            >
+              <div className="absolute inset-0 bg-ice-cyan/20 rounded-full blur-2xl animate-pulse" />
+              <Image
+                src="/brand/techneeds-logo.png"
+                alt="TechNeeds IGDTUW Official Logo"
+                fill
+                sizes="(max-width: 768px) 112px, 144px"
+                className="object-contain relative z-10 drop-shadow-[0_0_25px_rgba(117,230,255,0.5)]"
+                priority
+              />
+            </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, letterSpacing: '0.4em' }}
               animate={{ opacity: 1, letterSpacing: '-0.02em' }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-white"
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+              className="font-display text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-soft-white"
             >
-              TECH<span className="text-lime">NEEDS</span>
+              TECH<span className="text-ice-cyan">NEEDS</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 0.7, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="font-mono text-xs text-gray-400 uppercase tracking-widest mt-2"
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="font-mono text-xs text-slate-400 mt-2 tracking-widest uppercase"
             >
-              PREMIER TECHNICAL SOCIETY // IGDTUW DELHI
+              Learn. Build. Explore. Connect.
             </motion.p>
           </div>
 
-          {/* Bottom telemetry progress */}
-          <div className="flex flex-col sm:flex-row items-end sm:items-center justify-between gap-4 font-mono text-xs border-t border-cobalt/20 pt-4">
-            <div className="flex items-center gap-3">
-              <span className="text-gray-500">ENGINE:</span>
-              <span className="text-white">GSAP + LENIS ACCELERATED</span>
+          {/* Bottom telemetry footer */}
+          <div className="flex justify-between items-end text-xs font-mono border-t border-charcoal-border pt-4">
+            <div className="space-y-1">
+              <p className="text-slate-500">IGDTUW KASHMERE GATE, DELHI</p>
+              <p className="text-slate-400">STATUS: INITIALIZING LIGHT FIELD</p>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="w-36 h-1 bg-[#0a1226] border border-cobalt/30 overflow-hidden">
-                <motion.div
-                  className="h-full bg-lime shadow-[0_0_10px_#D4FF24]"
-                  style={{ width: `${counter}%` }}
-                />
-              </div>
-              <span className="text-lime font-bold min-w-[3rem] text-right font-mono">
-                {counter}%
+            <div className="text-right">
+              <span className="text-4xl sm:text-6xl font-display font-black text-soft-white tracking-tighter">
+                {counter}
+                <span className="text-xs text-ice-cyan font-mono font-normal ml-1">%</span>
               </span>
             </div>
           </div>
