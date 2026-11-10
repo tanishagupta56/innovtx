@@ -6,6 +6,7 @@ import GlobalInteractiveBackground from './cursor/GlobalInteractiveBackground';
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+  const auraRef = useRef<HTMLDivElement>(null);
   const [isDesktop, setIsDesktop] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
@@ -23,6 +24,8 @@ export default function CustomCursor() {
     let mouseY = window.innerHeight / 2;
     let ringX = mouseX;
     let ringY = mouseY;
+    let auraX = mouseX;
+    let auraY = mouseY;
     let rafId: number;
 
     const onMouseMove = (e: MouseEvent) => {
@@ -42,8 +45,15 @@ export default function CustomCursor() {
       ringX += (mouseX - ringX) * 0.2;
       ringY += (mouseY - ringY) * 0.2;
 
+      auraX += (mouseX - auraX) * 0.08;
+      auraY += (mouseY - auraY) * 0.08;
+
       if (ringRef.current) {
         ringRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+      }
+
+      if (auraRef.current) {
+        auraRef.current.style.transform = `translate3d(${auraX}px, ${auraY}px, 0)`;
       }
 
       rafId = requestAnimationFrame(render);
@@ -89,15 +99,25 @@ export default function CustomCursor() {
 
       {isDesktop && (
         <>
-          {/* Subtle Trailing Cursor Ring */}
+          {/* Ambient cursor spotlight in Electric Blue & Lime Green */}
+          <div
+            ref={auraRef}
+            className="fixed top-0 left-0 w-[480px] h-[480px] -ml-[240px] -mt-[240px] rounded-full pointer-events-none z-[5] opacity-30 mix-blend-screen transition-opacity duration-300"
+            style={{
+              background:
+                'radial-gradient(circle, rgba(49, 94, 255, 0.22) 0%, rgba(184, 217, 76, 0.08) 40%, rgba(8, 11, 18, 0) 70%)',
+            }}
+          />
+
+          {/* Trailing electric blue / lime ring */}
           <div
             ref={ringRef}
-            className={`fixed top-0 left-0 rounded-full pointer-events-none z-[9999] transition-all duration-150 ease-out ${
+            className={`fixed top-0 left-0 rounded-full pointer-events-none z-[9999] -ml-5 -mt-5 transition-all duration-150 ease-out ${
               isHovered
-                ? 'w-11 h-11 -ml-[22px] -mt-[22px] border border-lime-green bg-lime-green/5'
+                ? 'w-14 h-14 -ml-7 -mt-7 border-2 border-lime-green bg-lime-green/10 shadow-[0_0_20px_rgba(184,217,76,0.35)]'
                 : isClicking
-                ? 'w-6 h-6 -ml-3 -mt-3 border border-electric-blue scale-90'
-                : 'w-8 h-8 -ml-4 -mt-4 border border-electric-blue/40'
+                ? 'w-8 h-8 -ml-4 -mt-4 border-2 border-electric-blue-light scale-90'
+                : 'w-10 h-10 border border-electric-blue/60 shadow-[0_0_12px_rgba(49,94,255,0.3)]'
             }`}
           />
 
@@ -105,7 +125,7 @@ export default function CustomCursor() {
           <div
             ref={dotRef}
             className={`fixed top-0 left-0 w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full pointer-events-none z-[10000] transition-colors duration-150 ${
-              isHovered ? 'bg-lime-green scale-125' : 'bg-electric-blue'
+              isHovered ? 'bg-lime-green scale-150 shadow-[0_0_8px_#B8D94C]' : 'bg-electric-blue-light'
             }`}
           />
         </>
