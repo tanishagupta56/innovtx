@@ -42,12 +42,12 @@ export default function Footer() {
                   alt="TechNeeds Logo"
                   fill
                   sizes="40px"
-                  className="object-contain drop-shadow-[0_0_12px_rgba(117,230,255,0.4)]"
+                  className="object-contain drop-shadow-[0_0_12px_rgba(49,94,255,0.4)]"
                 />
               </div>
               <div>
                 <span className="font-display font-black text-xl text-soft-white tracking-tight">
-                  TECH<span className="text-ice-cyan">NEEDS</span>
+                  TECH<span className="text-lime-green">NEEDS</span>
                 </span>
                 <span className="font-mono text-[10px] text-slate-400 block tracking-widest">
                   IGDTUW TECHNICAL SOCIETY
@@ -66,19 +66,19 @@ export default function Footer() {
             {/* Verified Contact Details */}
             <div className="space-y-2 pt-2 text-xs font-mono text-slate-300">
               <div className="flex items-center gap-2">
-                <span className="text-ice-cyan font-bold">EMAIL:</span>
-                <a href="mailto:techneedsigdtuw@gmail.com" className="hover:text-ice-cyan underline">
+                <span className="text-lime-green font-bold">EMAIL:</span>
+                <a href="mailto:techneedsigdtuw@gmail.com" className="hover:text-lime-green underline">
                   techneedsigdtuw@gmail.com
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-ice-cyan font-bold">WHATSAPP:</span>
-                <a href="https://wa.me/918958898580" target="_blank" rel="noopener noreferrer" className="hover:text-ice-cyan underline">
+                <span className="text-lime-green font-bold">WHATSAPP:</span>
+                <a href="https://wa.me/918958898580" target="_blank" rel="noopener noreferrer" className="hover:text-lime-green underline">
                   +91 8958898580
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-ice-cyan font-bold">CAMPUS:</span>
+                <span className="text-lime-green font-bold">CAMPUS:</span>
                 <span>IGDTUW, Kashmere Gate, Delhi 110006</span>
               </div>
             </div>
@@ -88,16 +88,16 @@ export default function Footer() {
           <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8 font-mono text-xs">
             {/* Column 1: Ecosystem */}
             <div className="space-y-4">
-              <h4 className="text-ice-cyan uppercase tracking-widest font-bold border-b border-charcoal-border pb-2">
+              <h4 className="text-lime-green uppercase tracking-widest font-bold border-b border-charcoal-border pb-2">
                 {'// DISCOVER'}
               </h4>
               <ul className="space-y-2.5 text-slate-400">
-                <li><Link href="/about" className="hover:text-ice-cyan transition-colors">⚡ About Society</Link></li>
-                <li><Link href="/events" className="hover:text-ice-cyan transition-colors">📅 Events &amp; Passes</Link></li>
-                <li><Link href="/timeline" className="hover:text-ice-cyan transition-colors">⏳ 3D Spatial Timeline</Link></li>
-                <li><Link href="/mentorship" className="hover:text-ice-cyan transition-colors">🤝 Mentorship Cadre</Link></li>
-                <li><Link href="/resources" className="hover:text-ice-cyan transition-colors">📚 TechBoard Docs</Link></li>
-                <li><Link href="/team" className="hover:text-ice-cyan transition-colors">👥 Leadership &amp; Alumni</Link></li>
+                <li><Link href="/about" className="hover:text-lime-green transition-colors">⚡ About Society</Link></li>
+                <li><Link href="/events" className="hover:text-lime-green transition-colors">📅 Events &amp; Passes</Link></li>
+                <li><Link href="/timeline" className="hover:text-lime-green transition-colors">⏳ 3D Spatial Timeline</Link></li>
+                <li><Link href="/mentorship" className="hover:text-lime-green transition-colors">🤝 Mentorship Cadre</Link></li>
+                <li><Link href="/resources" className="hover:text-lime-green transition-colors">📚 TechBoard Docs</Link></li>
+                <li><Link href="/team" className="hover:text-lime-green transition-colors">👥 Leadership &amp; Alumni</Link></li>
               </ul>
             </div>
 
@@ -127,7 +127,7 @@ export default function Footer() {
                     href="https://www.instagram.com/techneeds_igdtuw_/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-ice-cyan transition-colors flex items-center gap-1.5"
+                    className="hover:text-lime-green transition-colors flex items-center gap-1.5"
                   >
                     <span>Instagram</span>
                     <span className="text-[10px]">↗</span>
@@ -138,7 +138,7 @@ export default function Footer() {
                     href="https://www.linkedin.com/company/techneeds-igdtuw/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-ice-cyan transition-colors flex items-center gap-1.5"
+                    className="hover:text-lime-green transition-colors flex items-center gap-1.5"
                   >
                     <span>LinkedIn</span>
                     <span className="text-[10px]">↗</span>
@@ -149,7 +149,7 @@ export default function Footer() {
                     href="https://igdtuw.ac.in/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-ice-cyan transition-colors flex items-center gap-1.5"
+                    className="hover:text-lime-green transition-colors flex items-center gap-1.5"
                   >
                     <span>IGDTUW Portal</span>
                     <span className="text-[10px]">↗</span>
@@ -160,7 +160,7 @@ export default function Footer() {
                     href="https://assetmerkleigdtuw.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-ice-cyan transition-colors flex items-center gap-1.5"
+                    className="hover:text-lime-green transition-colors flex items-center gap-1.5"
                   >
                     <span>AssetMerkle Hub</span>
                     <span className="text-[10px]">↗</span>
@@ -170,7 +170,7 @@ export default function Footer() {
 
               <div className="pt-2">
                 <MagneticButton strength={15} onClick={scrollToTop}>
-                  <button className="px-3 py-2 border border-charcoal-border bg-charcoal hover:border-ice-cyan text-ice-cyan font-mono text-[10px] uppercase tracking-wider flex items-center gap-1 rounded">
+                  <button className="px-3 py-2 border border-charcoal-border bg-charcoal hover:border-electric-blue/60 text-lime-green font-mono text-[10px] uppercase tracking-wider flex items-center gap-1 rounded">
                     <span>↑ BACK TO TOP</span>
                   </button>
                 </MagneticButton>
@@ -181,7 +181,7 @@ export default function Footer() {
 
         {/* Massive Full-Width Editorial Brand Wordmark */}
         <div className="pt-10 select-none overflow-hidden text-center">
-          <h2 className="editorial-title text-[14vw] sm:text-[15vw] font-black leading-[0.8] tracking-tighter text-transparent [-webkit-text-stroke:1.5px_rgba(117,230,255,0.25)] hover:[-webkit-text-stroke:1.5px_#75E6FF] transition-all duration-700">
+          <h2 className="editorial-title text-[14vw] sm:text-[15vw] font-black leading-[0.8] tracking-tighter text-transparent [-webkit-text-stroke:1.5px_rgba(49,94,255,0.25)] hover:[-webkit-text-stroke:1.5px_#75E6FF] transition-all duration-700">
             TECHNEEDS
           </h2>
         </div>
@@ -190,7 +190,7 @@ export default function Footer() {
         <div className="mt-8 pt-6 border-t border-charcoal-border flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-slate-500">
           <p>© {new Date().getFullYear()} TECHNEEDS IGDTUW. ALL RIGHTS RESERVED.</p>
           <div className="flex items-center gap-4">
-            <span className="text-ice-cyan">● LIGHT FIELD ACTIVE</span>
+            <span className="text-lime-green">● LIGHT FIELD ACTIVE</span>
             <span className="text-slate-600">{'// NEXT.JS 14 ENGINE'}</span>
           </div>
         </div>

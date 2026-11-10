@@ -137,7 +137,7 @@ export default function ShowcaseClient() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-3.5 py-1.5 font-mono text-xs rounded-full uppercase transition-all ${
                 selectedCategory === cat
-                  ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_12px_#75E6FF]'
+                  ? 'bg-electric-blue text-deep-ink font-bold shadow-[0_0_12px_#315EFF]'
                   : 'bg-deep-ink border border-charcoal-border text-slate-300 hover:text-white'
               }`}
             >
@@ -159,11 +159,11 @@ export default function ShowcaseClient() {
         {filtered.map((proj) => (
           <div
             key={proj.id}
-            className="p-8 sm:p-10 border border-charcoal-border bg-charcoal/70 rounded-2xl hover:border-ice-cyan transition-all flex flex-col justify-between group relative overflow-hidden"
+            className="p-8 sm:p-10 border border-charcoal-border bg-charcoal/70 rounded-2xl hover:border-electric-blue/50 transition-all flex flex-col justify-between group relative overflow-hidden"
           >
             <div>
               <div className="flex items-center justify-between gap-2 mb-4">
-                <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-charcoal border border-charcoal-border text-ice-cyan">
+                <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-charcoal border border-charcoal-border text-lime-green">
                   {proj.category}
                 </span>
                 {proj.award && (
@@ -173,7 +173,7 @@ export default function ShowcaseClient() {
                 )}
               </div>
 
-              <h3 className="font-display font-bold text-2xl sm:text-3xl text-soft-white group-hover:text-ice-cyan transition-colors mb-1">
+              <h3 className="font-display font-bold text-2xl sm:text-3xl text-soft-white group-hover:text-lime-green transition-colors mb-1">
                 {proj.name}
               </h3>
 
@@ -219,7 +219,7 @@ export default function ShowcaseClient() {
                     href={proj.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-1.5 bg-ice-cyan text-deep-ink font-mono text-xs font-bold rounded hover:bg-cyan-300 transition-colors"
+                    className="px-4 py-1.5 bg-electric-blue text-deep-ink font-mono text-xs font-bold rounded hover:bg-cyan-300 transition-colors"
                   >
                     Live Demo ↗
                   </a>
@@ -250,7 +250,7 @@ export default function ShowcaseClient() {
             {submitted ? (
               <div className="p-8 text-center space-y-3 font-mono">
                 <span className="text-3xl block">✨</span>
-                <p className="text-ice-cyan font-bold text-lg">Project Submitted Successfully!</p>
+                <p className="text-lime-green font-bold text-lg">Project Submitted Successfully!</p>
                 <p className="text-xs text-slate-400">Your submission is queued for peer review.</p>
               </div>
             ) : (
@@ -263,7 +263,7 @@ export default function ShowcaseClient() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="e.g. EcoTrace AI"
-                    className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-ice-cyan"
+                    className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-electric-blue/50"
                   />
                 </div>
 
@@ -274,7 +274,7 @@ export default function ShowcaseClient() {
                     value={form.tagline}
                     onChange={(e) => setForm({ ...form, tagline: e.target.value })}
                     placeholder="e.g. Autonomous Satellite Monitoring System"
-                    className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-ice-cyan"
+                    className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-electric-blue/50"
                   />
                 </div>
 
@@ -286,7 +286,7 @@ export default function ShowcaseClient() {
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
                     placeholder="What problem does it solve? What architecture did you use?"
-                    className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-ice-cyan"
+                    className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-electric-blue/50"
                   />
                 </div>
 
@@ -296,7 +296,7 @@ export default function ShowcaseClient() {
                     <select
                       value={form.category}
                       onChange={(e) => setForm({ ...form, category: e.target.value })}
-                      className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-ice-cyan"
+                      className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-electric-blue/50"
                     >
                       <option value="AI & Climate">AI &amp; Climate</option>
                       <option value="Web3 & Security">Web3 &amp; Security</option>
@@ -312,7 +312,7 @@ export default function ShowcaseClient() {
                       value={form.team}
                       onChange={(e) => setForm({ ...form, team: e.target.value })}
                       placeholder="e.g. Aanya, Mehak, Sneha"
-                      className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-ice-cyan"
+                      className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-electric-blue/50"
                     />
                   </div>
                 </div>
@@ -324,7 +324,7 @@ export default function ShowcaseClient() {
                     value={form.techStack}
                     onChange={(e) => setForm({ ...form, techStack: e.target.value })}
                     placeholder="e.g. React, PyTorch, Supabase, Tailwind"
-                    className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-ice-cyan"
+                    className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-electric-blue/50"
                   />
                 </div>
 
@@ -336,7 +336,7 @@ export default function ShowcaseClient() {
                       value={form.githubUrl}
                       onChange={(e) => setForm({ ...form, githubUrl: e.target.value })}
                       placeholder="https://github.com/..."
-                      className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-ice-cyan"
+                      className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-electric-blue/50"
                     />
                   </div>
 
@@ -347,7 +347,7 @@ export default function ShowcaseClient() {
                       value={form.demoUrl}
                       onChange={(e) => setForm({ ...form, demoUrl: e.target.value })}
                       placeholder="https://..."
-                      className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-ice-cyan"
+                      className="w-full px-4 py-2 bg-deep-ink border border-charcoal-border rounded text-soft-white focus:outline-none focus:border-electric-blue/50"
                     />
                   </div>
                 </div>
@@ -362,7 +362,7 @@ export default function ShowcaseClient() {
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-ice-cyan text-deep-ink font-bold rounded hover:bg-cyan-300"
+                    className="px-6 py-2 bg-electric-blue text-deep-ink font-bold rounded hover:bg-cyan-300"
                   >
                     Submit Project
                   </button>

@@ -102,7 +102,7 @@ export default function CollaborateClient() {
           onClick={() => setActiveTab('sponsor')}
           className={`px-5 py-2.5 uppercase tracking-wider rounded-md transition-all ${
             activeTab === 'sponsor'
-              ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_15px_#75E6FF]'
+              ? 'bg-electric-blue text-deep-ink font-bold shadow-[0_0_15px_#315EFF]'
               : 'bg-charcoal border border-charcoal-border text-slate-400 hover:text-white'
           }`}
         >
@@ -113,7 +113,7 @@ export default function CollaborateClient() {
           onClick={() => setActiveTab('collaborate')}
           className={`px-5 py-2.5 uppercase tracking-wider rounded-md transition-all ${
             activeTab === 'collaborate'
-              ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_15px_#75E6FF]'
+              ? 'bg-electric-blue text-deep-ink font-bold shadow-[0_0_15px_#315EFF]'
               : 'bg-charcoal border border-charcoal-border text-slate-400 hover:text-white'
           }`}
         >
@@ -128,7 +128,7 @@ export default function CollaborateClient() {
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
               SPONSORSHIP PACKAGES // INNOVORTEX ARENA
             </span>
-            <span className="font-mono text-xs text-ice-cyan font-bold">
+            <span className="font-mono text-xs text-lime-green font-bold">
               CUSTOM TIERS AVAILABLE
             </span>
           </div>
@@ -139,7 +139,7 @@ export default function CollaborateClient() {
                 key={idx}
                 className={`p-8 rounded-2xl border flex flex-col justify-between ${
                   tier.highlight
-                    ? 'border-ice-cyan bg-charcoal/90 shadow-[0_0_25px_rgba(117,230,255,0.15)]'
+                    ? 'border-electric-blue/50 bg-charcoal/90 shadow-[0_0_25px_rgba(117,230,255,0.15)]'
                     : 'border-charcoal-border bg-charcoal/60'
                 }`}
               >
@@ -154,7 +154,7 @@ export default function CollaborateClient() {
                   <ul className="space-y-3 font-sans">
                     {tier.benefits.map((b, i) => (
                       <li key={i} className="text-xs text-slate-300 flex items-start gap-2">
-                        <span className="text-ice-cyan font-mono mt-0.5">✔</span>
+                        <span className="text-lime-green font-mono mt-0.5">✔</span>
                         <span>{b}</span>
                       </li>
                     ))}
@@ -166,8 +166,8 @@ export default function CollaborateClient() {
                     href="mailto:techneedsigdtuw@gmail.com?subject=Sponsorship%20Proposal%20-%20TechNeeds"
                     className={`block w-full text-center py-3 text-xs font-mono font-bold rounded uppercase transition-colors ${
                       tier.highlight
-                        ? 'bg-ice-cyan text-deep-ink hover:bg-cyan-300 shadow-[0_0_15px_rgba(117,230,255,0.4)]'
-                        : 'bg-deep-ink border border-charcoal-border text-soft-white hover:border-ice-cyan'
+                        ? 'bg-electric-blue text-deep-ink hover:bg-cyan-300 shadow-[0_0_15px_rgba(117,230,255,0.4)]'
+                        : 'bg-deep-ink border border-charcoal-border text-soft-white hover:border-electric-blue/50'
                     }`}
                   >
                     Request Brochure &amp; Deck →
@@ -186,7 +186,7 @@ export default function CollaborateClient() {
               className="p-8 border border-charcoal-border bg-charcoal/60 rounded-2xl flex flex-col justify-between"
             >
               <div>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-charcoal border border-charcoal-border text-ice-cyan block w-fit mb-4">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-charcoal border border-charcoal-border text-lime-green block w-fit mb-4">
                   {col.tag}
                 </span>
                 <h3 className="text-xl font-bold text-soft-white mb-3">{col.title}</h3>
@@ -204,11 +204,11 @@ export default function CollaborateClient() {
       {/* Real Working Inquiry Form */}
       <div className="p-10 border border-charcoal-border bg-charcoal/70 rounded-3xl space-y-8">
         <div>
-          <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+          <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
             GET IN TOUCH
           </span>
           <h2 className="editorial-title text-3xl sm:text-4xl text-soft-white mt-3">
-            Submit a Partnership Inquiry<span className="text-ice-cyan">.</span>
+            Submit a Partnership Inquiry<span className="text-lime-green">.</span>
           </h2>
           <p className="text-slate-400 text-sm font-sans mt-1">
             Our corporate relations team typically reviews inquiries within 24 hours.
@@ -216,8 +216,8 @@ export default function CollaborateClient() {
         </div>
 
         {submitted ? (
-          <div className="p-8 text-center space-y-2 font-mono bg-deep-ink border border-ice-cyan rounded-xl">
-            <span className="text-2xl text-ice-cyan block">✔</span>
+          <div className="p-8 text-center space-y-2 font-mono bg-deep-ink border border-electric-blue/50 rounded-xl">
+            <span className="text-2xl text-lime-green block">✔</span>
             <p className="text-soft-white font-bold text-base">Inquiry Dispatched Successfully</p>
             <p className="text-xs text-slate-400">
               Thank you! Our Corporate Relations team will connect via {form.email || 'your provided email'}.
@@ -233,7 +233,7 @@ export default function CollaborateClient() {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Full Name"
-                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-ice-cyan"
+                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-electric-blue/50"
               />
             </div>
 
@@ -245,7 +245,7 @@ export default function CollaborateClient() {
                 value={form.organization}
                 onChange={(e) => setForm({ ...form, organization: e.target.value })}
                 placeholder="Company or University"
-                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-ice-cyan"
+                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-electric-blue/50"
               />
             </div>
 
@@ -257,7 +257,7 @@ export default function CollaborateClient() {
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 placeholder="you@company.com"
-                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-ice-cyan"
+                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-electric-blue/50"
               />
             </div>
 
@@ -266,7 +266,7 @@ export default function CollaborateClient() {
               <select
                 value={form.type}
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
-                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-ice-cyan"
+                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-electric-blue/50"
               >
                 <option value="Event Sponsorship">InnoVortex Event Sponsorship</option>
                 <option value="Technical Workshop">Sponsored Workshop / Lab</option>
@@ -283,7 +283,7 @@ export default function CollaborateClient() {
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 placeholder="Tell us about your proposed collaboration or sponsorship goals..."
-                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-ice-cyan"
+                className="w-full px-4 py-2.5 bg-deep-ink border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-electric-blue/50"
               />
             </div>
 
@@ -291,7 +291,7 @@ export default function CollaborateClient() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-8 py-3.5 bg-ice-cyan text-deep-ink font-bold uppercase rounded-md hover:bg-cyan-300 transition-colors shadow-[0_0_15px_rgba(117,230,255,0.4)] disabled:opacity-50"
+                className="px-8 py-3.5 bg-electric-blue text-deep-ink font-bold uppercase rounded-md hover:bg-cyan-300 transition-colors shadow-[0_0_15px_rgba(117,230,255,0.4)] disabled:opacity-50"
               >
                 {submitting ? 'Transmitting...' : 'Dispatch Inquiry →'}
               </button>
@@ -305,7 +305,7 @@ export default function CollaborateClient() {
         <div className="space-y-1">
           <p className="text-soft-white font-bold">DIRECT COMMUNICATIONS DESK:</p>
           <p className="text-slate-400">
-            Email: <a href="mailto:techneedsigdtuw@gmail.com" className="text-ice-cyan underline">techneedsigdtuw@gmail.com</a> | WhatsApp: <a href="https://wa.me/918958898580" target="_blank" rel="noopener noreferrer" className="text-ice-cyan underline">+91 8958898580</a>
+            Email: <a href="mailto:techneedsigdtuw@gmail.com" className="text-lime-green underline">techneedsigdtuw@gmail.com</a> | WhatsApp: <a href="https://wa.me/918958898580" target="_blank" rel="noopener noreferrer" className="text-lime-green underline">+91 8958898580</a>
           </p>
           <p className="text-slate-500">
             Campus: Indira Gandhi Delhi Technical University for Women, Kashmere Gate, Delhi 110006
@@ -317,7 +317,7 @@ export default function CollaborateClient() {
             href="https://www.instagram.com/techneeds_igdtuw_/"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 bg-charcoal border border-charcoal-border rounded text-slate-300 hover:text-white hover:border-ice-cyan transition-colors"
+            className="px-4 py-2 bg-charcoal border border-charcoal-border rounded text-slate-300 hover:text-white hover:border-electric-blue/50 transition-colors"
           >
             Instagram ↗
           </a>
@@ -325,7 +325,7 @@ export default function CollaborateClient() {
             href="https://www.linkedin.com/company/techneeds-igdtuw/"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 bg-charcoal border border-charcoal-border rounded text-slate-300 hover:text-white hover:border-ice-cyan transition-colors"
+            className="px-4 py-2 bg-charcoal border border-charcoal-border rounded text-slate-300 hover:text-white hover:border-electric-blue/50 transition-colors"
           >
             LinkedIn ↗
           </a>

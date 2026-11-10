@@ -95,7 +95,7 @@ export default function MentorshipPage() {
         {/* Editorial Header */}
         <div className="border-b border-charcoal-border pb-12">
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               MENTORSHIP CADRE // SSSC
             </span>
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
@@ -105,7 +105,7 @@ export default function MentorshipPage() {
 
           <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             SSSC MENTORSHIP <br />
-            <span className="text-ice-cyan">ECOSYSTEM.</span>
+            <span className="text-lime-green">ECOSYSTEM.</span>
           </h1>
 
           <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">
@@ -116,7 +116,7 @@ export default function MentorshipPage() {
         {/* Cohort Archive Section */}
         <div className="space-y-8">
           <div className="flex items-center justify-between border-b border-charcoal-border pb-3">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-ice-cyan font-bold">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-lime-green font-bold">
               {'// VERIFIED COHORT ARCHIVE & MENTORS'}
             </h2>
             <span className="text-xs font-mono text-slate-500">PUBLIC CURRICULUM</span>
@@ -126,11 +126,11 @@ export default function MentorshipPage() {
             {COHORTS.map((cohort, idx) => (
               <div
                 key={idx}
-                className="p-8 border border-charcoal-border bg-charcoal/70 rounded-2xl flex flex-col justify-between group hover:border-ice-cyan transition-all"
+                className="p-8 border border-charcoal-border bg-charcoal/70 rounded-2xl flex flex-col justify-between group hover:border-electric-blue/50 transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-charcoal border border-charcoal-border text-ice-cyan">
+                    <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-charcoal border border-charcoal-border text-lime-green">
                       {cohort.tag}
                     </span>
                     <span className="text-[11px] font-mono text-slate-400">
@@ -138,7 +138,7 @@ export default function MentorshipPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-soft-white group-hover:text-ice-cyan transition-colors mb-2">
+                  <h3 className="text-2xl font-bold text-soft-white group-hover:text-lime-green transition-colors mb-2">
                     {cohort.title}
                   </h3>
 
@@ -161,7 +161,7 @@ export default function MentorshipPage() {
                     </span>
                     {cohort.outcomes.map((out, i) => (
                       <div key={i} className="text-xs text-slate-300 flex items-start gap-2 font-sans">
-                        <span className="text-ice-cyan font-mono">▹</span>
+                        <span className="text-lime-green font-mono">▹</span>
                         <span>{out}</span>
                       </div>
                     ))}
@@ -170,7 +170,7 @@ export default function MentorshipPage() {
 
                 <div className="pt-6 mt-6 border-t border-charcoal-border flex items-center justify-between text-xs font-mono">
                   <span className="text-slate-500">STATUS:</span>
-                  <span className="text-ice-cyan font-bold">{cohort.status}</span>
+                  <span className="text-lime-green font-bold">{cohort.status}</span>
                 </div>
               </div>
             ))}
@@ -180,11 +180,11 @@ export default function MentorshipPage() {
         {/* Upcoming Tracks Application */}
         <div className="p-10 border border-electric-blue/40 bg-charcoal/80 rounded-3xl space-y-8">
           <div>
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               APPLY FOR NEXT CADRE
             </span>
             <h2 className="editorial-title text-3xl sm:text-5xl text-soft-white mt-3">
-              Upcoming Mentorship Tracks<span className="text-ice-cyan">.</span>
+              Upcoming Mentorship Tracks<span className="text-lime-green">.</span>
             </h2>
             <p className="text-slate-400 text-sm font-sans mt-2 max-w-xl">
               Registration opens for new cohorts twice a year. Submit your interest to be notified as soon as seat allocation commences.
@@ -194,7 +194,7 @@ export default function MentorshipPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {TRACKS.map((tr, i) => (
               <div key={i} className="p-6 bg-deep-ink border border-charcoal-border rounded-xl space-y-3">
-                <span className="text-xs font-mono text-ice-cyan font-bold block">{tr.timeline}</span>
+                <span className="text-xs font-mono text-lime-green font-bold block">{tr.timeline}</span>
                 <h4 className="text-lg font-bold text-soft-white">{tr.title}</h4>
                 <p className="text-xs text-slate-300 font-sans leading-relaxed">{tr.focus}</p>
                 <div className="text-[11px] font-mono text-slate-500 pt-2 border-t border-charcoal-border">
@@ -209,7 +209,7 @@ export default function MentorshipPage() {
               FREE FOR ALL ENROLLED IGDTUW UNDERGRADUATES
             </span>
             <MagneticButton href="/signup" strength={25}>
-              <span className="px-8 py-3.5 bg-ice-cyan text-deep-ink font-mono text-xs font-bold uppercase rounded-md shadow-[0_0_15px_rgba(117,230,255,0.4)]">
+              <span className="px-8 py-3.5 bg-electric-blue text-deep-ink font-mono text-xs font-bold uppercase rounded-md shadow-[0_0_15px_rgba(117,230,255,0.4)]">
                 Register for Mentorship Cohort →
               </span>
             </MagneticButton>
@@ -218,7 +218,7 @@ export default function MentorshipPage() {
 
         {/* Mentorship FAQs */}
         <div className="space-y-6">
-          <h3 className="font-mono text-xs uppercase tracking-widest text-ice-cyan font-bold">
+          <h3 className="font-mono text-xs uppercase tracking-widest text-lime-green font-bold">
             {'// MENTORSHIP COMMON QUESTIONS'}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -56,7 +56,7 @@ export default async function ResourcesPage({
         {/* Editorial Header */}
         <div className="border-b border-charcoal-border pb-12">
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               KNOWLEDGE VAULT // TECHBOARD
             </span>
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
@@ -66,7 +66,7 @@ export default async function ResourcesPage({
 
           <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             TECHBOARD <br />
-            <span className="text-ice-cyan">RESOURCES.</span>
+            <span className="text-lime-green">RESOURCES.</span>
           </h1>
 
           <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">

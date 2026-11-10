@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { signOut } from '@/app/(auth)/actions';
 
@@ -8,6 +9,14 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const headerList = headers();
+  const pathname = headerList.get('x-pathname') || '';
+
+  // Bypassing protection for admin login route
+  if (pathname.includes('/admin/login')) {
+    return <>{children}</>;
+  }
+
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -48,55 +57,41 @@ export default async function AdminLayout({
           </div>
 
           <Link href="/" target="_blank" className="text-xs text-gray-400 hover:text-white px-2.5 py-1 border border-cobalt/20">
-            View Site ↗
+            View Live Site ↗
           </Link>
 
           <form action={signOut}>
             <button
               type="submit"
-              className="text-xs font-mono text-red-400 hover:text-red-300 px-2.5 py-1 border border-red-500/20 hover:border-red-500/40"
+              className="text-xs font-mono text-red-400 hover:text-red-300 px-3 py-1 bg-red-950/40 border border-red-500/30 rounded"
             >
-              Exit
+              Sign Out
             </button>
           </form>
         </div>
       </header>
 
-      {/* Main layout */}
-      <div className="flex min-h-[calc(100vh-57px)]">
-        {/* Sidebar */}
-        <aside className="w-64 border-r border-cobalt/20 bg-[#040714] p-4 flex-shrink-0 flex flex-col justify-between">
-          <nav className="space-y-1">
-            <AdminNavLink href="/admin" label="Overview" icon="📊" />
-            <AdminNavLink href="/admin/events" label="Events & Check-in" icon="⚡" />
-            <AdminNavLink href="/admin/opportunities" label="Opportunities" icon="💼" />
-            <AdminNavLink href="/admin/tickets" label="Support Tickets" icon="💬" />
-            <AdminNavLink href="/admin/audit-logs" label="Audit Logs" icon="📜" />
-          </nav>
+      {/* Admin Subnav */}
+      <nav className="border-b border-cobalt/15 bg-[#040814] px-6 py-2.5 flex items-center gap-6 overflow-x-auto text-xs font-mono">
+        <Link href="/admin" className="text-gray-300 hover:text-white transition-colors">
+          Overview
+        </Link>
+        <Link href="/admin/events" className="text-gray-300 hover:text-white transition-colors">
+          Events Management
+        </Link>
+        <Link href="/admin/opportunities" className="text-gray-300 hover:text-white transition-colors">
+          Opportunities Radar
+        </Link>
+        <Link href="/admin/tickets" className="text-gray-300 hover:text-white transition-colors">
+          Helpdesk Tickets
+        </Link>
+        <Link href="/admin/audit-logs" className="text-gray-300 hover:text-white transition-colors">
+          Audit Logs
+        </Link>
+      </nav>
 
-          <div className="pt-4 border-t border-cobalt/15 text-[11px] font-mono text-gray-500">
-            <p>Admin RLS: ACTIVE</p>
-            <p className="text-gray-600 mt-1">Environment: Prototype</p>
-          </div>
-        </aside>
-
-        {/* Content body */}
-        <main className="flex-1 p-8 overflow-y-auto max-w-7xl">
-          {children}
-        </main>
-      </div>
+      {/* Admin Content */}
+      <main className="p-6 max-w-7xl mx-auto">{children}</main>
     </div>
-  );
-}
-
-function AdminNavLink({ href, label, icon }: { href: string; label: string; icon: string }) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider text-gray-300 hover:text-white hover:bg-cobalt/20 border border-transparent hover:border-cobalt/40 transition-all"
-    >
-      <span>{icon}</span>
-      <span>{label}</span>
-    </Link>
   );
 }

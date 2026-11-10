@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { forgotPassword } from '@/app/(auth)/actions';
 
 export default function ForgotPasswordPage() {
@@ -20,58 +21,65 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="w-full max-w-md p-8 sm:p-10 border border-cobalt/30 bg-[#050917] relative shadow-[0_0_50px_rgba(21,88,201,0.2)]">
+    <div className="w-full max-w-md p-8 sm:p-10 border border-charcoal-border bg-charcoal/90 backdrop-blur-xl relative shadow-[0_0_50px_rgba(49,94,255,0.15)] rounded-2xl">
       <div className="text-center mb-8">
         <Link href="/" className="inline-block group">
-          <span className="w-10 h-10 bg-[#0a1228] border border-cobalt/60 inline-flex items-center justify-center font-mono text-sm text-lime group-hover:border-lime group-hover:shadow-[0_0_15px_#D4FF24] transition-all mb-3">
-            TN
-          </span>
-          <h1 className="font-display text-3xl font-extrabold text-white tracking-tight">
-            RESET <span className="text-lime">SECRET</span>
+          <div className="relative w-12 h-12 mx-auto mb-3">
+            <Image
+              src="/brand/techneeds-logo.png"
+              alt="TechNeeds IGDTUW"
+              fill
+              sizes="48px"
+              className="object-contain group-hover:scale-105 transition-transform drop-shadow-[0_0_15px_rgba(49,94,255,0.4)]"
+            />
+          </div>
+          <h1 className="editorial-title text-3xl font-extrabold text-soft-white tracking-tight uppercase">
+            RESET <span className="text-lime-green">SECRET</span>
           </h1>
         </Link>
-        <p className="font-mono text-xs text-gray-400 mt-1 uppercase tracking-widest">
+        <p className="font-mono text-xs text-muted-text mt-1 uppercase tracking-widest">
           PASSWORD RECOVERY PROTOCOL
         </p>
       </div>
 
       <form action={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-mono">
-            [ERROR] {error}
+          <div className="p-3 bg-red-950/70 border border-burnt-orange/50 text-red-200 text-xs font-mono rounded-lg">
+            <span className="text-burnt-orange font-bold mr-1">[ALERT]</span> {error}
           </div>
         )}
         {success && (
-          <div className="p-3 bg-lime/10 border border-lime/30 text-lime text-xs font-mono">
-            [LINK DISPATCHED] {success}
+          <div className="p-3 bg-lime-green/10 border border-lime-green/30 text-lime-green text-xs font-mono rounded-lg">
+            <span className="font-bold mr-1">✓</span> {success}
           </div>
         )}
 
         <div>
-          <label htmlFor="email" className="block text-xs font-mono text-gray-300 uppercase mb-2">
-            Registered Email
+          <label htmlFor="email" className="block text-xs font-mono text-muted-text uppercase mb-2">
+            Registered Student Email
           </label>
           <input
             id="email"
             name="email"
             type="email"
             required
-            className="input-field font-mono text-xs"
+            className="input-field font-mono text-xs rounded-lg"
             placeholder="you@igdtuw.ac.in"
+            autoComplete="email"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 mt-2"
+          className="btn-magnetic w-full text-xs font-mono uppercase tracking-wider py-3.5 mt-2 rounded-lg font-bold"
         >
           {loading ? 'Transmitting Link...' : 'Send Reset Link →'}
         </button>
       </form>
 
-      <div className="mt-8 pt-6 border-t border-cobalt/15 text-center font-mono text-xs">
-        <Link href="/login" className="text-gray-400 hover:text-lime">
+      <div className="mt-8 pt-6 border-t border-charcoal-border text-center font-mono text-xs">
+        <Link href="/login" className="text-muted-text hover:text-lime-green">
           ← Return to Student Sign In
         </Link>
       </div>

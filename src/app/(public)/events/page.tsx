@@ -91,7 +91,7 @@ export default async function EventsPage({
         {/* Editorial Header */}
         <div className="border-b border-charcoal-border pb-12">
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               EVENT CALENDAR // DISCOVERY ARENA
             </span>
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
@@ -101,7 +101,7 @@ export default async function EventsPage({
 
           <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             EVENTS &amp; <br />
-            <span className="text-ice-cyan">HACKATHONS.</span>
+            <span className="text-lime-green">HACKATHONS.</span>
           </h1>
 
           <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">
@@ -117,7 +117,7 @@ export default async function EventsPage({
               type="text"
               placeholder="Search event title or keywords..."
               defaultValue={searchParams.search || ''}
-              className="px-4 py-2 bg-deep-ink border border-charcoal-border rounded-md text-soft-white font-mono text-xs placeholder:text-slate-500 w-full sm:w-64 focus:outline-none focus:border-ice-cyan"
+              className="px-4 py-2 bg-deep-ink border border-charcoal-border rounded-md text-soft-white font-mono text-xs placeholder:text-slate-500 w-full sm:w-64 focus:outline-none focus:border-electric-blue/50"
             />
             <button
               type="submit"
@@ -144,7 +144,7 @@ export default async function EventsPage({
                 href={cat === 'all' ? '/events' : `/events?category=${cat}`}
                 className={`px-3 py-1 font-mono text-xs rounded-full uppercase transition-all ${
                   (cat === 'all' && !searchParams.category) || searchParams.category === cat
-                    ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_12px_#75E6FF]'
+                    ? 'bg-electric-blue text-deep-ink font-bold shadow-[0_0_12px_#315EFF]'
                     : 'bg-deep-ink border border-charcoal-border text-slate-300 hover:text-white'
                 }`}
               >
@@ -157,7 +157,7 @@ export default async function EventsPage({
         {/* Live & Upcoming Events Section */}
         <div className="space-y-8">
           <div className="flex items-center justify-between border-b border-charcoal-border pb-3">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-ice-cyan font-bold">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-lime-green font-bold">
               {'// ACTIVE & UPCOMING EVENTS ('}{filteredEvents.length}{')'}
             </h2>
             <span className="text-xs font-mono text-slate-500">DIGITAL QR PASSES APPLICABLE</span>
@@ -167,21 +167,21 @@ export default async function EventsPage({
             {filteredEvents.map((evt, idx) => (
               <article
                 key={evt.id}
-                className="border border-charcoal-border bg-charcoal/70 hover:border-ice-cyan transition-all p-8 sm:p-12 rounded-2xl relative overflow-hidden group"
+                className="border border-charcoal-border bg-charcoal/70 hover:border-electric-blue/50 transition-all p-8 sm:p-12 rounded-2xl relative overflow-hidden group"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
                   <div className="lg:col-span-5 aspect-[16/10] bg-black border border-charcoal-border rounded-xl overflow-hidden flex flex-col items-center justify-center p-6 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-electric-blue/20 to-black text-center">
                     <span className="font-display font-extrabold text-2xl text-soft-white">
                       {evt.title}
                     </span>
-                    <span className="font-mono text-xs text-ice-cyan mt-3 uppercase tracking-wider">
+                    <span className="font-mono text-xs text-lime-green mt-3 uppercase tracking-wider">
                       {evt.category} {'// OFFICIAL EVENT'}
                     </span>
                   </div>
 
                   <div className="lg:col-span-7 space-y-5">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold uppercase bg-ice-cyan/15 text-ice-cyan border border-ice-cyan/30">
+                      <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold uppercase bg-lime-green/15 text-lime-green border border-lime-green/30">
                         {getEventTiming(evt.start_date, evt.end_date).toUpperCase()}
                       </span>
                       <span className="font-mono text-xs text-slate-400">
@@ -189,7 +189,7 @@ export default async function EventsPage({
                       </span>
                     </div>
 
-                    <h3 className="font-display text-2xl sm:text-4xl font-extrabold text-soft-white group-hover:text-ice-cyan transition-colors">
+                    <h3 className="font-display text-2xl sm:text-4xl font-extrabold text-soft-white group-hover:text-lime-green transition-colors">
                       {evt.title}
                     </h3>
 
@@ -204,7 +204,7 @@ export default async function EventsPage({
                       </div>
                       <div>
                         <span className="text-slate-500 uppercase block">VENUE:</span>
-                        <span className="text-ice-cyan font-bold">{evt.venue}</span>
+                        <span className="text-lime-green font-bold">{evt.venue}</span>
                       </div>
                       <div>
                         <span className="text-slate-500 uppercase block">PASS:</span>
@@ -214,7 +214,7 @@ export default async function EventsPage({
 
                     <div className="pt-2">
                       <MagneticButton href={`/events/${evt.slug}`}>
-                        <span className="px-6 py-3 bg-ice-cyan text-deep-ink font-mono text-xs font-bold uppercase rounded-md inline-block shadow-[0_0_15px_rgba(117,230,255,0.35)]">
+                        <span className="px-6 py-3 bg-electric-blue text-deep-ink font-mono text-xs font-bold uppercase rounded-md inline-block shadow-[0_0_15px_rgba(117,230,255,0.35)]">
                           Book Event Pass &amp; Details →
                         </span>
                       </MagneticButton>
@@ -230,14 +230,14 @@ export default async function EventsPage({
         <div className="space-y-8 pt-8">
           <div className="flex items-center justify-between border-b border-charcoal-border pb-3">
             <div>
-              <h2 className="font-mono text-xs uppercase tracking-widest text-ice-cyan font-bold">
+              <h2 className="font-mono text-xs uppercase tracking-widest text-lime-green font-bold">
                 {'// HISTORICAL EDITIONS ARCHIVE (2023–2026)'}
               </h2>
               <p className="text-xs text-slate-400 font-sans mt-1">
                 Completed hackathons, workshops, and mentorship cohorts documented in our archival records.
               </p>
             </div>
-            <Link href="/timeline" className="text-xs font-mono text-ice-cyan hover:underline font-bold">
+            <Link href="/timeline" className="text-xs font-mono text-lime-green hover:underline font-bold">
               3D Timeline Matrix →
             </Link>
           </div>
@@ -246,17 +246,17 @@ export default async function EventsPage({
             {TIMELINE_MILESTONES.slice(0, 6).map((item) => (
               <div
                 key={item.id}
-                className="p-6 border border-charcoal-border bg-charcoal/60 rounded-xl flex flex-col justify-between group hover:border-ice-cyan transition-all"
+                className="p-6 border border-charcoal-border bg-charcoal/60 rounded-xl flex flex-col justify-between group hover:border-electric-blue/50 transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-3">
-                    <span className="px-2 py-0.5 rounded bg-charcoal border border-charcoal-border text-ice-cyan text-[10px] font-bold uppercase">
+                    <span className="px-2 py-0.5 rounded bg-charcoal border border-charcoal-border text-lime-green text-[10px] font-bold uppercase">
                       {item.category}
                     </span>
                     <span>{item.month} {item.year}</span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-soft-white group-hover:text-ice-cyan transition-colors mb-2">
+                  <h3 className="text-lg font-bold text-soft-white group-hover:text-lime-green transition-colors mb-2">
                     {item.title}
                   </h3>
 
@@ -268,7 +268,7 @@ export default async function EventsPage({
                 <div className="pt-4 border-t border-charcoal-border flex items-center justify-between text-xs font-mono text-slate-400">
                   <span>📍 {item.venue}</span>
                   {item.metrics.participants && (
-                    <span className="text-ice-cyan font-bold">{item.metrics.participants}</span>
+                    <span className="text-lime-green font-bold">{item.metrics.participants}</span>
                   )}
                 </div>
               </div>

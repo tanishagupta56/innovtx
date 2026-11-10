@@ -47,18 +47,18 @@ export default async function TimelinePage() {
         {/* Editorial Header */}
         <div className="border-b border-charcoal-border pb-10">
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               SPATIAL ARCHIVE // CHRONICLE
             </span>
-            <span className="font-mono text-xs text-ice-cyan uppercase tracking-widest flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-ice-cyan animate-ping" />
+            <span className="font-mono text-xs text-lime-green uppercase tracking-widest flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-electric-blue animate-ping" />
               14 VERIFIED NODES
             </span>
           </div>
 
           <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             CHRONOLOGICAL <br />
-            <span className="text-ice-cyan">3D TIMELINE.</span>
+            <span className="text-lime-green">3D TIMELINE.</span>
           </h1>
 
           <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">

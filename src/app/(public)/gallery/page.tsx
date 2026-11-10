@@ -64,7 +64,7 @@ export default function GalleryPage() {
         {/* Header */}
         <div className="border-b border-charcoal-border pb-10">
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               VISUAL CHRONICLE // VIBES
             </span>
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
@@ -74,7 +74,7 @@ export default function GalleryPage() {
 
           <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             SOCIETY <br />
-            <span className="text-ice-cyan">VIBES &amp; GALLERY.</span>
+            <span className="text-lime-green">VIBES &amp; GALLERY.</span>
           </h1>
 
           <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">
@@ -87,12 +87,12 @@ export default function GalleryPage() {
           {MOMENTS.map((m, idx) => (
             <div
               key={idx}
-              className="p-6 border border-charcoal-border bg-charcoal/70 rounded-2xl hover:border-ice-cyan transition-all flex flex-col justify-between group"
+              className="p-6 border border-charcoal-border bg-charcoal/70 rounded-2xl hover:border-electric-blue/50 transition-all flex flex-col justify-between group"
             >
               <div>
                 {/* Visual Placeholder Frame with Gradient Cyber Texture */}
-                <div className={`w-full ${m.aspect} rounded-xl bg-gradient-to-br from-electric-blue/20 via-deep-ink to-black border border-charcoal-border relative overflow-hidden flex flex-col justify-end p-4 mb-4 group-hover:border-ice-cyan transition-colors`}>
-                  <div className="absolute top-3 left-3 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-[10px] font-mono text-ice-cyan uppercase border border-charcoal-border">
+                <div className={`w-full ${m.aspect} rounded-xl bg-gradient-to-br from-electric-blue/20 via-deep-ink to-black border border-charcoal-border relative overflow-hidden flex flex-col justify-end p-4 mb-4 group-hover:border-electric-blue/50 transition-colors`}>
+                  <div className="absolute top-3 left-3 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-[10px] font-mono text-lime-green uppercase border border-charcoal-border">
                     {m.tag}
                   </div>
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-ice-cyan/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -105,7 +105,7 @@ export default function GalleryPage() {
                   <span>{m.date}</span>
                 </div>
 
-                <h3 className="text-xl font-bold text-soft-white group-hover:text-ice-cyan transition-colors mb-2">
+                <h3 className="text-xl font-bold text-soft-white group-hover:text-lime-green transition-colors mb-2">
                   {m.title}
                 </h3>
 
@@ -116,7 +116,7 @@ export default function GalleryPage() {
 
               <div className="mt-6 pt-4 border-t border-charcoal-border flex items-center justify-between text-xs font-mono text-slate-500">
                 <span>ARCHIVE #0{idx + 1}</span>
-                <span className="text-ice-cyan font-bold">VERIFIED VIBE</span>
+                <span className="text-lime-green font-bold">VERIFIED VIBE</span>
               </div>
             </div>
           ))}
@@ -131,7 +131,7 @@ export default function GalleryPage() {
           <div className="pt-2">
             <Link
               href="/community"
-              className="px-6 py-2.5 bg-ice-cyan text-deep-ink rounded-md font-mono text-xs uppercase font-bold inline-block hover:bg-cyan-300 transition-colors shadow-[0_0_12px_rgba(117,230,255,0.3)]"
+              className="px-6 py-2.5 bg-electric-blue text-deep-ink rounded-md font-mono text-xs uppercase font-bold inline-block hover:bg-cyan-300 transition-colors shadow-[0_0_12px_rgba(117,230,255,0.3)]"
             >
               Join Media Wing →
             </Link>

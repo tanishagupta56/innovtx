@@ -60,13 +60,13 @@ export default function ResourcesClient({
           type="text"
           placeholder="Search topics, roadmaps..."
           defaultValue={searchParamSearch || ''}
-          className="px-4 py-2 bg-charcoal border border-charcoal-border rounded-md text-soft-white placeholder:text-slate-500 w-full sm:w-64 focus:outline-none focus:border-ice-cyan"
+          className="px-4 py-2 bg-charcoal border border-charcoal-border rounded-md text-soft-white placeholder:text-slate-500 w-full sm:w-64 focus:outline-none focus:border-electric-blue/50"
         />
 
         <select
           name="difficulty"
           defaultValue={searchParamDiff || ''}
-          className="px-4 py-2 bg-charcoal border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-ice-cyan"
+          className="px-4 py-2 bg-charcoal border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-electric-blue/50"
         >
           <option value="">All Difficulties</option>
           <option value="Beginner">Beginner</option>
@@ -77,7 +77,7 @@ export default function ResourcesClient({
         <select
           name="tag"
           defaultValue={searchParamTag || ''}
-          className="px-4 py-2 bg-charcoal border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-ice-cyan"
+          className="px-4 py-2 bg-charcoal border border-charcoal-border rounded-md text-soft-white focus:outline-none focus:border-electric-blue/50"
         >
           <option value="">All Topics</option>
           {allTags.map((t) => (
@@ -99,7 +99,7 @@ export default function ResourcesClient({
           onClick={() => setShowBookmarksOnly(!showBookmarksOnly)}
           className={`px-4 py-2 font-mono text-xs uppercase tracking-wider rounded-md border transition-all ${
             showBookmarksOnly
-              ? 'bg-ice-cyan text-deep-ink border-ice-cyan font-bold shadow-[0_0_15px_#75E6FF]'
+              ? 'bg-electric-blue text-deep-ink border-electric-blue/50 font-bold shadow-[0_0_15px_#315EFF]'
               : 'bg-charcoal border-charcoal-border text-slate-300 hover:text-white'
           }`}
         >
@@ -124,17 +124,17 @@ export default function ResourcesClient({
             return (
               <div
                 key={res.id}
-                className="p-8 border border-charcoal-border bg-charcoal/70 rounded-2xl hover:border-ice-cyan transition-all flex flex-col justify-between group relative overflow-hidden"
+                className="p-8 border border-charcoal-border bg-charcoal/70 rounded-2xl hover:border-electric-blue/50 transition-all flex flex-col justify-between group relative overflow-hidden"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="px-2 py-0.5 rounded bg-charcoal border border-charcoal-border text-ice-cyan uppercase font-bold text-[10px] font-mono">
+                    <span className="px-2 py-0.5 rounded bg-charcoal border border-charcoal-border text-lime-green uppercase font-bold text-[10px] font-mono">
                       {res.difficulty || 'GENERAL'}
                     </span>
                     <button
                       onClick={() => toggleBookmark(res.id)}
                       className={`text-lg p-1 transition-transform hover:scale-125 ${
-                        isBookmarked ? 'text-ice-cyan' : 'text-slate-600 hover:text-slate-300'
+                        isBookmarked ? 'text-lime-green' : 'text-slate-600 hover:text-slate-300'
                       }`}
                       title={isBookmarked ? 'Remove bookmark' : 'Bookmark this resource'}
                     >
@@ -142,7 +142,7 @@ export default function ResourcesClient({
                     </button>
                   </div>
 
-                  <h3 className="font-display font-bold text-2xl text-soft-white mb-3 group-hover:text-ice-cyan transition-colors">
+                  <h3 className="font-display font-bold text-2xl text-soft-white mb-3 group-hover:text-lime-green transition-colors">
                     {res.title}
                   </h3>
 
@@ -171,7 +171,7 @@ export default function ResourcesClient({
                     href={res.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full text-center text-xs py-2.5 font-mono uppercase tracking-wider flex items-center justify-center gap-2 bg-charcoal border border-charcoal-border rounded-md hover:bg-ice-cyan hover:text-deep-ink hover:border-ice-cyan transition-all font-bold"
+                    className="w-full text-center text-xs py-2.5 font-mono uppercase tracking-wider flex items-center justify-center gap-2 bg-charcoal border border-charcoal-border rounded-md hover:bg-electric-blue hover:text-deep-ink hover:border-electric-blue/50 transition-all font-bold"
                   >
                     <span>Launch Resource</span>
                     <span>↗</span>

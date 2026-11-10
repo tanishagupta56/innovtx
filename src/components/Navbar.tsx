@@ -17,6 +17,7 @@ const navItems = [
   { href: '/team', label: 'Team' },
   { href: '/community', label: 'Community' },
   { href: '/collaborate', label: 'Partner' },
+  { href: '/faq', label: 'FAQ' },
 ];
 
 export default function Navbar() {
@@ -28,9 +29,9 @@ export default function Navbar() {
   useEffect(() => {
     try {
       const supabase = createClient();
-      supabase.auth.getUser().then(({ data }) => setUser(data?.user || null));
+      supabase.auth.getUser().then(({ data }) => setUser(data?.user || null)).catch(() => setUser(null));
     } catch {
-      // ignore
+      setUser(null);
     }
 
     const onScroll = () => {
@@ -56,8 +57,8 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 px-4 sm:px-8 ${
-        scrolled ? 'py-3 bg-deep-ink/85 backdrop-blur-xl border-b border-charcoal-border shadow-2xl' : 'py-5'
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 px-4 sm:px-8 pointer-events-auto ${
+        scrolled ? 'py-3 bg-deep-ink/90 backdrop-blur-xl border-b border-charcoal-border shadow-2xl' : 'py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -72,22 +73,22 @@ export default function Navbar() {
               alt="TechNeeds IGDTUW Logo"
               fill
               sizes="(max-width: 640px) 36px, 40px"
-              className="object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_0_12px_rgba(117,230,255,0.4)]"
+              className="object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_0_12px_rgba(49,94,255,0.4)]"
               priority
             />
           </div>
           <div className="flex flex-col">
             <span className="leading-none text-soft-white tracking-tight font-extrabold text-lg sm:text-xl font-display">
-              TECH<span className="text-ice-cyan">NEEDS</span>
+              TECH<span className="text-lime-green">NEEDS</span>
             </span>
-            <span className="font-mono text-[9px] text-slate-400 tracking-widest leading-none mt-1">
+            <span className="font-mono text-[9px] text-muted-text tracking-widest leading-none mt-1">
               IGDTUW // DEV ARCHITECTURE
             </span>
           </div>
         </Link>
 
         {/* Floating Navigation Dock (Desktop) */}
-        <nav className="hidden xl:flex items-center gap-1 px-4 py-2 bg-charcoal/70 backdrop-blur-md border border-charcoal-border rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+        <nav className="hidden xl:flex items-center gap-1 px-4 py-2 bg-charcoal/80 backdrop-blur-md border border-charcoal-border rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -96,8 +97,8 @@ export default function Navbar() {
                 href={item.href}
                 className={`relative px-3.5 py-1 font-mono text-xs uppercase tracking-wider transition-all duration-200 rounded-full ${
                   isActive
-                    ? 'text-deep-ink font-bold bg-ice-cyan shadow-[0_0_15px_#75E6FF]'
-                    : 'text-slate-300 hover:text-soft-white hover:bg-white/5'
+                    ? 'text-soft-white font-bold bg-electric-blue shadow-[0_0_15px_rgba(49,94,255,0.45)]'
+                    : 'text-muted-text hover:text-soft-white hover:bg-white/5'
                 }`}
               >
                 {item.label}
@@ -111,11 +112,11 @@ export default function Navbar() {
           {/* Quick Search Shortcut */}
           <button
             onClick={triggerCmdK}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 font-mono text-xs text-slate-300 bg-charcoal/80 border border-charcoal-border hover:border-ice-cyan hover:text-ice-cyan transition-all rounded-md"
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 font-mono text-xs text-muted-text bg-charcoal/90 border border-charcoal-border hover:border-lime-green hover:text-lime-green transition-all rounded-md"
             title="Search Platform (Ctrl+K)"
           >
             <span>Search</span>
-            <kbd className="px-1.5 py-0.5 bg-black/60 border border-charcoal-border text-[10px] text-ice-cyan font-mono rounded">
+            <kbd className="px-1.5 py-0.5 bg-black/60 border border-charcoal-border text-[10px] text-lime-green font-mono rounded">
               ⌘K
             </kbd>
           </button>
@@ -131,7 +132,7 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="px-4 py-2 bg-ice-cyan hover:bg-cyan-300 text-deep-ink font-mono text-xs font-bold uppercase tracking-wider rounded-md transition-all shadow-[0_0_15px_rgba(117,230,255,0.35)]"
+              className="px-4 py-2 bg-lime-green hover:bg-lime-green/90 text-deep-ink font-mono text-xs font-bold uppercase tracking-wider rounded-md transition-all shadow-[0_0_15px_rgba(184,217,76,0.35)]"
             >
               Sign In
             </Link>
@@ -146,7 +147,7 @@ export default function Navbar() {
             <div className="w-5 h-4 flex flex-col justify-between">
               <span
                 className={`w-full h-0.5 bg-white transition-all ${
-                  mobileOpen ? 'rotate-45 translate-y-1.5 bg-ice-cyan' : ''
+                  mobileOpen ? 'rotate-45 translate-y-1.5 bg-lime-green' : ''
                 }`}
               />
               <span
@@ -156,7 +157,7 @@ export default function Navbar() {
               />
               <span
                 className={`w-full h-0.5 bg-white transition-all ${
-                  mobileOpen ? '-rotate-45 -translate-y-1.5 bg-ice-cyan' : ''
+                  mobileOpen ? '-rotate-45 -translate-y-1.5 bg-lime-green' : ''
                 }`}
               />
             </div>
@@ -178,10 +179,11 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => setMobileOpen(false)}
                   className={`py-2.5 px-3 rounded-md transition-all ${
                     pathname === item.href
-                      ? 'bg-ice-cyan text-deep-ink font-bold'
-                      : 'text-slate-300 hover:text-white hover:bg-charcoal'
+                      ? 'bg-electric-blue text-soft-white font-bold'
+                      : 'text-muted-text hover:text-white hover:bg-charcoal'
                   }`}
                 >
                   {item.label}
@@ -190,19 +192,30 @@ export default function Navbar() {
 
               <div className="pt-4 border-t border-charcoal-border flex flex-col gap-3 mt-2">
                 <button
-                  onClick={triggerCmdK}
-                  className="w-full text-left py-2.5 px-3 bg-charcoal border border-charcoal-border text-slate-300 flex justify-between items-center rounded-md"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    triggerCmdK();
+                  }}
+                  className="w-full text-left py-2.5 px-3 bg-charcoal border border-charcoal-border text-muted-text flex justify-between items-center rounded-md"
                 >
                   <span>Quick Palette Search</span>
-                  <span className="text-ice-cyan">⌘K</span>
+                  <span className="text-lime-green">⌘K</span>
                 </button>
 
                 {user ? (
-                  <Link href="/dashboard" className="w-full text-center py-3 bg-electric-blue text-white rounded-md font-bold">
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileOpen(false)}
+                    className="w-full text-center py-3 bg-electric-blue text-white rounded-md font-bold"
+                  >
                     Open Dashboard
                   </Link>
                 ) : (
-                  <Link href="/login" className="w-full text-center py-3 bg-ice-cyan text-deep-ink rounded-md font-bold">
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="w-full text-center py-3 bg-lime-green text-deep-ink rounded-md font-bold"
+                  >
                     Sign In to Portal
                   </Link>
                 )}

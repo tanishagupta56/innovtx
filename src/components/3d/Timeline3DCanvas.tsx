@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, Float } from '@react-three/drei';
 import * as THREE from 'three';
@@ -19,9 +19,11 @@ function TimelineBeacon({ milestone, position, isSelected, onSelect }: TimelineB
   const [hovered, setHovered] = useState(false);
 
   const isHackathon = milestone.category === 'hackathon';
-  const beaconColor = isHackathon ? '#D4FF24' : '#1558C9';
+  const isMentorship = milestone.category === 'mentorship';
+  const beaconColor = isHackathon ? '#B8D94C' : (isMentorship ? '#D65A31' : '#315EFF');
 
   useFrame((state) => {
+    if (typeof document !== 'undefined' && document.hidden) return;
     const t = state.clock.getElapsedTime();
     if (ringRef.current) {
       ringRef.current.rotation.z = t * 1.5;
@@ -46,11 +48,9 @@ function TimelineBeacon({ milestone, position, isSelected, onSelect }: TimelineB
         onPointerOver={(e) => {
           e.stopPropagation();
           setHovered(true);
-          document.body.style.cursor = 'pointer';
         }}
         onPointerOut={() => {
           setHovered(false);
-          document.body.style.cursor = 'auto';
         }}
       >
         <octahedronGeometry args={[isSelected ? 0.35 : hovered ? 0.3 : 0.22, 0]} />
@@ -67,7 +67,7 @@ function TimelineBeacon({ milestone, position, isSelected, onSelect }: TimelineB
       <mesh ref={ringRef}>
         <ringGeometry args={[0.38, 0.42, 32]} />
         <meshBasicMaterial
-          color={hovered || isSelected ? '#D4FF24' : '#38bdf8'}
+          color={hovered || isSelected ? '#B8D94C' : '#315EFF'}
           side={THREE.DoubleSide}
           transparent
           opacity={0.7}
@@ -79,18 +79,18 @@ function TimelineBeacon({ milestone, position, isSelected, onSelect }: TimelineB
         <Text
           position={[0, 0.6, 0]}
           fontSize={0.22}
-          color={isSelected || hovered ? '#D4FF24' : '#ffffff'}
+          color={isSelected || hovered ? '#B8D94C' : '#F2F4F8'}
           anchorX="center"
           anchorY="middle"
           outlineWidth={0.02}
-          outlineColor="#030407"
+          outlineColor="#080B12"
         >
           {`${milestone.year} · ${milestone.month.substring(0, 3)}`}
         </Text>
         <Text
           position={[0, 0.35, 0]}
           fontSize={0.14}
-          color="#94a3b8"
+          color="#969EAD"
           anchorX="center"
           anchorY="middle"
           maxWidth={2}
@@ -105,13 +105,13 @@ function TimelineBeacon({ milestone, position, isSelected, onSelect }: TimelineB
 
 function SplineCurve({ points }: { points: THREE.Vector3[] }) {
   const curve = useMemo(() => new THREE.CatmullRomCurve3(points), [points]);
-  const tubeGeometry = useMemo(() => new THREE.TubeGeometry(curve, 120, 0.035, 8, false), [curve]);
+  const tubeGeometry = useMemo(() => new THREE.TubeGeometry(curve, 100, 0.035, 8, false), [curve]);
 
   return (
     <mesh geometry={tubeGeometry}>
       <meshStandardMaterial
-        color="#1558C9"
-        emissive="#1558C9"
+        color="#315EFF"
+        emissive="#1E44D6"
         emissiveIntensity={0.8}
         roughness={0.4}
         metalness={0.6}
@@ -123,6 +123,7 @@ function SplineCurve({ points }: { points: THREE.Vector3[] }) {
 
 function CameraRig({ targetPos }: { targetPos: [number, number, number] | null }) {
   useFrame((state) => {
+    if (typeof document !== 'undefined' && document.hidden) return;
     if (targetPos) {
       const dest = new THREE.Vector3(targetPos[0], targetPos[1] + 0.3, targetPos[2] + 2.5);
       state.camera.position.lerp(dest, 0.05);
@@ -139,13 +140,22 @@ export function Timeline3DCanvas({
   selectedId: string | null;
   onSelectMilestone: (m: MilestoneItem) => void;
 }) {
+  // Ensure cursor reset on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.style.cursor = 'auto';
+      }
+    };
+  }, []);
+
   // Compute spatial positions along an undulating 3D spline across years
   const positions: [number, number, number][] = useMemo(() => {
     return TIMELINE_MILESTONES.map((_, i) => {
       const t = i / (TIMELINE_MILESTONES.length - 1);
-      const x = (t - 0.5) * 22; // spread along X axis
-      const y = Math.sin(t * Math.PI * 3) * 1.5; // wave along Y
-      const z = Math.cos(t * Math.PI * 2) * 1.8; // wave along Z
+      const x = (t - 0.5) * 22;
+      const y = Math.sin(t * Math.PI * 3) * 1.5;
+      const z = Math.cos(t * Math.PI * 2) * 1.8;
       return [x, y, z];
     });
   }, []);
@@ -158,25 +168,26 @@ export function Timeline3DCanvas({
   const targetPos = selectedIdx >= 0 ? positions[selectedIdx] : null;
 
   return (
-    <div className="w-full h-[520px] relative rounded-xl border border-white/10 overflow-hidden bg-midnight-950/80 backdrop-blur-md">
+    <div className="w-full h-[520px] relative rounded-2xl border border-charcoal-border overflow-hidden bg-charcoal/80 backdrop-blur-md">
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 pointer-events-none">
-        <span className="w-2 h-2 rounded-full bg-electric-lime animate-pulse" />
+        <span className="w-2 h-2 rounded-full bg-lime-green animate-pulse" />
         <span className="text-[11px] font-mono uppercase tracking-widest text-slate-300">
           SPATIAL TIMELINE MATRIX // 14 VERIFIED NODES
         </span>
       </div>
 
-      <div className="absolute bottom-4 right-4 z-10 text-[11px] font-mono text-slate-500 pointer-events-none">
+      <div className="absolute bottom-4 right-4 z-10 text-[11px] font-mono text-muted-text pointer-events-none">
         INTERACTIVE 3D NODES · CLICK ANY NODE TO INSPECT
       </div>
 
       <Canvas
         camera={{ position: [0, 1.2, 8], fov: 45 }}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        dpr={[1, 1.5]}
       >
         <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={15} color="#1558C9" />
-        <pointLight position={[-10, -5, -5]} intensity={15} color="#D4FF24" />
+        <pointLight position={[10, 10, 10]} intensity={15} color="#315EFF" />
+        <pointLight position={[-10, -5, -5]} intensity={15} color="#B8D94C" />
 
         <SplineCurve points={vectorPoints} />
 
@@ -195,3 +206,5 @@ export function Timeline3DCanvas({
     </div>
   );
 }
+
+export default Timeline3DCanvas;

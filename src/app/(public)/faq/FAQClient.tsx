@@ -139,7 +139,7 @@ export default function FAQClient() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Type your question or keywords..."
-            className="w-full px-5 py-3 bg-deep-ink border border-charcoal-border rounded-xl text-soft-white font-mono text-sm placeholder:text-slate-500 focus:outline-none focus:border-ice-cyan"
+            className="w-full px-5 py-3 bg-deep-ink border border-charcoal-border rounded-xl text-soft-white font-mono text-sm placeholder:text-slate-500 focus:outline-none focus:border-electric-blue/50"
           />
         </div>
 
@@ -150,7 +150,7 @@ export default function FAQClient() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-3.5 py-1.5 font-mono text-xs rounded-full uppercase transition-all ${
                 selectedCategory === cat
-                  ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_12px_#75E6FF]'
+                  ? 'bg-electric-blue text-deep-ink font-bold shadow-[0_0_12px_#315EFF]'
                   : 'bg-deep-ink border border-charcoal-border text-slate-300 hover:text-white'
               }`}
             >
@@ -172,15 +172,15 @@ export default function FAQClient() {
               >
                 <button
                   onClick={() => toggleAccordion(item.id)}
-                  className="w-full p-6 text-left flex items-center justify-between gap-4 font-display font-bold text-lg sm:text-xl text-soft-white hover:text-ice-cyan transition-colors"
+                  className="w-full p-6 text-left flex items-center justify-between gap-4 font-display font-bold text-lg sm:text-xl text-soft-white hover:text-lime-green transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono text-ice-cyan uppercase px-2 py-0.5 rounded bg-deep-ink border border-charcoal-border">
+                    <span className="text-xs font-mono text-lime-green uppercase px-2 py-0.5 rounded bg-deep-ink border border-charcoal-border">
                       {item.category}
                     </span>
                     <span>{item.question}</span>
                   </div>
-                  <span className="text-xl font-mono text-ice-cyan flex-shrink-0">
+                  <span className="text-xl font-mono text-lime-green flex-shrink-0">
                     {isOpen ? '−' : '+'}
                   </span>
                 </button>

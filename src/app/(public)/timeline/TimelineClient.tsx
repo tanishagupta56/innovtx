@@ -11,7 +11,7 @@ const Timeline3DCanvas = dynamic(
     ssr: false,
     loading: () => (
       <div className="w-full h-[520px] rounded-2xl border border-charcoal-border bg-charcoal/80 flex items-center justify-center font-mono text-sm text-slate-400">
-        <span className="w-3 h-3 rounded-full bg-ice-cyan animate-ping mr-3" />
+        <span className="w-3 h-3 rounded-full bg-electric-blue animate-ping mr-3" />
         INITIALIZING 3D SPATIAL ACCELERATOR...
       </div>
     ),
@@ -64,7 +64,7 @@ export default function TimelineClient({
             onClick={() => setActiveYear('all')}
             className={`px-3.5 py-1.5 font-mono text-xs rounded-full uppercase transition-all ${
               activeYear === 'all'
-                ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_12px_#75E6FF]'
+                ? 'bg-electric-blue text-deep-ink font-bold shadow-[0_0_12px_#315EFF]'
                 : 'bg-deep-ink text-slate-300 hover:bg-white/10 border border-charcoal-border'
             }`}
           >
@@ -96,7 +96,7 @@ export default function TimelineClient({
               onClick={() => setActiveCategory(cat.key)}
               className={`px-3 py-1 text-xs font-mono rounded-full uppercase transition-all ${
                 activeCategory === cat.key
-                  ? 'bg-ice-cyan text-deep-ink font-bold shadow-[0_0_10px_#75E6FF]'
+                  ? 'bg-electric-blue text-deep-ink font-bold shadow-[0_0_10px_#315EFF]'
                   : 'text-slate-400 hover:text-slate-200 border border-charcoal-border bg-deep-ink'
               }`}
             >
@@ -114,7 +114,7 @@ export default function TimelineClient({
             <span className="font-mono text-xs text-slate-400 uppercase tracking-wider">
               DISPLAYING {filtered.length} ARCHIVAL LOGS
             </span>
-            <span className="text-[11px] font-mono text-ice-cyan font-bold">
+            <span className="text-[11px] font-mono text-lime-green font-bold">
               CLICK ENTRY TO INSPECT
             </span>
           </div>
@@ -128,13 +128,13 @@ export default function TimelineClient({
                   onClick={() => setSelectedMilestone(item)}
                   className={`p-6 rounded-2xl border transition-all cursor-pointer relative overflow-hidden group ${
                     isSelected
-                      ? 'border-ice-cyan bg-charcoal/90 shadow-[0_0_25px_rgba(117,230,255,0.15)]'
-                      : 'border-charcoal-border bg-charcoal/60 hover:border-ice-cyan/50 hover:bg-charcoal/80'
+                      ? 'border-electric-blue/50 bg-charcoal/90 shadow-[0_0_25px_rgba(117,230,255,0.15)]'
+                      : 'border-charcoal-border bg-charcoal/60 hover:border-electric-blue/50/50 hover:bg-charcoal/80'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2.5">
-                      <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-charcoal border border-charcoal-border text-ice-cyan">
+                      <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-charcoal border border-charcoal-border text-lime-green">
                         {item.category}
                       </span>
                       <span className="text-xs font-mono text-slate-400">
@@ -142,7 +142,7 @@ export default function TimelineClient({
                       </span>
                     </div>
                     {item.verified && (
-                      <span className="flex items-center gap-1 text-[10px] font-mono text-ice-cyan uppercase font-bold">
+                      <span className="flex items-center gap-1 text-[10px] font-mono text-lime-green uppercase font-bold">
                         <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
@@ -151,7 +151,7 @@ export default function TimelineClient({
                     )}
                   </div>
 
-                  <h3 className="text-xl font-bold text-soft-white group-hover:text-ice-cyan transition-colors">
+                  <h3 className="text-xl font-bold text-soft-white group-hover:text-lime-green transition-colors">
                     {item.title}
                   </h3>
 
@@ -162,7 +162,7 @@ export default function TimelineClient({
                   <div className="mt-4 pt-3 border-t border-charcoal-border flex items-center justify-between text-xs font-mono text-slate-400">
                     <span>📍 {item.venue}</span>
                     {item.metrics.participants && (
-                      <span className="text-ice-cyan font-bold">
+                      <span className="text-lime-green font-bold">
                         👥 {item.metrics.participants}
                       </span>
                     )}
@@ -188,7 +188,7 @@ export default function TimelineClient({
                 <div className="absolute top-0 right-0 w-32 h-32 bg-electric-blue/20 rounded-full blur-2xl pointer-events-none" />
 
                 <div className="flex items-center justify-between mb-4">
-                  <span className="font-mono text-xs text-ice-cyan uppercase tracking-widest font-bold">
+                  <span className="font-mono text-xs text-lime-green uppercase tracking-widest font-bold">
                     RECORD ID // {selectedMilestone.id}
                   </span>
                   <span className="px-2.5 py-0.5 text-[10px] font-mono uppercase bg-deep-ink rounded text-slate-300 border border-charcoal-border">
@@ -211,7 +211,7 @@ export default function TimelineClient({
                       <span className="text-[10px] font-mono text-slate-400 uppercase block">
                         PARTICIPANTS
                       </span>
-                      <span className="text-lg font-bold text-ice-cyan font-mono">
+                      <span className="text-lg font-bold text-lime-green font-mono">
                         {selectedMilestone.metrics.participants}
                       </span>
                     </div>
@@ -247,7 +247,7 @@ export default function TimelineClient({
                     <ul className="space-y-2 font-sans">
                       {selectedMilestone.highlights.map((h, i) => (
                         <li key={i} className="text-xs text-slate-300 flex items-start gap-2">
-                          <span className="text-ice-cyan font-mono mt-0.5">▹</span>
+                          <span className="text-lime-green font-mono mt-0.5">▹</span>
                           <span>{h}</span>
                         </li>
                       ))}
@@ -265,7 +265,7 @@ export default function TimelineClient({
                       href={selectedMilestone.sourceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3.5 py-1.5 text-xs font-mono bg-ice-cyan text-deep-ink font-bold rounded hover:bg-cyan-300 transition-colors flex items-center gap-1.5 shadow-[0_0_12px_rgba(117,230,255,0.3)]"
+                      className="px-3.5 py-1.5 text-xs font-mono bg-electric-blue text-deep-ink font-bold rounded hover:bg-cyan-300 transition-colors flex items-center gap-1.5 shadow-[0_0_12px_rgba(117,230,255,0.3)]"
                     >
                       <span>SOURCE LINK</span>
                       <span>↗</span>

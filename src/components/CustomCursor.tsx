@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import InteractiveLightField from './cursor/InteractiveLightField';
+import GlobalInteractiveField from './cursor/GlobalInteractiveField';
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -40,13 +40,11 @@ export default function CustomCursor() {
     const onMouseDown = () => setIsClicking(true);
     const onMouseUp = () => setIsClicking(false);
 
-    // Smooth physics loop for the trailing ring and ambient light aura
+    // Physics loop for trailing elements
     const render = () => {
-      // Lerp for ring
-      ringX += (mouseX - ringX) * 0.18;
-      ringY += (mouseY - ringY) * 0.18;
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
 
-      // Slower lerp for ambient glow
       auraX += (mouseX - auraX) * 0.08;
       auraY += (mouseY - auraY) * 0.08;
 
@@ -96,30 +94,30 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* TechNeeds Interactive Light Field Shader & Particle Canvas */}
-      <InteractiveLightField />
+      {/* Global Interactive Background Field */}
+      <GlobalInteractiveField />
 
       {isDesktop && (
         <>
-          {/* Ambient reactive cursor spotlight in Electric Blue & Ice Cyan */}
+          {/* Ambient cursor spotlight in Electric Blue & Lime Green */}
           <div
             ref={auraRef}
-            className="fixed top-0 left-0 w-[520px] h-[520px] -ml-[260px] -mt-[260px] rounded-full pointer-events-none z-[40] opacity-35 mix-blend-screen transition-opacity duration-300"
+            className="fixed top-0 left-0 w-[480px] h-[480px] -ml-[240px] -mt-[240px] rounded-full pointer-events-none z-[5] opacity-30 mix-blend-screen transition-opacity duration-300"
             style={{
               background:
-                'radial-gradient(circle, rgba(117, 230, 255, 0.25) 0%, rgba(49, 94, 255, 0.15) 35%, rgba(8, 11, 18, 0) 70%)',
+                'radial-gradient(circle, rgba(49, 94, 255, 0.22) 0%, rgba(184, 217, 76, 0.08) 40%, rgba(8, 11, 18, 0) 70%)',
             }}
           />
 
-          {/* Trailing electric cyan/blue ring */}
+          {/* Trailing electric blue / lime ring */}
           <div
             ref={ringRef}
             className={`fixed top-0 left-0 rounded-full pointer-events-none z-[9999] -ml-5 -mt-5 transition-all duration-150 ease-out ${
               isHovered
-                ? 'w-16 h-16 -ml-8 -mt-8 border-2 border-ice-cyan bg-ice-cyan/10 shadow-[0_0_24px_rgba(117,230,255,0.4)]'
+                ? 'w-14 h-14 -ml-7 -mt-7 border-2 border-lime-green bg-lime-green/10 shadow-[0_0_20px_rgba(184,217,76,0.35)]'
                 : isClicking
                 ? 'w-8 h-8 -ml-4 -mt-4 border-2 border-electric-blue-light scale-90'
-                : 'w-10 h-10 border border-ice-cyan/50 shadow-[0_0_12px_rgba(49,94,255,0.3)]'
+                : 'w-10 h-10 border border-electric-blue/60 shadow-[0_0_12px_rgba(49,94,255,0.3)]'
             }`}
           />
 
@@ -127,7 +125,7 @@ export default function CustomCursor() {
           <div
             ref={dotRef}
             className={`fixed top-0 left-0 w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full pointer-events-none z-[10000] transition-colors duration-150 ${
-              isHovered ? 'bg-acid-lime scale-150 shadow-[0_0_8px_#D4FF24]' : 'bg-ice-cyan'
+              isHovered ? 'bg-lime-green scale-150 shadow-[0_0_8px_#B8D94C]' : 'bg-electric-blue-light'
             }`}
           />
         </>

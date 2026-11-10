@@ -54,15 +54,15 @@ export default function Preloader() {
           className="fixed inset-0 z-[99999] bg-[#080B12] flex flex-col justify-between p-8 sm:p-12 pointer-events-none select-none overflow-hidden"
         >
           {/* Laser horizontal scanline */}
-          <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-ice-cyan to-transparent shadow-[0_0_20px_#75E6FF] animate-scanline pointer-events-none" />
+          <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-electric-blue to-transparent shadow-[0_0_20px_#315EFF] animate-scanline pointer-events-none" />
 
           {/* Top telemetry bar */}
           <div className="flex justify-between items-center text-xs font-mono">
             <span className="text-electric-blue-light tracking-widest uppercase">
               TECHNEEDS IGDTUW // DIGITAL EXPERIENCE
             </span>
-            <span className="text-ice-cyan flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-ice-cyan animate-ping" />
+            <span className="text-lime-green flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-lime-green animate-ping" />
               ONLINE
             </span>
           </div>
@@ -75,13 +75,13 @@ export default function Preloader() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="relative w-28 h-28 sm:w-36 sm:h-36 mb-6"
             >
-              <div className="absolute inset-0 bg-ice-cyan/20 rounded-full blur-2xl animate-pulse" />
+              <div className="absolute inset-0 bg-lime-green/20 rounded-full blur-2xl animate-pulse" />
               <Image
                 src="/brand/techneeds-logo.png"
                 alt="TechNeeds IGDTUW Official Logo"
                 fill
                 sizes="(max-width: 768px) 112px, 144px"
-                className="object-contain relative z-10 drop-shadow-[0_0_25px_rgba(117,230,255,0.5)]"
+                className="object-contain relative z-10 drop-shadow-[0_0_25px_rgba(49,94,255,0.5)]"
                 priority
               />
             </motion.div>
@@ -92,7 +92,7 @@ export default function Preloader() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
               className="font-display text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-soft-white"
             >
-              TECH<span className="text-ice-cyan">NEEDS</span>
+              TECH<span className="text-lime-green">NEEDS</span>
             </motion.h1>
 
             <motion.p
@@ -114,7 +114,7 @@ export default function Preloader() {
             <div className="text-right">
               <span className="text-4xl sm:text-6xl font-display font-black text-soft-white tracking-tighter">
                 {counter}
-                <span className="text-xs text-ice-cyan font-mono font-normal ml-1">%</span>
+                <span className="text-xs text-lime-green font-mono font-normal ml-1">%</span>
               </span>
             </div>
           </div>

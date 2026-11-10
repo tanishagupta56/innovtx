@@ -17,7 +17,7 @@ export default function AboutPage() {
         {/* Header spread */}
         <div className="border-b border-charcoal-border pb-16">
           <div className="flex items-center gap-3 mb-6">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               SOCIETY ARCHITECTURE // WHO WE ARE
             </span>
             <span className="font-mono text-xs text-slate-500 uppercase tracking-widest">
@@ -29,10 +29,10 @@ export default function AboutPage() {
             <div className="lg:col-span-8">
               <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight leading-[0.95]">
                 ENGINEERING FOR THE <br />
-                <span className="text-transparent [-webkit-text-stroke:1.5px_#315EFF] hover:[-webkit-text-stroke:1.5px_#75E6FF] transition-all">
+                <span className="text-transparent [-webkit-text-stroke:1.5px_#315EFF] hover:[-webkit-text-stroke:1.5px_#315EFF] transition-all">
                   UNAPOLOGETICALLY
                 </span>{' '}
-                AMBITIOUS<span className="text-ice-cyan">.</span>
+                AMBITIOUS<span className="text-lime-green">.</span>
               </h1>
 
               <p className="mt-8 text-slate-300 font-sans text-lg sm:text-2xl max-w-3xl leading-relaxed">
@@ -42,7 +42,7 @@ export default function AboutPage() {
 
             <div className="lg:col-span-4 flex justify-center lg:justify-end">
               <div className="relative w-44 h-44 sm:w-56 sm:h-56">
-                <div className="absolute inset-0 bg-ice-cyan/20 rounded-full blur-2xl animate-pulse" />
+                <div className="absolute inset-0 bg-lime-green/20 rounded-full blur-2xl animate-pulse" />
                 <Image
                   src="/brand/techneeds-logo.png"
                   alt="Official TechNeeds Logo"
@@ -60,7 +60,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-8 border border-charcoal-border bg-charcoal/60 rounded-2xl">
           {SOCIETY_STATS.map((stat, i) => (
             <div key={i} className="text-center p-4">
-              <span className="text-3xl sm:text-5xl font-mono font-bold text-ice-cyan block mb-1">
+              <span className="text-3xl sm:text-5xl font-mono font-bold text-lime-green block mb-1">
                 {stat.number}
               </span>
               <span className="text-xs font-mono font-bold text-soft-white uppercase tracking-wider block">
@@ -76,11 +76,11 @@ export default function AboutPage() {
         {/* Narrative Chapters: Asymmetric Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-4 lg:sticky lg:top-36 space-y-6 font-mono text-xs">
-            <span className="text-ice-cyan block uppercase tracking-widest font-bold">
+            <span className="text-lime-green block uppercase tracking-widest font-bold">
               {'// MANIFESTO INDEX'}
             </span>
             <ul className="space-y-3 text-slate-400">
-              <li className="text-ice-cyan font-bold">01. OUR ORIGIN STORY</li>
+              <li className="text-lime-green font-bold">01. OUR ORIGIN STORY</li>
               <li>02. MISSION &amp; VISION</li>
               <li>03. MENTORSHIP &amp; SSSC</li>
               <li>04. HACKATHON ARENA</li>
@@ -88,7 +88,7 @@ export default function AboutPage() {
             </ul>
 
             <div className="pt-6 border-t border-charcoal-border">
-              <Link href="/timeline" className="text-ice-cyan hover:underline flex items-center gap-2 font-bold">
+              <Link href="/timeline" className="text-lime-green hover:underline flex items-center gap-2 font-bold">
                 <span>View 3D Historical Timeline</span>
                 <span>→</span>
               </Link>
@@ -99,7 +99,7 @@ export default function AboutPage() {
             {/* Chapter 1: Origin */}
             <ScrollReveal direction="up" distance={25}>
               <div className="p-8 sm:p-12 border border-charcoal-border bg-charcoal/70 rounded-2xl">
-                <span className="text-xs font-mono text-ice-cyan uppercase font-bold mb-3 block">
+                <span className="text-xs font-mono text-lime-green uppercase font-bold mb-3 block">
                   CHAPTER 01 // ORIGIN &amp; ROOTS
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold text-soft-white mb-4">
@@ -117,7 +117,7 @@ export default function AboutPage() {
             {/* Chapter 2: Mission & Vision */}
             <ScrollReveal direction="up" distance={25} delay={0.1}>
               <div className="p-8 sm:p-12 border border-charcoal-border bg-charcoal/70 rounded-2xl">
-                <span className="text-xs font-mono text-ice-cyan uppercase font-bold mb-3 block">
+                <span className="text-xs font-mono text-lime-green uppercase font-bold mb-3 block">
                   CHAPTER 02 // MISSION &amp; VISION
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold text-soft-white mb-4">
@@ -125,13 +125,13 @@ export default function AboutPage() {
                 </h3>
                 <div className="space-y-4 text-slate-300 font-sans text-base leading-relaxed">
                   <div>
-                    <strong className="text-soft-white block font-mono text-sm mb-1 uppercase text-ice-cyan">
+                    <strong className="text-soft-white block font-mono text-sm mb-1 uppercase text-lime-green">
                       MISSION:
                     </strong>
                     To democratize advanced technical education, facilitate peer mentorship, and cultivate unapologetic technical confidence among women engineers through competitive hackathons and open-source contribution.
                   </div>
                   <div>
-                    <strong className="text-soft-white block font-mono text-sm mb-1 uppercase text-ice-cyan">
+                    <strong className="text-soft-white block font-mono text-sm mb-1 uppercase text-lime-green">
                       VISION:
                     </strong>
                     To establish IGDTUW as a recognized national hub of elite engineering talent where graduates lead engineering teams at top technology companies and launch venture-backed startups worldwide.
@@ -143,7 +143,7 @@ export default function AboutPage() {
             {/* Chapter 3: Mentorship Ecosystem */}
             <ScrollReveal direction="up" distance={25} delay={0.15}>
               <div className="p-8 sm:p-12 border border-charcoal-border bg-charcoal/70 rounded-2xl">
-                <span className="text-xs font-mono text-ice-cyan uppercase font-bold mb-3 block">
+                <span className="text-xs font-mono text-lime-green uppercase font-bold mb-3 block">
                   CHAPTER 03 // SSSC MENTORSHIP ECOSYSTEM
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold text-soft-white mb-4">
@@ -156,7 +156,7 @@ export default function AboutPage() {
                   Historical cohort curricula have featured dedicated tracks in Web Development (led by Vidusi Agarwal) and Data Structures &amp; Algorithms in C/C++ (led by Shefali Kaushal), helping hundreds of freshers navigate early technical careers.
                 </p>
                 <div className="pt-4 mt-4 border-t border-charcoal-border">
-                  <Link href="/mentorship" className="text-xs font-mono text-ice-cyan hover:underline font-bold">
+                  <Link href="/mentorship" className="text-xs font-mono text-lime-green hover:underline font-bold">
                     Learn more about Mentorship Cohorts →
                   </Link>
                 </div>
@@ -166,7 +166,7 @@ export default function AboutPage() {
             {/* Chapter 4: Hackathons & InnoVortex */}
             <ScrollReveal direction="up" distance={25} delay={0.2}>
               <div className="p-8 sm:p-12 border border-charcoal-border bg-charcoal/70 rounded-2xl">
-                <span className="text-xs font-mono text-ice-cyan uppercase font-bold mb-3 block">
+                <span className="text-xs font-mono text-lime-green uppercase font-bold mb-3 block">
                   CHAPTER 04 // THE INNOVORTEX ARENA
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold text-soft-white mb-4">
@@ -186,11 +186,11 @@ export default function AboutPage() {
         {/* Society Departments Grid */}
         <div className="space-y-8 pt-8">
           <div>
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               ORGANIZATIONAL ARCHITECTURE
             </span>
             <h2 className="editorial-title text-4xl sm:text-5xl text-soft-white mt-3">
-              DEPARTMENT WINGS<span className="text-ice-cyan">.</span>
+              DEPARTMENT WINGS<span className="text-lime-green">.</span>
             </h2>
           </div>
 
@@ -201,7 +201,7 @@ export default function AboutPage() {
                 className="p-6 border border-charcoal-border bg-charcoal/60 rounded-xl flex flex-col justify-between"
               >
                 <div>
-                  <span className="font-mono text-[10px] text-ice-cyan uppercase tracking-widest block mb-2">
+                  <span className="font-mono text-[10px] text-lime-green uppercase tracking-widest block mb-2">
                     {dept.codename}
                   </span>
                   <h4 className="text-lg font-bold text-soft-white mb-2">{dept.name}</h4>
@@ -225,12 +225,12 @@ export default function AboutPage() {
           </p>
           <div className="flex justify-center gap-4">
             <MagneticButton href="/signup" strength={25}>
-              <span className="px-8 py-3.5 bg-ice-cyan text-deep-ink font-mono text-xs font-bold uppercase rounded-md shadow-[0_0_15px_rgba(117,230,255,0.4)]">
+              <span className="px-8 py-3.5 bg-electric-blue text-deep-ink font-mono text-xs font-bold uppercase rounded-md shadow-[0_0_15px_rgba(117,230,255,0.4)]">
                 Create Student Account →
               </span>
             </MagneticButton>
             <MagneticButton href="/community" strength={20}>
-              <span className="px-8 py-3.5 bg-charcoal border border-charcoal-border text-soft-white font-mono text-xs font-bold uppercase rounded-md hover:border-ice-cyan">
+              <span className="px-8 py-3.5 bg-charcoal border border-charcoal-border text-soft-white font-mono text-xs font-bold uppercase rounded-md hover:border-electric-blue/50">
                 Community Hub
               </span>
             </MagneticButton>

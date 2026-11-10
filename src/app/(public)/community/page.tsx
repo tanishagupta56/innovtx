@@ -67,18 +67,18 @@ export default function CommunityPage() {
         {/* Editorial Header */}
         <div className="border-b border-charcoal-border pb-10">
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               ECOSYSTEM // 1,200+ MEMBERS
             </span>
-            <span className="font-mono text-xs text-ice-cyan uppercase tracking-widest flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-ice-cyan animate-ping" />
+            <span className="font-mono text-xs text-lime-green uppercase tracking-widest flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-electric-blue animate-ping" />
               GLOBAL NETWORK
             </span>
           </div>
 
           <h1 className="editorial-title text-5xl sm:text-7xl xl:text-8xl text-soft-white tracking-tight uppercase">
             COMMUNITY <br />
-            <span className="text-ice-cyan">COLLECTIVE.</span>
+            <span className="text-lime-green">COLLECTIVE.</span>
           </h1>
 
           <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">
@@ -92,7 +92,7 @@ export default function CommunityPage() {
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">
               COMMUNICATION MATRIX
             </span>
-            <span className="font-mono text-xs text-ice-cyan">
+            <span className="font-mono text-xs text-lime-green">
               DIRECT ACCESS NODES
             </span>
           </div>
@@ -101,19 +101,19 @@ export default function CommunityPage() {
             {CHANNELS.map((channel, idx) => (
               <div
                 key={idx}
-                className="p-8 rounded-2xl border border-charcoal-border bg-charcoal/70 hover:border-ice-cyan transition-all flex flex-col justify-between group"
+                className="p-8 rounded-2xl border border-charcoal-border bg-charcoal/70 hover:border-electric-blue/50 transition-all flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <span className="px-2.5 py-0.5 text-[10px] font-mono uppercase bg-charcoal border border-charcoal-border rounded text-slate-300">
                       {channel.badge}
                     </span>
-                    <span className="text-xs font-mono text-ice-cyan font-bold">
+                    <span className="text-xs font-mono text-lime-green font-bold">
                       {channel.members}
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-soft-white group-hover:text-ice-cyan transition-colors">
+                  <h3 className="text-2xl font-bold text-soft-white group-hover:text-lime-green transition-colors">
                     {channel.title}
                   </h3>
 
@@ -128,7 +128,7 @@ export default function CommunityPage() {
                     href={channel.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 text-xs font-mono font-bold bg-ice-cyan text-deep-ink hover:bg-cyan-300 transition-colors rounded-md shadow-[0_0_12px_rgba(117,230,255,0.3)]"
+                    className="px-4 py-2 text-xs font-mono font-bold bg-electric-blue text-deep-ink hover:bg-cyan-300 transition-colors rounded-md shadow-[0_0_12px_rgba(117,230,255,0.3)]"
                   >
                     Enter Channel ↗
                   </a>
@@ -141,11 +141,11 @@ export default function CommunityPage() {
         {/* Member Perks & Benefits */}
         <div className="p-10 rounded-3xl border border-charcoal-border bg-charcoal/50">
           <div className="mb-8">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-ice-cyan">
+            <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-charcoal border border-charcoal-border text-lime-green">
               MEMBERSHIP PRIVILEGES
             </span>
             <h2 className="editorial-title text-3xl sm:text-5xl text-soft-white mt-3">
-              WHAT YOU GAIN IN THE COLLECTIVE<span className="text-ice-cyan">.</span>
+              WHAT YOU GAIN IN THE COLLECTIVE<span className="text-lime-green">.</span>
             </h2>
           </div>
 
@@ -162,7 +162,7 @@ export default function CommunityPage() {
 
         {/* Community Charter */}
         <div className="p-8 border border-charcoal-border bg-charcoal/70 rounded-2xl">
-          <h3 className="font-mono text-xs uppercase text-ice-cyan tracking-widest mb-4 font-bold">
+          <h3 className="font-mono text-xs uppercase text-lime-green tracking-widest mb-4 font-bold">
             {'//'} THE TECHNEEDS COMMUNITY CHARTER
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs text-slate-300">
@@ -190,7 +190,7 @@ export default function CommunityPage() {
             Create your account today and unlock instant access to event registrations and society cohorts.
           </p>
           <MagneticButton href="/signup" strength={25}>
-            <span className="px-8 py-3.5 bg-ice-cyan text-deep-ink font-mono text-xs font-bold uppercase rounded-md shadow-[0_0_15px_rgba(117,230,255,0.4)]">
+            <span className="px-8 py-3.5 bg-electric-blue text-deep-ink font-mono text-xs font-bold uppercase rounded-md shadow-[0_0_15px_rgba(117,230,255,0.4)]">
               Create Student Identity →
             </span>
           </MagneticButton>
