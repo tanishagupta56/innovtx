@@ -37,18 +37,49 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
+  // 1. Check Supabase auth user
   let user = null;
+  let profile = null;
   try {
     const { data } = await supabase.auth.getUser();
     user = data?.user || null;
+    if (user) {
+      const { data: p } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      profile = p;
+    }
   } catch {
     user = null;
   }
 
+  // 2. Check custom signed session cookie (techneeds_session)
+  const customSessionCookie = request.cookies.get('techneeds_session')?.value;
+  let customSession: { userId: string; email: string; role: string; expiresAt: number } | null = null;
+  if (customSessionCookie) {
+    try {
+      const parts = customSessionCookie.split('.');
+      if (parts.length === 2) {
+        // Base64url decode payload
+        const base64 = parts[0].replace(/-/g, '+').replace(/_/g, '/');
+        const jsonStr = atob(base64);
+        const parsed = JSON.parse(jsonStr);
+        if (parsed && parsed.expiresAt && Date.now() < parsed.expiresAt) {
+          customSession = parsed;
+        }
+      }
+    } catch {
+      customSession = null;
+    }
+  }
+
+  const isAuthenticated = !!user || !!customSession;
   const pathname = request.nextUrl.pathname;
 
   // Protected student routes
-  if (pathname.startsWith('/dashboard') && !user) {
+  if (pathname.startsWith('/dashboard') && !isAuthenticated) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/login';
     redirectUrl.searchParams.set('redirect', pathname);
@@ -57,26 +88,17 @@ export async function updateSession(request: NextRequest) {
 
   // Protected admin routes
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    if (!user) {
+    if (!isAuthenticated) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/admin/login';
       return NextResponse.redirect(redirectUrl);
     }
 
-    try {
-      // Check admin role
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
+    const isAdmin =
+      (customSession && ['admin', 'super_admin'].includes(customSession.role)) ||
+      (profile && ['admin', 'super_admin'].includes(profile.role));
 
-      if (!profile || !['admin', 'super_admin'].includes(profile.role)) {
-        const redirectUrl = request.nextUrl.clone();
-        redirectUrl.pathname = '/';
-        return NextResponse.redirect(redirectUrl);
-      }
-    } catch {
+    if (!isAdmin) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/';
       return NextResponse.redirect(redirectUrl);
@@ -84,7 +106,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Redirect authenticated users away from auth pages
-  if (user && (pathname === '/login' || pathname === '/signup')) {
+  if (isAuthenticated && (pathname === '/login' || pathname === '/signup')) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/dashboard';
     return NextResponse.redirect(redirectUrl);
