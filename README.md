@@ -72,4 +72,6 @@ Connect production Supabase credentials in .env.local to link live student/admin
 - TypeScript typecheck (`tsc --noEmit`): Passed with 0 errors.
 - ESLint (`next lint`): Passed with 0 errors.
 - Production build (`next build`): All 35 routes compiled and prerendered successfully with code 0.
-- Live server smoke test: `http://localhost:3000/` and subroutes verified with HTTP 200 responses.
+- Live server smoke test: All 11 public and authenticated routes return HTTP 200 OK.
+- Headless visual smoke test: Verified at 1440px desktop (`docs/screenshot.png`) and 390px mobile (`docs/screenshot-390.png`).
+- Crypto test: Valid token HMAC verification passes; tampered token rejected.
