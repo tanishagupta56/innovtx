@@ -3,22 +3,19 @@
 import React, { useEffect, useState } from 'react';
 
 export default function HeroVisual() {
-  const [telemetry, setTelemetry] = useState({
-    fps: 60,
-    nodes: 900,
+  const [coreStatus, setCoreStatus] = useState({
     rotX: '0.00',
     rotY: '0.00',
-    coreState: 'STABLE // RESONATING',
+    state: 'STABLE // RESONATING',
   });
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTelemetry((prev) => ({
-        ...prev,
+      setCoreStatus({
         rotX: (Math.sin(Date.now() * 0.001) * 0.4).toFixed(3),
         rotY: (Math.cos(Date.now() * 0.0012) * 0.6).toFixed(3),
-        fps: Math.floor(59 + Math.random() * 2),
-      }));
+        state: 'STABLE // RESONATING',
+      });
     }, 200);
 
     return () => clearInterval(interval);
@@ -34,14 +31,14 @@ export default function HeroVisual() {
         <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-lime-green" />
         <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-lime-green" />
 
-        {/* Top HUD Telemetry */}
+        {/* Top HUD Status */}
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between font-mono text-[11px] text-muted-text">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-lime-green animate-pulse" />
-            <span className="text-soft-white font-bold tracking-wider">CORE TELEMETRY</span>
+            <span className="text-soft-white font-bold tracking-wider">ORBITAL MATRIX</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-lime-green font-mono">NODES: {telemetry.nodes}</span>
+            <span className="text-lime-green font-mono">NODES: 900+ ACTIVE</span>
             <span className="text-muted-text hidden sm:inline">ENGINE: WEBGL_R3F</span>
           </div>
         </div>
@@ -56,12 +53,12 @@ export default function HeroVisual() {
         {/* Bottom Coordinates Readout */}
         <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between font-mono text-[10px] text-muted-text border-t border-charcoal-border pt-3">
           <div className="flex items-center gap-3">
-            <span>ROT_X: <strong className="text-soft-white">{telemetry.rotX}</strong></span>
-            <span>ROT_Y: <strong className="text-soft-white">{telemetry.rotY}</strong></span>
+            <span>ROT_X: <strong className="text-soft-white">{coreStatus.rotX}</strong></span>
+            <span>ROT_Y: <strong className="text-soft-white">{coreStatus.rotY}</strong></span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-muted-text">STATE:</span>
-            <span className="text-lime-green font-bold">{telemetry.coreState}</span>
+            <span className="text-lime-green font-bold">{coreStatus.state}</span>
           </div>
         </div>
       </div>

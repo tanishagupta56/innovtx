@@ -1,6 +1,3 @@
-'use client';
-
-import GlobalInteractiveField from './GlobalInteractiveField';
-
-export { GlobalInteractiveField };
-export default GlobalInteractiveField;
+export { default } from './GlobalInteractiveBackground';
+export { default as GlobalInteractiveBackground } from './GlobalInteractiveBackground';
+export { default as GlobalInteractiveField } from './GlobalInteractiveBackground';

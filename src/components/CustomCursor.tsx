@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import GlobalInteractiveField from './cursor/GlobalInteractiveField';
+import GlobalInteractiveBackground from './cursor/GlobalInteractiveBackground';
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -95,7 +95,7 @@ export default function CustomCursor() {
   return (
     <>
       {/* Global Interactive Background Field */}
-      <GlobalInteractiveField />
+      <GlobalInteractiveBackground />
 
       {isDesktop && (
         <>

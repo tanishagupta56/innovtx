@@ -7,7 +7,7 @@ import MagneticButton from './MagneticButton';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen w-full flex flex-col justify-between pt-28 pb-12 px-6 sm:px-12 overflow-hidden bg-deep-ink">
+    <section className="relative min-h-screen w-full flex flex-col justify-between pt-28 pb-12 px-6 sm:px-12 overflow-hidden bg-transparent">
       {/* Background radial energy field */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] bg-electric-blue/15 blur-[170px] pointer-events-none -z-10" />
       <div className="absolute bottom-10 left-10 w-[400px] h-[400px] bg-lime-green/10 blur-[140px] pointer-events-none -z-10" />
@@ -24,7 +24,7 @@ export default function Hero() {
         }}
       />
 
-      {/* Top telemetry bar */}
+      {/* Top society status bar */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

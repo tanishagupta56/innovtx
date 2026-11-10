@@ -35,7 +35,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#03060f] text-gray-200">
+    <div className="min-h-screen bg-transparent text-gray-200">
       {/* Admin header */}
       <header className="border-b border-cobalt/25 bg-[#050917] sticky top-0 z-40 px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-4">

@@ -20,7 +20,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-deep-ink flex items-center justify-center px-6 py-12 relative overflow-hidden z-10">
+    <div className="min-h-screen bg-transparent flex items-center justify-center px-6 py-12 relative overflow-hidden z-10">
       <div className="w-full max-w-md relative z-10 p-8 border border-charcoal-border bg-charcoal/90 backdrop-blur-xl shadow-2xl rounded-2xl">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block group mb-3">

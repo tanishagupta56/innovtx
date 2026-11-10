@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function FAQPage() {
   return (
-    <div className="pt-32 pb-24 px-6 sm:px-12 bg-deep-ink min-h-screen text-soft-white relative z-10">
+    <div className="pt-32 pb-24 px-6 sm:px-12 bg-transparent min-h-screen text-soft-white relative z-10">
       <div className="max-w-5xl mx-auto space-y-16">
         {/* Editorial Header */}
         <div className="border-b border-charcoal-border pb-12">

@@ -20,7 +20,7 @@ export default async function DashboardLayout({
     .single();
 
   return (
-    <div className="min-h-screen bg-midnight">
+    <div className="min-h-screen bg-transparent">
       {/* Dashboard nav */}
       <nav className="border-b border-cobalt/10 bg-midnight/90 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">

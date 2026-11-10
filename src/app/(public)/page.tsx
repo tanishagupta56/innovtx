@@ -2,7 +2,7 @@ import Hero from '@/components/Hero';
 import InfiniteMarquee from '@/components/InfiniteMarquee';
 import MagneticButton from '@/components/MagneticButton';
 import ScrollReveal from '@/components/ScrollReveal';
-import DigitalEnergyCoreSection from '@/components/home/DigitalEnergyCoreSection';
+import TechNeedsEcosystemSection from '@/components/home/TechNeedsEcosystemSection';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -74,7 +74,7 @@ export default async function HomePage() {
   const secondaryEvents = events.slice(1);
 
   return (
-    <div className="relative w-full overflow-hidden bg-deep-ink text-soft-white">
+    <div className="relative w-full overflow-hidden bg-transparent text-soft-white">
       {/* 1. CINEMATIC HERO WITH OFFICIAL LOGO & LIGHT FIELD INTEGRATION */}
       <Hero />
 
@@ -221,8 +221,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 5. DIGITAL ENERGY CORE (Interactive 3D Ecosystem Installation) */}
-      <DigitalEnergyCoreSection />
+      {/* 5. THE TECHNEEDS ECOSYSTEM (Interactive 3D Spatial Network) */}
+      <TechNeedsEcosystemSection />
 
       {/* 6. FEATURED PROGRAMMES (InnoVortex, SSSC, 21-Day CS Sprint, Open Source) */}
       <section className="py-24 sm:py-36 px-6 sm:px-12 border-b border-charcoal-border relative z-10 bg-deep-ink">
