@@ -9,9 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        midnight: '#030407',
+        midnight: {
+          DEFAULT: '#030407',
+          950: '#030407',
+          900: '#060913',
+          800: '#0d1326',
+        },
+        'electric-lime': '#D4FF24',
+        'electric-cobalt': '#1558C9',
+        'electric-cobalt-light': '#38bdf8',
+        'cobalt-bright': '#2d74ff',
         cobalt: {
           DEFAULT: '#1558C9',
+          bright: '#2d74ff',
           50: '#E8F0FE',
           100: '#C5D9FC',
           200: '#8BB3F9',

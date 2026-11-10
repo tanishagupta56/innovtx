@@ -62,11 +62,12 @@ export default function Footer() {
                 {'// PLATFORM'}
               </h4>
               <ul className="space-y-2.5 text-gray-400">
+                <li><Link href="/timeline" className="hover:text-lime transition-colors">⏳ 3D Spatial Timeline</Link></li>
+                <li><Link href="/initiatives" className="hover:text-lime transition-colors">🚀 Society Initiatives</Link></li>
                 <li><Link href="/events" className="hover:text-lime transition-colors">⚡ Events &amp; Passes</Link></li>
-                <li><Link href="/opportunities" className="hover:text-lime transition-colors">💼 Opportunities</Link></li>
-                <li><Link href="/resources" className="hover:text-lime transition-colors">📚 TechBoard Docs</Link></li>
-                <li><Link href="/timeline" className="hover:text-lime transition-colors">⏳ Society Timeline</Link></li>
-                <li><Link href="/team" className="hover:text-lime transition-colors">👥 Leads &amp; Alumni</Link></li>
+                <li><Link href="/community" className="hover:text-lime transition-colors">🌐 Community Ecosystem</Link></li>
+                <li><Link href="/gallery" className="hover:text-lime transition-colors">📸 Vibes &amp; Moments</Link></li>
+                <li><Link href="/collaborate" className="hover:text-lime transition-colors">🤝 Partner &amp; Sponsor</Link></li>
               </ul>
             </div>
 

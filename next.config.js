@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['framer-motion', 'lenis', 'gsap'],
+  transpilePackages: ['framer-motion', 'lenis', 'gsap', 'three', '@react-three/fiber', '@react-three/drei'],
   images: {
     remotePatterns: [
       {

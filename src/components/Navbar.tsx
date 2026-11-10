@@ -8,13 +8,13 @@ import { createClient } from '@/lib/supabase/client';
 
 const navItems = [
   { href: '/', label: 'Overview' },
+  { href: '/timeline', label: '3D Timeline' },
+  { href: '/initiatives', label: 'Initiatives' },
   { href: '/events', label: 'Events' },
-  { href: '/opportunities', label: 'Opportunities' },
-  { href: '/resources', label: 'TechBoard' },
-  { href: '/timeline', label: 'Timeline' },
-  { href: '/team', label: 'Team' },
-  { href: '/about', label: 'Manifesto' },
-  { href: '/faq', label: 'Help' },
+  { href: '/community', label: 'Community' },
+  { href: '/gallery', label: 'Vibes' },
+  { href: '/collaborate', label: 'Partner' },
+  { href: '/opportunities', label: 'Radar' },
 ];
 
 export default function Navbar() {

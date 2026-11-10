@@ -1,149 +1,285 @@
 'use client';
 
-import { useState } from 'react';
-import { formatDate } from '@/lib/utils';
+import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { MilestoneItem } from '@/data/timelineData';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface TimelineItem {
-  id: string;
-  title: string;
-  description: string | null;
-  date: string;
-  year: number;
-  category: string | null;
-}
-
-export default function TimelineClient({ items }: { items: TimelineItem[] }) {
-  const years = Array.from(new Set(items.map((i) => i.year))).sort((a, b) => b - a);
-  const [activeYear, setActiveYear] = useState<number | 'all'>(years[0] || 'all');
-  const [expandedId, setExpandedId] = useState<string | null>(items[0]?.id || null);
-
-  const filtered = activeYear === 'all' ? items : items.filter((i) => i.year === activeYear);
-
-  if (!items.length) {
-    return (
-      <div className="p-16 border border-cobalt/25 bg-[#050816] text-center font-mono">
-        <p className="text-gray-400 text-lg mb-2">Historical milestones are currently being verified.</p>
-        <p className="text-gray-600 text-xs">Official society timeline records to be added by admin.</p>
+const Timeline3DCanvas = dynamic(
+  () => import('@/components/3d/Timeline3DCanvas').then((mod) => mod.Timeline3DCanvas),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[520px] rounded-xl border border-white/10 bg-midnight-950/80 flex items-center justify-center font-mono text-sm text-slate-500">
+        <span className="w-3 h-3 rounded-full bg-electric-lime animate-ping mr-3" />
+        INITIALIZING 3D SPATIAL ACCELERATOR...
       </div>
-    );
+    ),
   }
+);
+
+export default function TimelineClient({
+  initialMilestones,
+}: {
+  initialMilestones: MilestoneItem[];
+}) {
+  const [selectedMilestone, setSelectedMilestone] = useState<MilestoneItem | null>(
+    initialMilestones[0] || null
+  );
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeYear, setActiveYear] = useState<number | 'all'>('all');
+
+  const years = Array.from(new Set(initialMilestones.map((m) => m.year))).sort((a, b) => a - b);
+  const categories = [
+    { key: 'all', label: 'All Operations' },
+    { key: 'hackathon', label: 'Hackathons' },
+    { key: 'mentorship', label: 'SSSC Mentorship' },
+    { key: 'workshop', label: 'Workshops & Labs' },
+    { key: 'collaboration', label: 'Collaborations' },
+    { key: 'platform', label: 'Platform Releases' },
+  ];
+
+  const filtered = initialMilestones.filter((m) => {
+    const matchesCat = activeCategory === 'all' || m.category === activeCategory;
+    const matchesYr = activeYear === 'all' || m.year === activeYear;
+    return matchesCat && matchesYr;
+  });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-      {/* Sticky Year Navigation & Progress Rail (Desktop) */}
-      <div className="lg:col-span-4 lg:sticky lg:top-36 space-y-6">
-        <div className="p-6 border border-cobalt/25 bg-[#050816]">
-          <span className="text-lime font-mono text-xs uppercase tracking-widest font-bold block mb-4">
-            CHRONOLOGICAL SCRUBBER
-          </span>
+    <div className="space-y-10">
+      {/* 3D WebGL Spatial Timeline */}
+      <Timeline3DCanvas
+        selectedId={selectedMilestone?.id || null}
+        onSelectMilestone={(m) => setSelectedMilestone(m)}
+      />
 
-          <div className="flex lg:flex-col gap-2 flex-wrap">
+      {/* Scrubber & Filter Controls Bar */}
+      <div className="p-6 border border-white/10 bg-midnight-900/60 backdrop-blur-md rounded-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        {/* Year Pills */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest mr-2">
+            EPOCH:
+          </span>
+          <button
+            onClick={() => setActiveYear('all')}
+            className={`px-3 py-1.5 font-mono text-xs rounded transition-all ${
+              activeYear === 'all'
+                ? 'bg-electric-lime text-black font-bold shadow-[0_0_12px_#D4FF24]'
+                : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
+            }`}
+          >
+            All Years
+          </button>
+          {years.map((yr) => (
             <button
-              onClick={() => setActiveYear('all')}
-              className={`text-left px-4 py-2.5 font-mono text-xs uppercase tracking-wider border transition-all ${
-                activeYear === 'all'
-                  ? 'bg-lime text-midnight border-lime font-bold shadow-[0_0_15px_rgba(212,255,36,0.3)]'
-                  : 'border-cobalt/20 text-gray-400 hover:text-white hover:border-cobalt'
+              key={yr}
+              onClick={() => setActiveYear(yr)}
+              className={`px-3 py-1.5 font-mono text-xs rounded transition-all ${
+                activeYear === yr
+                  ? 'bg-electric-cobalt text-white font-bold shadow-[0_0_15px_#1558C9]'
+                  : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
               }`}
             >
-              All Milestones ({items.length})
+              {yr}
             </button>
-
-            {years.map((yr) => (
-              <button
-                key={yr}
-                onClick={() => setActiveYear(yr)}
-                className={`text-left px-4 py-2.5 font-mono text-xs uppercase tracking-wider border transition-all flex items-center justify-between ${
-                  activeYear === yr
-                    ? 'bg-cobalt text-white border-cobalt-bright font-bold shadow-[0_0_15px_rgba(21,88,201,0.4)]'
-                    : 'border-cobalt/20 text-gray-400 hover:text-white hover:border-cobalt'
-                }`}
-              >
-                <span>Year {yr}</span>
-                <span className="text-[10px] opacity-70">
-                  {items.filter((i) => i.year === yr).length} entries
-                </span>
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
 
-        {/* Telemetry info */}
-        <div className="p-6 border border-cobalt/20 bg-[#040712] font-mono text-xs text-gray-500 hidden lg:block space-y-2">
-          <p className="text-lime uppercase font-bold">{'// ARCHIVE VERIFICATION'}</p>
-          <p>Chronological records indexed by society executive tenure.</p>
-          <p className="text-gray-600">STATE: LIVE SYNCHRONIZED</p>
+        {/* Category Pills */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest mr-2">
+            TRACK:
+          </span>
+          {categories.map((cat) => (
+            <button
+              key={cat.key}
+              onClick={() => setActiveCategory(cat.key)}
+              className={`px-3 py-1 text-xs font-mono rounded transition-all ${
+                activeCategory === cat.key
+                  ? 'bg-white/20 text-white border border-electric-lime font-bold'
+                  : 'text-slate-400 hover:text-slate-200 border border-transparent'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Main Timeline Stream */}
-      <div className="lg:col-span-8 relative">
-        {/* Animated Electric Progress Line */}
-        <div className="absolute left-4 top-2 bottom-2 w-[2px] bg-gradient-to-b from-lime via-cobalt to-transparent shadow-[0_0_10px_#1558C9]" />
+      {/* Two Column Layout: Milestone Stream + Detail Inspector */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Chronological Stream */}
+        <div className="lg:col-span-7 space-y-6">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <span className="font-mono text-xs text-slate-400 uppercase tracking-wider">
+              DISPLAYING {filtered.length} ARCHIVAL LOGS
+            </span>
+            <span className="text-[11px] font-mono text-electric-lime">
+              CLICK ENTRY TO INSPECT
+            </span>
+          </div>
 
-        <div className="space-y-8 pl-12">
-          {filtered.map((item, idx) => {
-            const isExpanded = expandedId === item.id;
-            return (
-              <div key={item.id} className="relative group">
-                {/* Glowing Node Pulse */}
+          <div className="space-y-4">
+            {filtered.map((item) => {
+              const isSelected = selectedMilestone?.id === item.id;
+              return (
                 <div
-                  className={`absolute -left-[45px] top-6 w-5 h-5 rounded-none border-2 transition-all ${
-                    isExpanded
-                      ? 'bg-lime border-lime shadow-[0_0_15px_#D4FF24] rotate-45 scale-110'
-                      : 'bg-midnight border-cobalt group-hover:border-lime group-hover:rotate-45'
-                  }`}
-                />
-
-                {/* Milestone Content Card */}
-                <div
-                  onClick={() => setExpandedId(isExpanded ? null : item.id)}
-                  className={`p-8 border cursor-pointer transition-all duration-300 relative overflow-hidden ${
-                    isExpanded
-                      ? 'border-lime/60 bg-[#060a1d] shadow-[0_0_30px_rgba(21,88,201,0.2)]'
-                      : 'border-cobalt/25 bg-[#050816] hover:border-cobalt/60'
+                  key={item.id}
+                  onClick={() => setSelectedMilestone(item)}
+                  className={`p-6 rounded-xl border transition-all cursor-pointer relative overflow-hidden group ${
+                    isSelected
+                      ? 'border-electric-lime bg-midnight-900/90 shadow-[0_0_25px_rgba(212,255,36,0.15)]'
+                      : 'border-white/10 bg-midnight-950/60 hover:border-cobalt/50 hover:bg-midnight-900/40'
                   }`}
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-3">
-                      <span className="tag-telemetry-lime font-bold">
-                        {formatDate(item.date)}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2.5">
+                      <span className="px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-electric-cobalt/20 text-electric-cobalt border border-electric-cobalt/40">
+                        {item.category}
                       </span>
-                      {item.category && (
-                        <span className="font-mono text-xs text-gray-400 uppercase">
-                          {'// ' + item.category}
-                        </span>
-                      )}
+                      <span className="text-xs font-mono text-slate-400">
+                        {item.month} {item.year}
+                      </span>
                     </div>
-                    <span className="font-mono text-xs text-cobalt-300">
-                      {isExpanded ? '[-] CONTRACT' : '[+] EXPAND'}
-                    </span>
+                    {item.verified && (
+                      <span className="flex items-center gap-1 text-[10px] font-mono text-electric-lime uppercase">
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        VERIFIED RECORD
+                      </span>
+                    )}
                   </div>
 
-                  <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-white group-hover:text-lime transition-colors">
+                  <h3 className="text-xl font-bold text-white group-hover:text-electric-lime transition-colors">
                     {item.title}
                   </h3>
 
-                  <AnimatePresence>
-                    {isExpanded && item.description && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.35, ease: 'easeOut' }}
-                        className="overflow-hidden"
-                      >
-                        <div className="mt-4 pt-4 border-t border-cobalt/20 text-gray-300 font-body text-base leading-relaxed whitespace-pre-wrap">
-                          {item.description}
-                        </div>
-                      </motion.div>
+                  <p className="mt-2 text-sm text-slate-300 leading-relaxed line-clamp-2">
+                    {item.description}
+                  </p>
+
+                  <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-slate-400">
+                    <span>📍 {item.venue}</span>
+                    {item.metrics.participants && (
+                      <span className="text-electric-lime font-bold">
+                        👥 {item.metrics.participants}
+                      </span>
                     )}
-                  </AnimatePresence>
+                  </div>
                 </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Detailed Inspector Modal/Panel */}
+        <div className="lg:col-span-5 lg:sticky lg:top-28">
+          <AnimatePresence mode="wait">
+            {selectedMilestone ? (
+              <motion.div
+                key={selectedMilestone.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.2 }}
+                className="p-8 rounded-xl border border-electric-cobalt/40 bg-midnight-900/90 backdrop-blur-xl relative overflow-hidden shadow-2xl"
+              >
+                {/* Visual Accent Corner */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-electric-cobalt/20 rounded-full blur-2xl pointer-events-none" />
+
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-mono text-xs text-electric-lime uppercase tracking-widest">
+                    RECORD ID // {selectedMilestone.id}
+                  </span>
+                  <span className="px-2 py-0.5 text-[10px] font-mono uppercase bg-white/10 rounded text-slate-300 border border-white/10">
+                    {selectedMilestone.year} ARCHIVE
+                  </span>
+                </div>
+
+                <h2 className="text-2xl font-bold text-white leading-snug">
+                  {selectedMilestone.title}
+                </h2>
+
+                <p className="mt-4 text-slate-300 text-sm leading-relaxed">
+                  {selectedMilestone.description}
+                </p>
+
+                {/* Metrics Grid */}
+                <div className="mt-6 grid grid-cols-2 gap-3">
+                  {selectedMilestone.metrics.participants && (
+                    <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                      <span className="text-[10px] font-mono text-slate-400 uppercase block">
+                        PARTICIPANTS
+                      </span>
+                      <span className="text-lg font-bold text-electric-lime font-mono">
+                        {selectedMilestone.metrics.participants}
+                      </span>
+                    </div>
+                  )}
+                  {selectedMilestone.metrics.teams && (
+                    <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                      <span className="text-[10px] font-mono text-slate-400 uppercase block">
+                        TEAMS FORMED
+                      </span>
+                      <span className="text-lg font-bold text-white font-mono">
+                        {selectedMilestone.metrics.teams}
+                      </span>
+                    </div>
+                  )}
+                  {selectedMilestone.metrics.sponsors && (
+                    <div className="p-3 bg-white/5 rounded-lg border border-white/10 col-span-2">
+                      <span className="text-[10px] font-mono text-slate-400 uppercase block">
+                        SPONSORS & PARTNERS
+                      </span>
+                      <span className="text-sm font-semibold text-slate-200">
+                        {selectedMilestone.metrics.sponsors}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Highlights */}
+                {selectedMilestone.highlights && selectedMilestone.highlights.length > 0 && (
+                  <div className="mt-6 space-y-2">
+                    <span className="text-xs font-mono uppercase text-slate-400 tracking-wider block">
+                      KEY DELIVERABLES & OUTCOMES:
+                    </span>
+                    <ul className="space-y-2">
+                      {selectedMilestone.highlights.map((h, i) => (
+                        <li key={i} className="text-xs text-slate-300 flex items-start gap-2">
+                          <span className="text-electric-lime font-mono mt-0.5">▹</span>
+                          <span>{h}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Source Verification Link */}
+                <div className="mt-8 pt-5 border-t border-white/10 flex items-center justify-between">
+                  <div className="text-[11px] font-mono text-slate-400">
+                    VENUE: <span className="text-white">{selectedMilestone.venue}</span>
+                  </div>
+                  {selectedMilestone.sourceUrl && (
+                    <a
+                      href={selectedMilestone.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-1.5 text-xs font-mono bg-electric-lime text-black font-bold rounded hover:bg-lime-400 transition-colors flex items-center gap-1.5"
+                    >
+                      <span>SOURCE LINK</span>
+                      <span>↗</span>
+                    </a>
+                  )}
+                </div>
+              </motion.div>
+            ) : (
+              <div className="p-8 border border-white/10 bg-midnight-950/60 rounded-xl text-center text-slate-500 font-mono text-sm">
+                SELECT A NODE ON THE 3D SPLINE OR LIST TO VIEW TELEMETRY
               </div>
-            );
-          })}
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
