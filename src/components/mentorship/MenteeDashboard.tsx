@@ -457,7 +457,7 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
               : 'text-slate-400 hover:text-white bg-deep-ink border border-charcoal-border'
           }`}
         >
-          // Deliverables & Sprints
+          {"// Deliverables & Sprints"}
         </button>
         <button
           type="button"
