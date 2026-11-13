@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
+import { IS_DEMO_MODE } from '@/lib/mentorship/client-api';
+import { resetDemoStore } from '@/lib/mentorship/demo-store';
 
 interface PortalHeaderProps {
   user: {
@@ -29,16 +30,39 @@ export default function PortalHeader({ user, onOpenSignIn, onSignOut }: PortalHe
     }
   };
 
+  const handleResetDemo = () => {
+    if (confirm('Reset demo data to initial seed?')) {
+      resetDemoStore();
+      window.location.reload();
+    }
+  };
+
   return (
     <div className="p-4 sm:p-5 border border-charcoal-border bg-charcoal/80 rounded-2xl flex flex-wrap items-center justify-between gap-4">
       {/* Left: Brand/Status */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-wrap">
         <span className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-widest bg-deep-ink border border-charcoal-border text-lime-green font-bold">
           {user ? getRoleTag(user.role) : 'PORTAL // SSSC CADRE'}
         </span>
         <span className="font-mono text-xs text-slate-400 uppercase tracking-wider hidden sm:inline">
           {user ? `VERIFIED ${user.role.toUpperCase()}` : 'COHORT PLATFORM'}
         </span>
+
+        {IS_DEMO_MODE && (
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">
+              DEMO DATA
+            </span>
+            <button
+              type="button"
+              onClick={handleResetDemo}
+              title="Clear user changes and restore initial seed data"
+              className="px-2.5 py-0.5 text-[10px] font-mono text-slate-400 hover:text-white bg-deep-ink border border-charcoal-border hover:border-slate-400 rounded transition-all"
+            >
+              Reset Demo Data
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Right: User status or Sign In */}

@@ -80,6 +80,7 @@ function formatTimeRemaining(deadlineIso: string, nowMs: number) {
 }
 
 export default function MenteeDashboard({ user }: MenteeDashboardProps) {
+  const [profileUser, setProfileUser] = useState<any>(user);
   const [resources, setResources] = useState<MentorshipResource[]>([]);
   const [submissions, setSubmissions] = useState<MentorshipSubmission[]>([]);
   const [leaderboardRank, setLeaderboardRank] = useState<number | null>(null);
@@ -117,17 +118,27 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
   const loadData = async () => {
     setLoading(true);
     try {
-      const programId = user.program_ids?.[0];
+      const [meRes, progRes] = await Promise.all([
+        mentorshipApi.getMe().catch(() => ({ user: null })),
+        mentorshipApi.getPrograms().catch(() => ({ programs: [] })),
+      ]);
+
+      const live = meRes.user || user;
+      setProfileUser(live);
+
+      const activePrograms = (progRes.programs || []).filter((p: any) => p.status === 'active');
+      const programId = live.program_ids?.[0] || activePrograms[0]?.id;
+
       const [resData, subData, lbData] = await Promise.all([
         mentorshipApi.getResources(programId),
-        mentorshipApi.getSubmissions(undefined, user.id),
+        mentorshipApi.getSubmissions(undefined, live.id),
         mentorshipApi.getLeaderboard(programId),
       ]);
 
       setResources(resData.resources || []);
       setSubmissions(subData.submissions || []);
 
-      const userRankEntry = (lbData.leaderboard || []).find((r: any) => r.id === user.id);
+      const userRankEntry = (lbData.leaderboard || []).find((r: any) => r.id === live.id);
       if (userRankEntry) {
         setLeaderboardRank(userRankEntry.rank);
       }
@@ -318,11 +329,11 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
               03 // MENTEE DASHBOARD
             </span>
             <span className="text-xs font-mono text-slate-400">
-              ENROLLMENT: <strong>{user.enrollment_no || 'TN-ACTIVE'}</strong>
+              ENROLLMENT: <strong>{profileUser.enrollment_no || user.enrollment_no || 'TN-2026-DEMO'}</strong>
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-soft-white">
-            Welcome back, {user.name}
+            Welcome back, {profileUser.name || user.name}
           </h2>
           <p className="text-xs text-slate-300 font-sans max-w-xl">
             Track your weekly curriculum, review automated scores, and submit engineering deliverables before deadlines.
@@ -331,7 +342,7 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
 
         <div className="flex items-center gap-3">
           <Link
-            href={`/mentorship/profile/${user.id}`}
+            href={`/mentorship/profile/${profileUser.id || user.id}`}
             className="px-4 py-2.5 bg-deep-ink hover:bg-charcoal border border-charcoal-border hover:border-lime-green text-soft-white rounded-lg font-mono text-xs font-bold transition-all flex items-center gap-2 shadow-sm"
           >
             <span>🤖</span> VIEW AI PROFILE →
@@ -361,10 +372,12 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
             Cohort Rank
           </span>
           <div className="text-3xl sm:text-4xl font-mono font-bold text-soft-white">
-            {leaderboardRank ? (
+            {totalScore === 0 ? (
+              <span className="text-slate-400">—</span>
+            ) : leaderboardRank ? (
               <CountUp target={leaderboardRank} prefix="#" />
             ) : (
-              <span className="text-slate-400">#--</span>
+              <span className="text-slate-400">—</span>
             )}
           </div>
           <div className="mt-2 text-[11px] font-mono text-slate-400">
@@ -504,8 +517,8 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
 
         {/* Resource Cards Grid */}
         {!loading && filteredResources.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredResources.map((res) => {
+          <div key={activeTab} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+            {filteredResources.map((res, idx) => {
               const submission = submissions.find((s) => s.resource_id === res.id);
               const countdown = formatTimeRemaining(res.deadline, nowMs);
 
@@ -543,8 +556,9 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
               return (
                 <div
                   key={res.id}
+                  style={{ animationDelay: `${idx * 70}ms` }}
                   onClick={() => openActionDrawer(res)}
-                  className={`p-6 border bg-charcoal/80 rounded-2xl flex flex-col justify-between cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_10px_25px_rgba(0,0,0,0.5)] ${
+                  className={`p-6 border bg-charcoal/80 rounded-2xl flex flex-col justify-between cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_10px_25px_rgba(0,0,0,0.5)] animate-fade-in ${
                     shouldPulseRed
                       ? 'border-burnt-orange/60 shadow-[0_0_15px_rgba(255,107,74,0.25)] animate-pulse'
                       : 'border-charcoal-border hover:border-electric-blue/60'

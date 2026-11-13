@@ -5,6 +5,10 @@
  * All requests include credentials for cookie-based session management.
  */
 
+import { demoApiAdapter } from './demo-store';
+
+export const IS_DEMO_MODE = process.env.NEXT_PUBLIC_MENTORSHIP_DEMO !== 'false';
+
 const API_BASE = (process.env.NEXT_PUBLIC_MENTORSHIP_API_URL || '').replace(/\/$/, '') + '/api/mentorship';
 
 async function fetcher<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -28,7 +32,7 @@ async function fetcher<T = any>(endpoint: string, options: RequestInit = {}): Pr
   return data;
 }
 
-export const mentorshipApi = {
+const liveApi = {
   // Auth
   login: (identifier: string, password: string) =>
     fetcher('/auth/login', {
@@ -137,3 +141,5 @@ export const mentorshipApi = {
   getLeaderboard: (programId?: string) =>
     fetcher<{ leaderboard: any[]; total: number }>(`/leaderboard${programId ? `?program_id=${programId}` : ''}`),
 };
+
+export const mentorshipApi = IS_DEMO_MODE ? demoApiAdapter : liveApi;
