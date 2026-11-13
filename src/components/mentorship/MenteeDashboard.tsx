@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { mentorshipApi } from '@/lib/mentorship/client-api';
 import type { MentorshipResource, MentorshipSubmission } from '@/lib/mentorship/types';
 
+import Leaderboard from './Leaderboard';
+
 interface MenteeDashboardProps {
   user: any;
   onRefreshUser?: () => void;
@@ -81,6 +83,7 @@ function formatTimeRemaining(deadlineIso: string, nowMs: number) {
 
 export default function MenteeDashboard({ user }: MenteeDashboardProps) {
   const [profileUser, setProfileUser] = useState<any>(user);
+  const [subView, setSubView] = useState<'deliverables' | 'leaderboard'>('deliverables');
   const [resources, setResources] = useState<MentorshipResource[]>([]);
   const [submissions, setSubmissions] = useState<MentorshipSubmission[]>([]);
   const [leaderboardRank, setLeaderboardRank] = useState<number | null>(null);
@@ -367,11 +370,15 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
         </div>
 
         {/* KPI 2: Rank */}
-        <div className="p-6 bg-charcoal/80 border border-charcoal-border rounded-2xl relative overflow-hidden group hover:border-electric-blue/40 transition-all">
+        <div
+          onClick={() => setSubView('leaderboard')}
+          title="Click to view Cohort Leaderboard"
+          className="p-6 bg-charcoal/80 border border-charcoal-border rounded-2xl relative overflow-hidden group hover:border-lime-green/50 cursor-pointer transition-all"
+        >
           <span className="text-[10px] font-mono uppercase text-slate-400 tracking-wider block mb-2">
-            Cohort Rank
+            Cohort Rank 🏆
           </span>
-          <div className="text-3xl sm:text-4xl font-mono font-bold text-soft-white">
+          <div className="text-3xl sm:text-4xl font-mono font-bold text-soft-white group-hover:text-lime-green transition-colors">
             {totalScore === 0 ? (
               <span className="text-slate-400">—</span>
             ) : leaderboardRank ? (
@@ -381,7 +388,7 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
             )}
           </div>
           <div className="mt-2 text-[11px] font-mono text-slate-400">
-            Across active cohort peers
+            Across active cohort peers · Click to view
           </div>
         </div>
 
@@ -439,7 +446,42 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
         </div>
       </div>
 
-      {/* Tabs with smooth transitions */}
+      {/* Sub-view switcher: Deliverables vs Leaderboard */}
+      <div className="flex items-center gap-3 border-b border-charcoal-border pb-4 font-mono text-xs">
+        <button
+          type="button"
+          onClick={() => setSubView('deliverables')}
+          className={`px-4 py-2 rounded-lg font-bold transition-all uppercase ${
+            subView === 'deliverables'
+              ? 'bg-electric-blue text-soft-white shadow-[0_0_12px_rgba(49,94,255,0.4)]'
+              : 'text-slate-400 hover:text-white bg-deep-ink border border-charcoal-border'
+          }`}
+        >
+          // Deliverables & Sprints
+        </button>
+        <button
+          type="button"
+          onClick={() => setSubView('leaderboard')}
+          className={`px-4 py-2 rounded-lg font-bold transition-all uppercase ${
+            subView === 'leaderboard'
+              ? 'bg-lime-green text-deep-ink shadow-[0_0_12px_rgba(184,217,76,0.4)]'
+              : 'text-slate-400 hover:text-white bg-deep-ink border border-charcoal-border'
+          }`}
+        >
+          🏆 Cohort Leaderboard
+        </button>
+      </div>
+
+      {/* Sub-view: Leaderboard */}
+      {subView === 'leaderboard' && (
+        <Leaderboard
+          currentUserId={profileUser.id || user.id}
+          initialProgramId={profileUser.program_ids?.[0]}
+        />
+      )}
+
+      {/* Sub-view: Deliverables Tabs with smooth transitions */}
+      {subView === 'deliverables' && (
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-charcoal-border pb-3">
           <div className="flex items-center gap-2 p-1 bg-deep-ink border border-charcoal-border rounded-xl font-mono text-xs">
@@ -632,6 +674,7 @@ export default function MenteeDashboard({ user }: MenteeDashboardProps) {
           </div>
         )}
       </div>
+      )}
 
       {/* ============================================================ */}
       {/* ACTION DRAWER (Video Player, Quiz Builder, Project Submission) */}
