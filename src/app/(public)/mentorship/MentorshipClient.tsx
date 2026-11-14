@@ -150,6 +150,15 @@ export default function MentorshipClient({
               <p className="mt-4 text-slate-300 font-sans text-base sm:text-lg max-w-2xl leading-relaxed">
                 The Society Student Support Cell (SSSC) pairs aspiring engineers with experienced seniors and alumni. From foundational C++ algorithms to full-stack architectures and FAANG interview preparation.
               </p>
+
+              <div className="mt-6">
+                <Link
+                  href="/mentorship/mentors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-electric-blue hover:bg-electric-blue-light text-soft-white font-mono text-xs font-bold uppercase rounded-md shadow-[0_0_15px_rgba(49,94,255,0.4)] transition-all"
+                >
+                  Meet the Mentors →
+                </Link>
+              </div>
             </div>
 
             {/* Live Active Programs (Dynamic from API) */}
