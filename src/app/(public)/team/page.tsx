@@ -1,3 +1,4 @@
+import LeadsGlobeSection from '@/components/leads/LeadsGlobeSection';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { VERIFIED_TEAM_MEMBERS } from '@/data/teamData';
@@ -121,6 +122,9 @@ export default async function TeamPage({
             ))}
           </div>
         </div>
+
+        {/* 3D Leads Globe */}
+        <LeadsGlobeSection members={filteredMembers} />
 
         {/* Members Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
