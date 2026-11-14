@@ -31,8 +31,8 @@ export type Mentor = {
 export const mentors: Mentor[] = [
   {
     id: "mentor-1",
-    name: "Ananya Verma",
-    branch: "CSE (AI)",
+    name: "Aadhya Verma",
+    branch: "CSE core",
     year: "3rd Year",
     role: "Full-Stack Mentor",
     tagline: "Turning ideas into shipped products, one commit at a time.",
@@ -69,9 +69,9 @@ export const mentors: Mentor[] = [
   },
   {
     id: "mentor-2",
-    name: "Riya Mehta",
+    name: "Charushi",
     branch: "IT",
-    year: "4th Year",
+    year: "3th Year",
     role: "AI / ML Mentor",
     tagline: "Making machine learning less magical and more practical.",
     photo: "/mentors/mentor-2.jpg",
